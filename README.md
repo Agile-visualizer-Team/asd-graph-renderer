@@ -4,4 +4,4 @@ or...
 > ts-node build/index.ts
 
 Check output folder, example result:
-![example](./outout/graph.png "Example graph generated")
+![example](./output/graph.png "Example graph generated")
