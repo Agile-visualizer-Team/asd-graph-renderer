@@ -8,4 +8,4 @@ Then check the `output` folder, example result:
 
 ---
 
-![example](example.png "Example graph")
+![example](graph-example.png "Example graph")
