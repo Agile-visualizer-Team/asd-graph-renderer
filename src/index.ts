@@ -4,6 +4,9 @@ import fs from "fs";
 import {VSCODE_THEME} from "./graph-renderer-themes";
 import {GraphRendererLayout} from "./graph-renderer-layout";
 
+// TODO add tests (e.g. image output file checksum)
+// TODO integrate with dlv answer set parser
+
 const renderer = new GraphRenderer();
 renderer.width = 1280;
 renderer.height = 1280;
@@ -24,13 +27,13 @@ const nodes: GraphNode[] = [
 ];
 
 const edges: GraphEdge[] = [
-    new GraphEdge(nodeA, nodeB),
-    new GraphEdge(nodeA, nodeC),
-    new GraphEdge(nodeB, nodeD),
-    new GraphEdge(nodeB, nodeE),
-    new GraphEdge(nodeB, nodeF),
-    new GraphEdge(nodeC, nodeD),
-    new GraphEdge(nodeD, nodeG)
+    new GraphEdge(nodeA, nodeB, "1"),
+    new GraphEdge(nodeA, nodeC, "5"),
+    new GraphEdge(nodeB, nodeD, "2"),
+    new GraphEdge(nodeB, nodeE, "4"),
+    new GraphEdge(nodeB, nodeF, "7"),
+    new GraphEdge(nodeC, nodeD, "10"),
+    new GraphEdge(nodeD, nodeG, "8")
 ];
 
 renderer.render(nodes, edges, (img: OnFinish) => {

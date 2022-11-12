@@ -9,34 +9,54 @@ export interface GraphRendererTheme {
 export interface GraphRendererEdgeTheme {
     lineColor: string;
     arrowColor: string;
+    textColor: string;
+    fontFamily: string;
+    fontSize: string;
+    fontWeight: string;
 }
 
 export interface GraphRendererNodeTheme {
     backgroundColor: string;
     borderColor: string;
     textColor: string;
+    fontFamily: string;
+    fontSize: string;
+    fontWeight: string;
 }
 
+const VSCODE_THEME_FONT = 'Cascadia Code';
 export const VSCODE_THEME = {
     backgroundColor: '#1e1e1e',
     node: {
         backgroundColor: '#252526',
         borderColor: '#2765ab',
         textColor: '#fff',
-        rootTextColor: '#16825d'
+        fontFamily: VSCODE_THEME_FONT,
+        fontSize: '18px',
+        fontWeight: '400',
     },
     rootNode: {
         backgroundColor: '#252526',
         borderColor: '#12674a',
         textColor: '#fff',
+        fontFamily: VSCODE_THEME_FONT,
+        fontSize: '18px',
+        fontWeight: '500',
     },
     leafNode: {
         backgroundColor: '#252526',
         borderColor: '#a12d7c',
         textColor: '#fff',
+        fontFamily: VSCODE_THEME_FONT,
+        fontSize: '18px',
+        fontWeight: '400',
     },
     edge: {
         lineColor: '#3794ff',
-        arrowColor: '#3794ff'
+        arrowColor: '#3794ff',
+        textColor: '#cccccc',
+        fontFamily: VSCODE_THEME_FONT,
+        fontSize: '7px',
+        fontWeight: '300',
     }
 } as GraphRendererTheme;

@@ -9,9 +9,11 @@ export class GraphNode {
 export class GraphEdge {
     readonly from: GraphNode;
     readonly destination: GraphNode;
+    readonly weight: string|null;
 
-    constructor(from: GraphNode, destination: GraphNode) {
+    constructor(from: GraphNode, destination: GraphNode, weight: string|null) {
         this.from = from;
         this.destination = destination;
+        this.weight = weight;
     }
 }

@@ -6,10 +6,6 @@ declare function require(name: string): any;
 const cytosnap = require('cytosnap');
 cytosnap.use(['cytoscape-dagre', 'cytoscape-klay']);
 
-// TODO add custom font (Cascadia is the vsccode default font)
-// TODO add edge cost/weight
-// TODO tests: image output file checksum?
-
 export class GraphRenderer {
     width: number = 800;
     height: number = 600;
@@ -39,7 +35,8 @@ export class GraphRenderer {
                 data: {
                     id: e.from.label + '-' + e.destination.label,
                     source: e.from.label,
-                    target: e.destination.label
+                    target: e.destination.label,
+                    weight: e.weight
                 }
             });
         });
@@ -71,9 +68,9 @@ export class GraphRenderer {
             {
                 selector: 'node',
                 style: {
-                    'font-family': 'Arial',
-                    'font-size': '18px',
-                    'font-weight': '400',
+                    'font-family': this.theme.node.fontFamily,
+                    'font-size': this.theme.node.fontSize,
+                    'font-weight': this.theme.node.fontWeight,
                     'label': 'data(id)',
                     'background-color': this.theme.node.backgroundColor,
                     'text-valign': 'center',
@@ -87,6 +84,9 @@ export class GraphRenderer {
             {
                 selector: 'node.root',
                 style: {
+                    'font-family': this.theme.rootNode.fontFamily,
+                    'font-size': this.theme.rootNode.fontSize,
+                    'font-weight': this.theme.rootNode.fontWeight,
                     'background-color': this.theme.rootNode.backgroundColor,
                     'border-color': this.theme.rootNode.borderColor,
                     'color': this.theme.rootNode.textColor,
@@ -95,6 +95,9 @@ export class GraphRenderer {
             {
                 selector: 'node.leaf',
                 style: {
+                    'font-family': this.theme.leafNode.fontFamily,
+                    'font-size': this.theme.leafNode.fontSize,
+                    'font-weight': this.theme.leafNode.fontWeight,
                     'background-color': this.theme.leafNode.backgroundColor,
                     'border-color': this.theme.leafNode.borderColor,
                     'color': this.theme.leafNode.textColor,
@@ -111,7 +114,14 @@ export class GraphRenderer {
                     'curve-style': 'bezier',
                     'arrow-scale': 0.7,
                     'target-arrow-shape': 'triangle',
-                    'target-arrow-color': this.theme.edge.arrowColor
+                    'target-arrow-color': this.theme.edge.arrowColor,
+                    'source-label': 'data(weight)',
+                    'source-text-margin-x': 8,
+                    'source-text-offset': 12,
+                    'font-family': this.theme.edge.fontFamily,
+                    'font-size': this.theme.edge.fontSize,
+                    'font-weight': this.theme.edge.fontWeight,
+                    'color': this.theme.edge.textColor,
                 }
             }
         ];
