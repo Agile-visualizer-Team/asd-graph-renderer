@@ -5,10 +5,10 @@ Execute:
 
 or...
 
-> ts-node build/index.js
+> ts-node src/index.ts
 
 Then check the /output folder, example result:
 
----------------
+---
 
 ![example](./output/graph.png "Example graph")

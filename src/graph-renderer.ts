@@ -61,9 +61,7 @@ export class GraphRenderer {
             };
         }
 
-        console.error("Unsupported layout, using graph layout");
-        this.layout = GraphRendererLayout.Graph;
-        return this.generateCytoscapeLayout();
+        throw new Error("Unsupported layout type");
     }
 
     private generateCytoscapeStyle() {
