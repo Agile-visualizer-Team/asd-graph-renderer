@@ -1,11 +1,8 @@
-# Build
-> npm run build
-
-# Start
+# How to start
 > npm run start
 
-Then check the /output folder, example result:
+Then check the `output` folder, example result:
 
 ---
 
-![example](./output/graph.png "Example graph")
+![example](example.png "Example graph")
