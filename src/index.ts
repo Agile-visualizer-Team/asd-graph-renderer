@@ -15,11 +15,12 @@ const nodeA = new GraphNode("a"),
     nodeC = new GraphNode("c"),
     nodeD = new GraphNode("d"),
     nodeE = new GraphNode("e"),
-    nodeF = new GraphNode("f");
+    nodeF = new GraphNode("f"),
+    nodeG = new GraphNode("g");
 
 const nodes: GraphNode[] = [
     nodeA, nodeB, nodeC,
-    nodeD, nodeE, nodeF
+    nodeD, nodeE, nodeF, nodeG
 ];
 
 const edges: GraphEdge[] = [
@@ -28,7 +29,8 @@ const edges: GraphEdge[] = [
     new GraphEdge(nodeB, nodeD),
     new GraphEdge(nodeB, nodeE),
     new GraphEdge(nodeB, nodeF),
-    new GraphEdge(nodeC, nodeD)
+    new GraphEdge(nodeC, nodeD),
+    new GraphEdge(nodeD, nodeG)
 ];
 
 renderer.render(nodes, edges, (img: OnFinish) => {
