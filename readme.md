@@ -1,11 +1,8 @@
-# How to run
-Execute:
+# Build
+> npm run build
 
+# Start
 > npm run start
-
-or...
-
-> ts-node src/index.ts
 
 Then check the /output folder, example result:
 
