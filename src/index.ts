@@ -32,11 +32,13 @@ const edges: GraphEdge[] = [
 ];
 
 renderer.render(nodes, edges, (img: OnFinish) => {
-    fs.writeFile('output/graph.png', img.base64Data, 'base64', function (err) {
+    const filepath = 'output/graph-' + Date.now() + '.png';
+
+    fs.writeFile(filepath, img.base64Data, 'base64', function (err) {
         if (err) {
             console.error(err.message);
         } else {
-            console.log('Graph saved as output/graph.png');
+            console.log('Graph saved as ' + filepath);
         }
         process.exit(1);
     });
