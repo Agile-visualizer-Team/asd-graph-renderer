@@ -117,7 +117,7 @@ export class GraphRenderer {
                     'target-arrow-color': this.theme.edge.arrowColor,
                     'source-label': 'data(weight)',
                     'source-text-margin-x': 8,
-                    'source-text-offset': 12,
+                    'source-text-offset': 18,
                     'font-family': this.theme.edge.fontFamily,
                     'font-size': this.theme.edge.fontSize,
                     'font-weight': this.theme.edge.fontWeight,
