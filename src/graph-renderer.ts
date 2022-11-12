@@ -7,6 +7,7 @@ const cytosnap = require('cytosnap');
 cytosnap.use(['cytoscape-dagre', 'cytoscape-klay']);
 
 // TODO add custom font (Cascadia is the vsccode default font)
+// TODO add edge cost/weight
 
 export class GraphRenderer {
     width: number = 800;
