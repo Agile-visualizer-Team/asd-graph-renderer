@@ -1,0 +1,32 @@
+[
+    {
+        "as" : [
+            "node(a)",
+            "node(b)",
+            "node(c)",
+            "node(d)",
+            "node(e)",
+            "node(f)",
+            "node(g)",
+            "arch(a,b,10)",
+            "arch(a,c,5)",
+            "arch(b,d,6)",
+            "arch(b,e,7)",
+            "arch(b,f,5)",
+            "arch(c,d,4)",
+            "arch(d,g,3)"
+        ],
+        "cost" : "1@2"
+    },
+    {
+        "as" : [
+            "node(a)",
+            "node(b)",
+            "node(g)",
+            "arch(a,b,10)",
+            "arch(b,g,5)",
+            "arch(a,g,3)"
+        ],
+        "cost" : "1@2"
+    }
+]

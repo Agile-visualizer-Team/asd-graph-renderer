@@ -1,11 +1,10 @@
-import {GraphRenderer, OnFinish} from "./graph-renderer";
-import {GraphEdge, GraphNode} from "./graph-models";
+import {GraphRenderer, OnFinish} from "./renderer";
+import {Graph, GraphEdge, GraphNode} from "./models";
 import fs from "fs";
-import {VSCODE_THEME} from "./graph-renderer-themes";
-import {GraphRendererLayout} from "./graph-renderer-layout";
-
-// TODO add tests (e.g. image output file checksum)
-// TODO integrate with dlv answer set parser
+import {VSCODE_THEME} from "./renderer-themes";
+import {GraphRendererLayout} from "./renderer-layout";
+import {GraphParser} from "./parser";
+import * as path from "path";
 
 const renderer = new GraphRenderer();
 renderer.width = 1280;
@@ -13,38 +12,28 @@ renderer.height = 1280;
 renderer.theme = VSCODE_THEME;
 renderer.layout = GraphRendererLayout.Tree;
 
-const nodeA = new GraphNode("a"),
-    nodeB = new GraphNode("b"),
-    nodeC = new GraphNode("c"),
-    nodeD = new GraphNode("d"),
-    nodeE = new GraphNode("e"),
-    nodeF = new GraphNode("f"),
-    nodeG = new GraphNode("g");
+const templatePath = path.join(__dirname, "../input/template.json");
+const wrapperPath = path.join(__dirname, "../input/wrapper.json");
+const graphParser = new GraphParser(templatePath, wrapperPath);
 
-const nodes: GraphNode[] = [
-    nodeA, nodeB, nodeC,
-    nodeD, nodeE, nodeF, nodeG
-];
+try {
+    const renderingPromises: Promise<OnFinish>[] = [];
 
-const edges: GraphEdge[] = [
-    new GraphEdge(nodeA, nodeB, "1"),
-    new GraphEdge(nodeA, nodeC, "5"),
-    new GraphEdge(nodeB, nodeD, "2"),
-    new GraphEdge(nodeB, nodeE, "4"),
-    new GraphEdge(nodeB, nodeF, "7"),
-    new GraphEdge(nodeC, nodeD, "10"),
-    new GraphEdge(nodeD, nodeG, "8")
-];
-
-renderer.render(nodes, edges, (img: OnFinish) => {
-    const filepath = 'output/graph-' + Date.now() + '.png';
-
-    fs.writeFile(filepath, img.base64Data, 'base64', function (err) {
-        if (err) {
-            console.error(err.message);
-        } else {
+    graphParser.toGraphs().forEach((graph: Graph) => {
+        let rendering = renderer.render(graph);
+        rendering.then((img: OnFinish) => {
+            const filepath = 'output/graph-' + Date.now() + '.png';
+            fs.writeFileSync(filepath, img.base64Data, 'base64');
             console.log('Graph saved as ' + filepath);
-        }
-        process.exit(1);
+        });
+        renderingPromises.push(rendering);
     });
-});
+
+    Promise.all(renderingPromises).then(() => process.exit(1));
+} catch (error) {
+    if (error instanceof Error) {
+        console.error(error.message);
+    } else {
+        console.log('an error occurred: ', error);
+    }
+}

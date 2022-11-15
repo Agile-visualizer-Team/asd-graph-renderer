@@ -22,18 +22,32 @@ export interface GraphRendererNodeTheme {
     fontFamily: string;
     fontSize: string;
     fontWeight: string;
+    ellipse: {
+        sizeMultiplier: number
+    };
+    roundRectangle: {
+        widthMultiplier: number,
+        heightMultiplier: number
+    }
 }
 
 const VSCODE_THEME_FONT = 'Cascadia Code';
 export const VSCODE_THEME = {
     backgroundColor: '#1e1e1e',
-    node: {
+    node: <GraphRendererNodeTheme>{
         backgroundColor: '#252526',
         borderColor: '#2765ab',
         textColor: '#fff',
         fontFamily: VSCODE_THEME_FONT,
         fontSize: '18px',
         fontWeight: '400',
+        ellipse: {
+            sizeMultiplier: 24
+        },
+        roundRectangle: {
+            widthMultiplier: 14,
+            heightMultiplier: 26
+        }
     },
     rootNode: {
         backgroundColor: '#252526',
