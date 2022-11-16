@@ -1,14 +1,12 @@
-## Install
-> npm install
+## Commands
+    npm install
+    npm start
+    npm test
 
-## Start
-> npm start
+## Example graph
 
-Then check the `output` folder, example result:
+Run `npm start` and check the `output` folder.
 
 ---
 
 ![example](graph-example.png "Example graph")
-
-## Test
-> npm test
