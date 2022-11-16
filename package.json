@@ -20,6 +20,6 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && node build/index.js",
-    "test": "mocha --require ts-node/register --watch-extensions ts 'src/tests/**/*.ts'"
+    "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'"
   }
 }

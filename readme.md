@@ -1,11 +1,14 @@
-## 1. Install
+## Install
 > npm install
 
-## 2. Start
-> npm run start
+## Start
+> npm start
 
 Then check the `output` folder, example result:
 
 ---
 
 ![example](graph-example.png "Example graph")
+
+## Test
+> npm test

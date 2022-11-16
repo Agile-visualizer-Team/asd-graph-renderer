@@ -1,5 +1,5 @@
 import {GraphRenderer, OnFinish} from "./renderer";
-import {Graph, GraphEdge, GraphNode} from "./models";
+import {Graph} from "./models";
 import fs from "fs";
 import {VSCODE_THEME} from "./renderer-themes";
 import {GraphRendererLayout} from "./renderer-layout";
@@ -22,14 +22,14 @@ console.log("Using " + wrapperPath + " as answer set data...");
 try {
     const renderingPromises: Promise<OnFinish>[] = [];
 
-    graphParser.toGraphs().forEach((graph: Graph) => {
-        console.log("Rendering...");
+    graphParser.toGraphs().forEach((graph: Graph, index) => {
+        console.log(`Rendering graph ${index}...`);
 
         let rendering = renderer.render(graph);
         rendering.then((img: OnFinish) => {
             const filepath = 'output/graph-' + Date.now() + '.png';
             fs.writeFileSync(filepath, img.base64Data, 'base64');
-            console.log('Graph saved as ' + filepath);
+            console.log(`Graph ${index} saved as ${filepath}`);
         });
         renderingPromises.push(rendering);
     });

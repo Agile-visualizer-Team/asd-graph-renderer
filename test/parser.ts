@@ -1,4 +1,4 @@
-import {GraphParser} from "../parser";
+import {GraphParser} from "../src/parser";
 import {expect} from "chai";
 import * as sinon from "sinon";
 import fs from "fs";
@@ -78,7 +78,7 @@ describe("Parser_Test", () => {
     });
 
     it("should save the answerset in a JSON file and be coherent", () => {
-        const outputPath = path.join(__dirname, "../../tmp/graph-" + Date.now() + ".json");
+        const outputPath = path.join(__dirname, "parser_graph.json");
         const out = graph_fixture(GOOD_TEMPLATE, GOOD_AS, outputPath);
         expect(fs.existsSync(outputPath)).to.be.true;
         const expected = get_expected();

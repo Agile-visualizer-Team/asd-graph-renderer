@@ -154,7 +154,7 @@ export class GraphRenderer {
     render(graph: Graph): Promise<OnFinish> {
         const that = this;
 
-        return new Promise<OnFinish>((resolve, reject) => {
+        return new Promise<OnFinish>((resolve) => {
             const snap = cytosnap();
             snap.start().then(function () {
                 return snap.shot({
@@ -169,6 +169,7 @@ export class GraphRenderer {
                     background: that.theme.backgroundColor
                 });
             }).then(function (img: any) {
+                snap.stop();
                 resolve(<OnFinish>{
                     base64Data: img
                 } as OnFinish);
