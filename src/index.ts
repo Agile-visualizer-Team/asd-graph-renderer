@@ -16,8 +16,8 @@ const templatePath = path.join(__dirname, "../input/template.json");
 const wrapperPath = path.join(__dirname, "../input/wrapper.json");
 const graphParser = new GraphParser(templatePath, wrapperPath);
 
-console.log("Using " + templatePath + " as template...");
-console.log("Using " + wrapperPath + " as answer set data...");
+console.log("Using " + path.basename(templatePath) + " as template...");
+console.log("Using " + path.basename(wrapperPath) + " as answer set data...");
 
 try {
     const renderingPromises: Promise<OnFinish>[] = [];
@@ -27,7 +27,7 @@ try {
 
         let rendering = renderer.render(graph);
         rendering.then((img: OnFinish) => {
-            const filepath = 'output/graph-' + Date.now() + '.png';
+            const filepath = 'output/graph-' + index + '-' + Date.now() + '.png';
             fs.writeFileSync(filepath, img.base64Data, 'base64');
             console.log(`Graph ${index} saved as ${filepath}`);
         });
