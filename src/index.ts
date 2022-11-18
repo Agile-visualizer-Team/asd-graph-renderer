@@ -9,12 +9,12 @@ import yargs from "yargs";
 
 const argv = yargs
     .option('template', {
-        description: 'the json template config file',
+        description: 'the input json template config file',
         alias: 't',
         type: 'string'
     })
     .option('answer_set', {
-        description: 'the json answer set file',
+        description: 'the input json answer set file',
         alias: 'a',
         type: 'string'
     })
