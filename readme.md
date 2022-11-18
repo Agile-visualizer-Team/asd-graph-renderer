@@ -2,6 +2,7 @@
     npm install
     npm start
     npm test
+    node build/index.js --help
 
 ## Example graph
 
