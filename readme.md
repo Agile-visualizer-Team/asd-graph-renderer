@@ -6,10 +6,9 @@
 
 ## How to generate an answer set graph rendering
 
-In order to generate a demo graph, run `npm start`.  The following json example files will be used as demo input:
+In order to generate a demo graph rendering, run `npm start`.  The following json example files will be used as input:
 
-1) Template configuration (`input/example-template.json`)
-
+**Template configuration:** (`input/example-template.json`)
 
     {
         "template": "graph",
@@ -17,8 +16,7 @@ In order to generate a demo graph, run `npm start`.  The following json example 
         "arch": "arch/3"
     }
 
-2) Answer Set data (`input/example-wrapper.json`)
-
+**Answer Set data:** (`input/example-wrapper.json`)
 
     [
         {
@@ -50,10 +48,10 @@ In order to generate a demo graph, run `npm start`.  The following json example 
         }
     ]
 
-After the execution check the `output` folder, you should get a graph-*.png image for each input answer set.
+After the script execution is completed check the `output` folder, you should get a graph-*.png image for each input answer set.
 
 The first answer set will generate an image like this:
 
 ![example](graph-example.png "Example graph")
 
-Run `node build/index.js --help` to discover how to pass custom input files and output directory path.
+Run `node build/index.js --help` to discover how to pass custom input file and an output path.
