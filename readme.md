@@ -6,7 +6,7 @@
 
 ## How to generate an answer set graph rendering
 
-In order to generate a demo graph rendering, run `npm start`.  The following json example files will be used as input:
+In order to generate a demo graph rendering, run `npm start`. The following json example files will be used as input:
 
 **Template configuration:** (`input/example-template.json`)
 
@@ -16,7 +16,7 @@ In order to generate a demo graph rendering, run `npm start`.  The following jso
         "arch": "arch/3"
     }
 
-**Answer Set data:** (`input/example-wrapper.json`)
+**Answer set data:** (`input/example-answer-set.json`)
 
     [
         {
@@ -54,4 +54,4 @@ The first answer set will generate an image like this:
 
 ![example](graph-example.png "Example graph")
 
-Run `node build/index.js --help` to discover how to pass custom input file and an output path.
+Run `node build/index.js --help` to discover how to pass custom input file and output path.

@@ -31,7 +31,7 @@ renderer.theme = VSCODE_THEME;
 renderer.layout = GraphRendererLayout.Tree;
 
 const templatePath = argv.template || path.join(__dirname, "../input/example-template.json");
-const answerSetPath = argv.answer_set || path.join(__dirname, "../input/example-wrapper.json");
+const answerSetPath = argv.answer_set || path.join(__dirname, "../input/example-answer-set.json");
 const outputDirPath = argv.output_dir || path.join(__dirname, "../output");
 const graphParser = new GraphParser(templatePath, answerSetPath);
 
