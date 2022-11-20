@@ -52,6 +52,10 @@ After the script execution is completed check the `output` folder, you should ge
 
 The first answer set will generate an image like this:
 
-![example](graph-example.png "Example graph")
+![example](graph-example.png "Example graph (answer set 1)")
+
+while the second one will be:
+
+![example](graph-example-2.png "Example graph (answer set 2)")
 
 Run `node build/index.js --help` to discover how to pass custom input file and output path.
