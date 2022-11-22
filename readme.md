@@ -22,7 +22,7 @@
 
 In order to generate a demo graph rendering, run `npm start`. The following json files will be used as input:
 
-**Template configuration:** (`input/demo-template.json`)
+**Template:** (`input/demo-template.json`)
 
     {
         "template": "graph",
@@ -30,7 +30,7 @@ In order to generate a demo graph rendering, run `npm start`. The following json
         "arch": "arch/3"
     }
 
-**Answer set data:** (`input/demo-answer-set.json`)
+**Answer sets:** (`input/demo-answer-set.json`)
 
     [
         {
