@@ -1,24 +1,27 @@
 import fs from 'fs'
 import {Graph, GraphEdge, GraphNode} from "./models";
 import {validateAnswerSetsSchema, validateTemplateSchema} from "./schema-validators";
+import assert from "assert";
 
 export class GraphParser {
     private readonly template: any;
     private readonly answerSets: any[];
 
     /**
-     * It takes a template object, which is validated with a schema, and a list of answer set.
+     * It takes a template object, which is validated with a schema, and an array of answer set.
      */
     constructor(template: any, answerSets: any[]) {
-        if (!validateTemplateSchema(template) && validateTemplateSchema.errors) {
+        if (!validateTemplateSchema(template)) {
+            assert(validateTemplateSchema.errors);
             const error = validateTemplateSchema.errors[0];
             const path = error.instancePath || "template";
             throw Error("Template is not valid: " + path + " " + error.message);
         }
         this.template = template;
 
-        if (!validateAnswerSetsSchema(answerSets) && validateAnswerSetsSchema.errors) {
-            const error = validateAnswerSetsSchema.errors[0];
+        if (!validateAnswerSetsSchema(answerSets)) {
+            assert(validateTemplateSchema.errors);
+            const error = validateTemplateSchema.errors[0];
             const path = error.instancePath || "answer sets";
             throw Error("Answer sets are not valid: " + path + " " + error.message);
         }

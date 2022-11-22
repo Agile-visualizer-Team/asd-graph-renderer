@@ -10,21 +10,13 @@ const TEMPLATE_SCHEMA = {
         template: {type: "string"},
         nodes: {type: "string"},
         arch: {type: "string"},
-        // arch: {
-        //     type: "object",
-        //     properties: {
-        //         style: {type: "string"},
-        //         arch: {type: "string"},
-        //     },
-        //     required: ["nodes", "arch"]
-        // }
     },
     required: ["nodes", "arch"]
 };
 
-const TEMPLATE_AS = {
+const ANSWER_SETS_SCHEMA = {
     type: "array"
 };
 
 export const validateTemplateSchema = new Ajv().compile(TEMPLATE_SCHEMA);
-export const validateAnswerSetsSchema = new Ajv().compile(TEMPLATE_AS);
+export const validateAnswerSetsSchema = new Ajv().compile(ANSWER_SETS_SCHEMA);
