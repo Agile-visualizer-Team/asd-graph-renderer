@@ -1,33 +1,6 @@
 import fs from 'fs'
 import {Graph, GraphEdge, GraphNode} from "./models";
-import Ajv from "ajv";
-
-// TODO schema json del template
-const TEMPLATE_SCHEMA = {
-    type: "object",
-    properties: {
-        template: {type: "string"},
-        nodes: {type: "string"},
-        arch: {type: "string"},
-        // arch: {
-        //     type: "object",
-        //     properties: {
-        //         style: {type: "string"},
-        //         arch: {type: "string"},
-        //     },
-        //     required: ["nodes", "arch"]
-        // }
-    },
-    required: ["nodes", "arch"]
-};
-
-const validateTemplate = new Ajv().compile(TEMPLATE_SCHEMA);
-
-const TEMPLATE_AS = {
-    type: "array"
-};
-
-const validateAnswerSets = new Ajv().compile(TEMPLATE_AS);
+import {validateAnswerSets, validateTemplate} from "./validators";
 
 export class GraphParser {
     private readonly template: any;
