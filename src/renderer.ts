@@ -18,9 +18,9 @@ export class GraphRenderer {
         // TODO nodi colorabili
         graph.nodes.forEach(n => {
             const classes: string[] = [];
-            if (!graph.edges.find(e => e.destination == n)) {
+            if (!graph.edges.find(e => e.destination == n.name)) {
                 classes.push('root');
-            } else if (!graph.edges.find(e => e.from == n)) {
+            } else if (!graph.edges.find(e => e.from == n.name)) {
                 classes.push('leaf');
             }
 
@@ -52,9 +52,9 @@ export class GraphRenderer {
         graph.edges.forEach(e => {
             elements.push({
                 data: {
-                    id: e.from.name + '-' + e.destination.name,
-                    source: e.from.name,
-                    target: e.destination.name,
+                    id: e.from + '-' + e.destination,
+                    source: e.from,
+                    target: e.destination,
                     weight: e.weight
                 }
             });

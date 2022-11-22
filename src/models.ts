@@ -6,11 +6,10 @@ export interface Graph {
 
 export interface GraphNode {
     name: string;
-    weight: string;
 }
 
 export interface GraphEdge {
-    from: GraphNode;
-    destination: GraphNode;
+    from: string;
+    destination: string;
     weight: string|null;
 }

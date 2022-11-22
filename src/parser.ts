@@ -95,33 +95,19 @@ export class GraphParser {
 
         return answerSets.map(as => {
             const nodes: GraphNode[] = as.nodes.map(atom => {
-                let symbols = atom.split("(")[1].split(")")[0].split(",");
-                let name = symbols[0];
-                if (!name) {
-                    throw Error("Invalid node name: " + name);
-                }
-                let weight = symbols.length >= 2 ? symbols[1] : null;
+                let variables = atom.split("(")[1].split(")")[0].split(",");
+                let name = variables[0];
 
                 return <GraphNode>{
-                    name: name,
-                    weight: weight
+                    name: name
                 };
             });
 
             const edges: GraphEdge[] = as.arch.map(atom => {
-                let symbols = atom.split("(")[1].split(")")[0].split(",");
-
-                let from = nodes.find(n => n.name === symbols[0]);
-                if (!from) {
-                    throw Error("Invalid arc from node: " + symbols[0]);
-                }
-
-                let destination = nodes.find(n => n.name === symbols[1]);
-                if (!destination) {
-                    throw Error("Invalid arc destination node: " + symbols[1]);
-                }
-
-                let weight = symbols.length >= 3 ? symbols[2] : null;
+                let variables = atom.split("(")[1].split(")")[0].split(",");
+                let from = variables[0];
+                let destination = variables[1];
+                let weight = variables.length >= 3 ? variables[2] : null;
 
                 return <GraphEdge>{
                     from: from,
