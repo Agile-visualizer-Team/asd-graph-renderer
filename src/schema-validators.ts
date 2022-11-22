@@ -1,5 +1,8 @@
-// TODO schema json del template
 import Ajv from "ajv";
+
+/**
+ * @see https://ajv.js.org/guide/getting-started.html#basic-data-validation
+ */
 
 const TEMPLATE_SCHEMA = {
     type: "object",
