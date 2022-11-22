@@ -6,17 +6,11 @@
 
 ## How to render from file input
 
-    node build/script.js fromfile
-        --template ./input/demo-template.json
-        --as ./input/demo-as.json
-        --output ./output
+    node build/script.js fromfile --template ./input/demo-template.json --as ./input/demo-as.json --output ./output
 
 ## How to render from string input
 
-    node build/script.js fromstr
-        --template '{\"nodes\":\"node/1\",\"arch\":\"arch/2\"}'
-        --as '[{\"as\":[\"node(a)\",\"node(b)\",\"arch(a,b)\"]}]'
-        --output ./output
+    node build/script.js fromstr --template '{\"nodes\":\"node/1\",\"arch\":\"arch/2\"}' --as '[{\"as\":[\"node(a)\",\"node(b)\",\"arch(a,b)\"]}]' --output ./output
 
 ## Demo
 
