@@ -1,4 +1,4 @@
-import {GraphRenderer, OnFinish} from "../src/renderer";
+import {GraphRenderer, OnRenderingComplete} from "../src/renderer";
 import {VSCODE_THEME} from "../src/renderer-themes";
 import {GraphRendererLayout} from "../src/renderer-layout";
 import {Graph, GraphEdge, GraphNode} from "../src/models";
@@ -19,7 +19,7 @@ describe("Renderer_Test", function () {
         renderer.height = 1280;
         renderer.theme = VSCODE_THEME;
         renderer.layout = GraphRendererLayout.Tree;
-        renderer.render(graph).then((img: OnFinish) => {
+        renderer.render(graph).then((img: OnRenderingComplete) => {
             let expectedBase64 = fs.readFileSync(path.join(__dirname, "renderer_base64_img"), {encoding:'utf8', flag:'r'});
             let generatedBase64 = img.base64Data;
             assert.equal(generatedBase64, expectedBase64);

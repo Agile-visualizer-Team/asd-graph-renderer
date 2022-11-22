@@ -10,11 +10,12 @@ export class GraphRenderer {
     width: number = 800;
     height: number = 600;
     theme: GraphRendererTheme = VSCODE_THEME;
-    layout: GraphRendererLayout = GraphRendererLayout.Graph;
+    layout: GraphRendererLayout = GraphRendererLayout.Tree;
 
     private generateCytoscapeElements(graph: Graph): object[] {
         const elements: any[] = [];
 
+        // TODO nodi colorabili
         graph.nodes.forEach(n => {
             const classes: string[] = [];
             if (!graph.edges.find(e => e.destination == n)) {
@@ -46,6 +47,8 @@ export class GraphRenderer {
             });
         });
 
+        // TODO archi colorabili
+        // TODO archi non orientati
         graph.edges.forEach(e => {
             elements.push({
                 data: {
@@ -151,11 +154,11 @@ export class GraphRenderer {
         ];
     }
 
-    render(graph: Graph): Promise<OnFinish> {
+    render(graph: Graph): Promise<OnRenderingComplete> {
         const that = this;
 
-        return new Promise<OnFinish>((resolve) => {
-            const snap = cytosnap();
+        return new Promise<OnRenderingComplete>((resolve) => {
+            const snap = cytosnap(); // TODO testare su ubuntu
             snap.start().then(function () {
                 return snap.shot({
                     elements: that.generateCytoscapeElements(graph),
@@ -170,14 +173,14 @@ export class GraphRenderer {
                 });
             }).then(function (img: any) {
                 snap.stop();
-                resolve(<OnFinish>{
+                resolve(<OnRenderingComplete>{
                     base64Data: img
-                } as OnFinish);
+                } as OnRenderingComplete);
             });
         })
     }
 }
 
-export interface OnFinish {
+export interface OnRenderingComplete {
     base64Data: string;
 }

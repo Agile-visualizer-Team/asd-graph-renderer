@@ -1,4 +1,4 @@
-import { GraphParser } from "../src/parser";
+import { GraphParser } from "../src/old-parser";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import fs from "fs";

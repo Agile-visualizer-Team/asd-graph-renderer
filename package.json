@@ -2,6 +2,7 @@
   "dependencies": {
     "@types/cytoscape": "^3.19.9",
     "@types/sinon": "^10.0.13",
+    "ajv": "^8.11.2",
     "cytoscape": "^3.23.0",
     "cytoscape-dagre": "^2.5.0",
     "cytoscape-klay": "^3.1.4",
@@ -23,7 +24,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node build/index.js",
+    "start": "tsc && node build/script.js fromfile ../input/example-template.json ../input/example-as.json ../output",
     "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'"
   }
 }
