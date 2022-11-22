@@ -5,8 +5,8 @@ import fs from "fs";
 import {Graph} from "./models";
 
 class GraphScript {
-    private DEFAULT_INPUT_TEMPLATE_PATH = '../input/example-template.json';
-    private DEFAULT_INPUT_ANSWER_SET_PATH = '../input/example-as.json';
+    private DEFAULT_INPUT_TEMPLATE_PATH = '../template.json';
+    private DEFAULT_INPUT_ANSWER_SET_PATH = '../as.json';
     private DEFAULT_OUTPUT_PATH = '../output';
 
     constructor() {
