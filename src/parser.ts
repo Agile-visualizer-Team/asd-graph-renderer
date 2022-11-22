@@ -23,6 +23,12 @@ const TEMPLATE_SCHEMA = {
 
 const validateTemplate = new Ajv().compile(TEMPLATE_SCHEMA);
 
+const TEMPLATE_AS = {
+    type: "array"
+};
+
+const validateAnswerSets = new Ajv().compile(TEMPLATE_AS);
+
 export class GraphParser {
     private readonly template: any;
     private readonly answerSets: any[];
@@ -40,6 +46,15 @@ export class GraphParser {
             }
         }
         this.template = template;
+
+        if (!validateAnswerSets(answerSets)) {
+            if (validateAnswerSets.errors) {
+                throw Error("Answer sets are not valid: "
+                    + (validateAnswerSets.errors[0].instancePath || "answer sets") + " " + validateAnswerSets.errors[0].message);
+            } else {
+                throw Error("Answer sets are not valid: unknown error");
+            }
+        }
         this.answerSets = answerSets;
     }
 
@@ -54,6 +69,9 @@ export class GraphParser {
      * @returns An array of objects. Each object has two properties: nodes and arch.
      */
     private buildOutput(options: any, outputFile: string|null = null) {
+        if (!this.answerSets.length) {
+            throw Error("Answer set list is empty");
+        }
         const nodes = GraphParser.checkAtomsSyntax(options.nodes);
         const arch = GraphParser.checkAtomsSyntax(options.arch);
         const node_atom = new RegExp(nodes[0]+'\(.+\)'), node_ariety = nodes[1];

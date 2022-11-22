@@ -24,7 +24,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node build/script.js fromfile ../input/demo-template.json ../input/demo-as.json ../output",
+    "start": "tsc && node build/script.js fromfile --template ./input/demo-template.json --as ./input/demo-as.json --output ./output",
     "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'"
   }
 }

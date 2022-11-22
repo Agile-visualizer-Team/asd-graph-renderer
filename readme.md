@@ -4,7 +4,15 @@
     npm test
     node build/script.js --help
 
-## How to generate an answer set graph rendering
+## How to render from file input
+
+    node build/script.js fromfile --template ./input/demo-template.json --as ./input/demo-as.json --output ./output
+
+## How to render from string input
+
+    node build/script.js fromstr --template '{\"nodes\":\"node/1\",\"arch\":\"arch/2\"}' --as '[{\"as\":[\"node(a)\",\"node(b)\",\"arch(a,b)\"]}]' --output ./output
+
+## How to render the demo answer set + template
 
 In order to generate a demo graph rendering, run `npm start`. The following json files will be used as input:
 
