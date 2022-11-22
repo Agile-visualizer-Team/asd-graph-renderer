@@ -37,23 +37,17 @@ export class GraphParser {
      * It takes a template object, which is validated with a schema, and a list of answer set.
      */
     constructor(template: any, answerSets: any[]) {
-        if (!validateTemplate(template)) {
-            if (validateTemplate.errors) {
-                throw Error("Template is not valid: "
-                    + (validateTemplate.errors[0].instancePath || "template") + " " + validateTemplate.errors[0].message);
-            } else {
-                throw Error("Template is not valid: unknown error");
-            }
+        if (!validateTemplate(template) && validateTemplate.errors) {
+            const error = validateTemplate.errors[0];
+            const path = error.instancePath || "template";
+            throw Error("Template is not valid: " + path + " " + error.message);
         }
         this.template = template;
 
-        if (!validateAnswerSets(answerSets)) {
-            if (validateAnswerSets.errors) {
-                throw Error("Answer sets are not valid: "
-                    + (validateAnswerSets.errors[0].instancePath || "answer sets") + " " + validateAnswerSets.errors[0].message);
-            } else {
-                throw Error("Answer sets are not valid: unknown error");
-            }
+        if (!validateAnswerSets(answerSets) && validateAnswerSets.errors) {
+            const error = validateAnswerSets.errors[0];
+            const path = error.instancePath || "answer sets";
+            throw Error("Answer sets are not valid: " + path + " " + error.message);
         }
         this.answerSets = answerSets;
     }
