@@ -40,7 +40,6 @@ export class GraphParser {
             }
         }
         this.template = template;
-
         this.answerSets = answerSets;
     }
 
