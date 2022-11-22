@@ -135,45 +135,4 @@ export class GraphParser {
 
         return node_string.split("/");
     }
-
-/**
- * It takes a template file, runs it through the ASP solver, and then parses the output into a list of
- * graphs
- * @returns An array of Graphs.
- */
-    toGraphs(): Graph[] {
-        const options = this.getJSON(this.template_path);
-        const answerSets = this.buildOutput(options);
-
-        return answerSets.map(as => {
-            const nodes: GraphNode[] = as.nodes.map(atom => {
-                let symbols = atom.split("(")[1].split(")")[0].split(",");
-                let name = symbols[0];
-                if (!name) {
-                    throw Error("Invalid node name: " + name);
-                }
-                let weight = symbols.length >= 2 ? symbols[1] : null;
-                return new GraphNode(name, weight);
-            });
-
-            const edges: GraphEdge[] = as.arch.map(atom => {
-                let symbols = atom.split("(")[1].split(")")[0].split(",");
-
-                let from = nodes.find(n => n.name === symbols[0]);
-                if (!from) {
-                    throw Error("Invalid arc from node: " + symbols[0]);
-                }
-
-                let destination = nodes.find(n => n.name === symbols[1]);
-                if (!destination) {
-                    throw Error("Invalid arc destination node: " + symbols[1]);
-                }
-
-                let weight = symbols.length >= 3 ? symbols[2] : null;
-                return new GraphEdge(from, destination, weight);
-            });
-
-            return new Graph(nodes, edges);
-        });
-    }
 }

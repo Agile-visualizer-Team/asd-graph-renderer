@@ -101,7 +101,11 @@ export class GraphParser {
                     throw Error("Invalid node name: " + name);
                 }
                 let weight = symbols.length >= 2 ? symbols[1] : null;
-                return new GraphNode(name, weight);
+
+                return <GraphNode>{
+                    name: name,
+                    weight: weight
+                };
             });
 
             const edges: GraphEdge[] = as.arch.map(atom => {
@@ -118,10 +122,18 @@ export class GraphParser {
                 }
 
                 let weight = symbols.length >= 3 ? symbols[2] : null;
-                return new GraphEdge(from, destination, weight);
+
+                return <GraphEdge>{
+                    from: from,
+                    destination: destination,
+                    weight: weight
+                };
             });
 
-            return new Graph(nodes, edges);
+            return <Graph>{
+                nodes: nodes,
+                edges: edges,
+            };
         });
     }
 }

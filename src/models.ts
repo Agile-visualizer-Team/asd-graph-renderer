@@ -1,32 +1,16 @@
 
-export class Graph {
-    readonly nodes: GraphNode[];
-    readonly edges: GraphEdge[];
-
-    constructor(nodes: GraphNode[], edges: GraphEdge[]) {
-        this.nodes = nodes;
-        this.edges = edges;
-    }
+export interface Graph {
+    nodes: GraphNode[];
+    edges: GraphEdge[];
 }
 
-export class GraphNode {
-    readonly name: string;
-    readonly weight: string|null;
-
-    constructor(label: string, weight: string|null = null) {
-        this.name = label;
-        this.weight = weight;
-    }
+export interface GraphNode {
+    name: string;
+    weight: string;
 }
 
-export class GraphEdge {
-    readonly from: GraphNode;
-    readonly destination: GraphNode;
-    readonly weight: string|null;
-
-    constructor(from: GraphNode, destination: GraphNode, weight: string|null = null) {
-        this.from = from;
-        this.destination = destination;
-        this.weight = weight;
-    }
+export interface GraphEdge {
+    from: GraphNode;
+    destination: GraphNode;
+    weight: string|null;
 }
