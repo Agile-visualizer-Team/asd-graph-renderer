@@ -1,0 +1,29 @@
+{
+    "template": "graph",
+    "nodes": {
+        "atom":{
+            "name": "node",
+            "variables": ["label","color"]
+        },
+        "style":{
+            "color":{
+                "root":"green",
+                "leaves":"purple",
+                "nonRoot":"blue"
+            }
+        }
+    },
+    "arch": {
+        "atom":{
+            "name": "arch",
+            "variables": ["from","to","weight","color"] 
+        },
+        "style":{
+            "color":{
+                "branch":"green",
+                "path":"yellow"
+            },
+            "oriented": true
+        }
+    }
+}

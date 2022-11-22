@@ -1,0 +1,43 @@
+/* 
+*   This is the expected template file that will be used to generate a graph.
+*   To be a valid graph-template it must have:
+*       - A pair "template": "graph" which describe what kind of rappresentation the user aspire to;
+*       - A key "nodes": containing all the information regarding the atom that will be used as a nodes-generator;
+*       - A key "arch": containing all the information regarding the atom that will be used as a arches-generator;
+*   These last two keys may contain:
+*       - A key "atom", which contains information about it, such as the name of the atom used and its variables. MANDATORY FIELD
+*       - A key "style", which describe how the nodes (root, leaves, nonRoot) or the arch will be rappresented. 
+*         The user can define the colors to be used and if the arch are oriented or not. Whether the style tag is defined, 
+*         all the information derived from the atom itself will be overwritten. Otherwise, if the atoms does not contains
+*         information regarding the style they are going to be used default value. OPTIONAL FIELD
+*/
+
+{
+    "template": "graph",
+    "nodes": {
+        "atom":{
+            "name": "node",
+            "variables": ["label","color"]
+        },
+        "style":{
+            "color":{
+                "root":"green",
+                "leaves":"purple",
+                "nonRoot":"blue"
+            }
+        }
+    },
+    "arch": {
+        "atom":{
+            "name": "arch",
+            "variables": ["from","to","weight","color"] 
+        },
+        "style":{
+            "color":{
+                "branch":"green",
+                "path":"yellow"
+            },
+            "oriented": true
+        }
+    }
+}
