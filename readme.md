@@ -2,7 +2,7 @@
     npm install
     npm start
     npm test
-    node build/index.js --help
+    node build/script.js --help
 
 ## How to generate an answer set graph rendering
 
@@ -58,4 +58,4 @@ while the second one will be:
 
 ![demo as 2](demo-graph-2.png "Demo graph from answer set 2")
 
-Run `node build/index.js --help` to discover how to pass custom input file and output path.
+Run `node build/script.js --help` to discover how to pass custom input file and output path.
