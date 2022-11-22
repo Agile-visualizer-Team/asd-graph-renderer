@@ -23,5 +23,5 @@ const TEMPLATE_AS = {
     type: "array"
 };
 
-export const validateTemplate = new Ajv().compile(TEMPLATE_SCHEMA);
-export const validateAnswerSets = new Ajv().compile(TEMPLATE_AS);
+export const validateTemplateSchema = new Ajv().compile(TEMPLATE_SCHEMA);
+export const validateAnswerSetsSchema = new Ajv().compile(TEMPLATE_AS);
