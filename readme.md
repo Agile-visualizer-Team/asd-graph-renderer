@@ -16,9 +16,9 @@
     node build/script.js fromstr
         --template '{\"nodes\":\"node/1\",\"arch\":\"arch/2\"}'
         --as '[{\"as\":[\"node(a)\",\"node(b)\",\"arch(a,b)\"]}]'
---output ./output
+        --output ./output
 
-## How to render the demo graph generator
+## Demo
 
 In order to generate a demo graph rendering, run `npm start`. The following json files will be used as input:
 
@@ -71,5 +71,3 @@ The first answer set will generate an image like this:
 while the second one will be:
 
 ![demo as 2](demo-graph-2.png "Demo graph from answer set 2")
-
-Run `node build/script.js --help` to discover how to pass custom input file and output path.
