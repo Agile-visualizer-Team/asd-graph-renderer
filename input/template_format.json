@@ -2,7 +2,7 @@
     "template": "graph",
     "nodes": {
         "atom":{
-            "name": "node",
+            "name": "dass",
             "variables": ["label","color"]
         },
         "style":{
@@ -13,9 +13,9 @@
             }
         }
     },
-    "arch": {
+    "edge": {
         "atom":{
-            "name": "arch",
+            "name": "edge",
             "variables": ["from","to","weight","color"] 
         },
         "style":{

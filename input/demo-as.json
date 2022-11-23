@@ -8,13 +8,13 @@
             "node(e)",
             "node(f)",
             "node(g)",
-            "arch(a,b,10)",
-            "arch(a,c,5)",
-            "arch(b,d,6)",
-            "arch(b,e,7)",
-            "arch(b,f,5)",
-            "arch(c,d,4)",
-            "arch(d,g,3)"
+            "edge(a,b,10)",
+            "edge(a,c,5)",
+            "edge(b,d,6)",
+            "edge(b,e,7)",
+            "edge(b,f,5)",
+            "edge(c,d,4)",
+            "edge(d,g,3)"
         ],
         "cost" : "1@2"
     },
@@ -23,9 +23,9 @@
             "node(a)",
             "node(b)",
             "node(g)",
-            "arch(a,b,10)",
-            "arch(b,g,5)",
-            "arch(a,g,3)"
+            "edge(a,b,10)",
+            "edge(b,g,5)",
+            "edge(a,g,3)"
         ],
         "cost" : "1@2"
     }

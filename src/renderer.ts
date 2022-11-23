@@ -47,8 +47,8 @@ export class GraphRenderer {
             });
         });
 
-        // TODO archi colorabili
-        // TODO archi non orientati
+        // TODO edgei colorabili
+        // TODO edgei non orientati
         graph.edges.forEach(e => {
             elements.push({
                 data: {
