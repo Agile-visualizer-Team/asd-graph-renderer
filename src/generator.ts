@@ -1,4 +1,4 @@
-import {GraphRenderer, OnRenderingComplete} from "./renderer";
+import {GraphRenderer} from "./renderer";
 import {Graph} from "./models";
 import fs from "fs";
 import {VSCODE_THEME} from "./renderer-themes";
@@ -24,22 +24,22 @@ export class GraphImagesGenerator {
         renderer.layout = GraphRendererLayout.Tree;
 
         const parser = new GraphParser(this.template, this.answerSets);
-        parser.answerSetsToGraphs().forEach((graph: Graph, index) => {
+        const graphs = parser.answerSetsToGraphs();
+
+        renderer.render(graphs, (index, graph) => {
             if (callbacks) {
                 callbacks.onBeforeRendering(graph, index);
             }
-
-            renderer.render(graph).then((img: OnRenderingComplete) => {
-                if (callbacks) {
-                    callbacks.onAfterRendering(graph, index, img.base64Data);
-                }
-                const filename = 'graph-' + index + '-' + Date.now() + '.png';
-                const filepath = this.outputDirPath + '/' + filename;
-                fs.writeFileSync(filepath, img.base64Data, 'base64');
-                if (callbacks) {
-                    callbacks.onFileSaved(graph, index, filename);
-                }
-            });
+        }, (index, graph, base64Data) => {
+            if (callbacks) {
+                callbacks.onAfterRendering(graph, index, base64Data);
+            }
+            const filename = 'graph-' + index + '-' + Date.now() + '.png';
+            const filepath = this.outputDirPath + '/' + filename;
+            fs.writeFileSync(filepath, base64Data, 'base64');
+            if (callbacks) {
+                callbacks.onFileSaved(graph, index, filename);
+            }
         });
     }
 }

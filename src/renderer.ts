@@ -7,10 +7,10 @@ const cytosnap = require('cytosnap');
 cytosnap.use(['cytoscape-dagre', 'cytoscape-klay']);
 
 export class GraphRenderer {
-    width: number = 800;
-    height: number = 600;
-    theme: GraphRendererTheme = VSCODE_THEME;
-    layout: GraphRendererLayout = GraphRendererLayout.Tree;
+    public width: number = 800;
+    public height: number = 600;
+    public theme: GraphRendererTheme = VSCODE_THEME;
+    public layout: GraphRendererLayout = GraphRendererLayout.Tree;
 
     private generateCytoscapeElements(graph: Graph): object[] {
         const elements: any[] = [];
@@ -154,13 +154,18 @@ export class GraphRenderer {
         ];
     }
 
-    render(graph: Graph): Promise<OnRenderingComplete> {
+    render(graphs: Graph[],
+           onGraphRenderingStart: (index: number, graph: Graph) => void,
+           onGraphRendered: (index: number, graph: Graph, base64Data: string) => void) {
         const that = this;
+        const snap = cytosnap();
 
-        return new Promise<OnRenderingComplete>((resolve) => {
-            const snap = cytosnap(); // TODO testare su ubuntu
-            snap.start().then(function () {
-                return snap.shot({
+        snap.start().then(() => {
+            const renderingPromises: Promise<any>[] = [];
+
+            graphs.forEach((graph, index) => {
+                onGraphRenderingStart(index, graph);
+                let renderingPromise = snap.shot({
                     elements: that.generateCytoscapeElements(graph),
                     layout: that.generateCytoscapeLayout(),
                     style: that.generateCytoscapeStyle(),
@@ -170,17 +175,20 @@ export class GraphRenderer {
                     width: that.width,
                     height: that.height,
                     background: that.theme.backgroundColor
+                }).then(function (base64Data: any) {
+                    onGraphRendered(index, graph, base64Data);
                 });
-            }).then(function (img: any) {
-                snap.stop();
-                resolve(<OnRenderingComplete>{
-                    base64Data: img
-                } as OnRenderingComplete);
+                renderingPromises.push(renderingPromise);
             });
-        })
+
+            Promise.all(renderingPromises).then(() => {
+                snap.stop();
+            });
+        });
     }
 }
 
 export interface OnRenderingComplete {
+    index: number;
     base64Data: string;
 }
