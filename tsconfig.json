@@ -2,7 +2,8 @@
     "exclude": [
         "./node_modules",
         "./build",
-        "./test"
+        "./test",
+        "test.js"
     ],
     "compilerOptions": {
         "target": "es6",
