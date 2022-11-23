@@ -162,6 +162,7 @@ export class GraphRenderer {
             args: ['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage'] // ubuntu fix
         });
 
+        // TODo aggiungere catch per gestire le promise fallite
         snap.start().then(() => {
             const renderedPromises: Promise<any>[] = [];
 
