@@ -31,7 +31,8 @@ export interface GraphRendererNodeTheme {
     }
 }
 
-const VSCODE_THEME_FONT = 'Cascadia Code';
+const VSCODE_THEME_FONT = 'Cascadia Code'; // TODO fix: se non c'è il font installato non viene renderizzato
+
 export const VSCODE_THEME = {
     backgroundColor: '#1e1e1e',
     node: <GraphRendererNodeTheme>{
