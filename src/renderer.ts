@@ -155,16 +155,18 @@ export class GraphRenderer {
     }
 
     render(graphs: Graph[],
-           onGraphRenderingStart: (index: number, graph: Graph) => void,
-           onGraphRendered: (index: number, graph: Graph, base64Data: string) => void) {
+           onRenderingStart: (index: number, graph: Graph) => void,
+           onRendered: (index: number, graph: Graph, base64Data: string) => void) {
         const that = this;
-        const snap = cytosnap();
+        const snap = cytosnap({
+            args: ['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']
+        });
 
         snap.start().then(() => {
-            const renderingPromises: Promise<any>[] = [];
+            const renderedPromises: Promise<any>[] = [];
 
             graphs.forEach((graph, index) => {
-                onGraphRenderingStart(index, graph);
+                onRenderingStart(index, graph);
                 let renderingPromise = snap.shot({
                     elements: that.generateCytoscapeElements(graph),
                     layout: that.generateCytoscapeLayout(),
@@ -176,12 +178,12 @@ export class GraphRenderer {
                     height: that.height,
                     background: that.theme.backgroundColor
                 }).then(function (base64Data: any) {
-                    onGraphRendered(index, graph, base64Data);
+                    onRendered(index, graph, base64Data);
                 });
-                renderingPromises.push(renderingPromise);
+                renderedPromises.push(renderingPromise);
             });
 
-            Promise.all(renderingPromises).then(() => {
+            Promise.all(renderedPromises).then(() => {
                 snap.stop();
             });
         });
