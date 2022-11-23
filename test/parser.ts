@@ -11,7 +11,7 @@ const GOOD_AS = [
     cost: "1@2 2@3",
   },
   {
-    as: ["node(7)", "arch(7,7)"],
+    as: ["node(7)", "edge(7,7)"],
     cost: "1@2",
   },
 ];
@@ -19,7 +19,7 @@ const GOOD_AS = [
 /* A constant that is used to test the parser. */
 const GOOD_TEMPLATE = {
   nodes: "node/1",
-  arch: "arch/2",
+  edge: "edge/2",
 };
 
 /**
@@ -38,15 +38,15 @@ function graph_Fixture(template: any = GOOD_TEMPLATE,wrapper: any = GOOD_AS,flag
   return JSON.stringify(out);
 }
 /**
- * It takes a list of nodes and a list of archs, and returns a list of objects, each of which has a
- * list of nodes and a list of archs
+ * It takes a list of nodes and a list of edges, and returns a list of objects, each of which has a
+ * list of nodes and a list of edges
  * @returns The expected result.
  * </code>
  */
 function get_expected() {
   return JSON.stringify([
-    { nodes: ["node(1)"], arch: [] },
-    { nodes: ["node(7)"], arch: ["arch(7,7)"] },
+    { nodes: ["node(1)"], edge: [] },
+    { nodes: ["node(7)"], edge: ["edge(7,7)"] },
   ]);
 }
 
@@ -68,7 +68,7 @@ describe("Parser_Test", () => {
   it("should throw an exception if the template file is not well formatted", () => {
     sinon.stub(fs, "existsSync").returns(true);
     let g = new GraphParser("test1","test2");
-    sinon.stub(g, <any>"getJSON").returns({ nodes: "asf_3", arch: "try&2" });
+    sinon.stub(g, <any>"getJSON").returns({ nodes: "asf_3", edge: "try&2" });
     expect(function () {
       g.getAnswerSet();
     }).to.throw(

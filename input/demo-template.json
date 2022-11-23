@@ -1,5 +1,5 @@
 {
     "template": "graph",
     "nodes": "node/1",
-    "arch": "arch/3"
+    "edge": "edge/3"
 }

@@ -9,10 +9,58 @@ const TEMPLATE_SCHEMA = {
     properties: {
         template: {type: "string"},
         nodes: {type: "string"},
-        arch: {type: "string"},
+        edge: {type: "string"},
     },
-    required: ["nodes", "arch"]
+    required: ["nodes", "edge"]
 };
+
+// const NEW_TEMPLATE_SCHEMA = {
+//     type: "object",
+//     properties: {
+//         template: {type: "string"},
+//         nodes:{
+//             type:"object",
+//             properties: {
+//                 name: {type: "string"},
+//                 variables: {type: ["string"]}
+//             }
+//         },
+//         style:{
+//             type: "object",
+//             properties:{
+//                 color: {
+//                     type:"object",
+//                     properties: {
+//                         root: {type: "string"},
+//                         leaves: {type: "string"},
+//                         nonRoot: {type: "string"}
+//                     }
+//                 }
+//             }
+//         },
+//         edge:{
+//             type:"object",
+//             properties: {
+//                 name: {type: "string"},
+//                 variables: {type: ["string"]}
+//             }
+//         },
+//         style:{
+//             type: "object",
+//             properties:{
+//                 color: {
+//                     type:"object",
+//                     properties: {
+//                         root: {type: "string"},
+//                         leaves: {type: "string"},
+//                         nonRoot: {type: "string"}
+//                     }
+//                 }
+//             }
+//         }
+//     },
+//     required: ["nodes", "edge"]
+// };
 
 const ANSWER_SETS_SCHEMA = {
     type: "array"

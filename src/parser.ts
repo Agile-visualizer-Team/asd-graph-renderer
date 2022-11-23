@@ -29,23 +29,23 @@ export class GraphParser {
     }
 
     /**
-     * It takes a JSON object with two properties, nodes and arch, and returns an array of JSON objects
-     * with two properties, nodes and arch. The nodes and arch properties are arrays of strings. The
+     * It takes a JSON object with two properties, nodes and edge, and returns an array of JSON objects
+     * with two properties, nodes and edge. The nodes and edge properties are arrays of strings. The
      * strings are atoms. The atoms are extracted from the answer sets of a dlv program. The dlv program is
      * generated from the JSON object
      * @param {any} options - {
      * @param {string|null} [outputFile=null] - the file to write the output to. If null, the output is
      * returned as a string.
-     * @returns An array of objects. Each object has two properties: nodes and arch.
+     * @returns An array of objects. Each object has two properties: nodes and edge.
      */
     private buildOutput(options: any, outputFile: string|null = null) {
         if (!this.answerSets.length) {
             throw Error("Answer set list is empty");
         }
         const nodes = GraphParser.checkAtomsSyntax(options.nodes);
-        const arch = GraphParser.checkAtomsSyntax(options.arch);
+        const edge = GraphParser.checkAtomsSyntax(options.edge);
         const node_atom = new RegExp(nodes[0]+'\(.+\)'), node_ariety = nodes[1];
-        const arch_atom = new RegExp(arch[0]+'\(.+\)'), arch_ariety = arch[1];
+        const edge_atom = new RegExp(edge[0]+'\(.+\)'), edge_ariety = edge[1];
         let output = [];
         for (var i = 0; i < this.answerSets.length; ++i) {
             const n: string[] = [];
@@ -54,11 +54,11 @@ export class GraphParser {
             for (var j = 0; j < _as.length; ++j) {
                 if (node_atom.test(_as[j]) && _as[j].split(",").length == node_ariety) 
                     n.push(_as[j]);               
-                else if (arch_atom.test(_as[j]) && _as[j].split(",").length == arch_ariety)
+                else if (edge_atom.test(_as[j]) && _as[j].split(",").length == edge_ariety)
                     a.push(_as[j]);
             }
             if (n.length != 0) {
-                output.push({"nodes": n, "arch": a})
+                output.push({"nodes": n, "edge": a})
             }
         }
         if (outputFile) {
@@ -103,7 +103,7 @@ export class GraphParser {
                 };
             });
 
-            const edges: GraphEdge[] = as.arch.map(atom => {
+            const edges: GraphEdge[] = as.edge.map(atom => {
                 let variables = atom.split("(")[1].split(")")[0].split(",");
                 let from = variables[0];
                 let destination = variables[1];

@@ -10,7 +10,7 @@
 
 ## How to render from string input
 
-    node build/script.js fromstr --template '{\"nodes\":\"node/1\",\"arch\":\"arch/2\"}' --as '[{\"as\":[\"node(a)\",\"node(b)\",\"arch(a,b)\"]}]' --output ./output
+    node build/script.js fromstr --template '{\"nodes\":\"node/1\",\"edge\":\"edge/2\"}' --as '[{\"as\":[\"node(a)\",\"node(b)\",\"edge(a,b)\"]}]' --output ./output
 
 ## Demo
 
@@ -21,7 +21,7 @@ In order to generate a demo graph rendering, run `npm start`. The following json
     {
         "template": "graph",
         "nodes": "node/1",
-        "arch": "arch/3"
+        "edge": "edge/3"
     }
 
 **Answer sets:** (`input/demo-answer-set.json`)
@@ -33,13 +33,13 @@ In order to generate a demo graph rendering, run `npm start`. The following json
                 "node(c)", "node(d)",
                 "node(e)", "node(f)",
                 "node(g)",
-                "arch(a,b,10)",
-                "arch(a,c,5)",
-                "arch(b,d,6)",
-                "arch(b,e,7)",
-                "arch(b,f,5)",
-                "arch(c,d,4)",
-                "arch(d,g,3)"
+                "edge(a,b,10)",
+                "edge(a,c,5)",
+                "edge(b,d,6)",
+                "edge(b,e,7)",
+                "edge(b,f,5)",
+                "edge(c,d,4)",
+                "edge(d,g,3)"
             ],
             "cost" : "1@2"
         },
@@ -48,9 +48,9 @@ In order to generate a demo graph rendering, run `npm start`. The following json
                 "node(a)",
                 "node(b)",
                 "node(g)",
-                "arch(a,b,10)",
-                "arch(b,g,5)",
-                "arch(a,g,3)"
+                "edge(a,b,10)",
+                "edge(b,g,5)",
+                "edge(a,g,3)"
             ],
             "cost" : "1@2"
         }

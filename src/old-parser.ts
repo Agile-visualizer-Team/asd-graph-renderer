@@ -66,20 +66,20 @@ export class GraphParser {
     }
 
 /**
- * It takes a JSON object with two properties, nodes and arch, and returns an array of JSON objects
- * with two properties, nodes and arch. The nodes and arch properties are arrays of strings. The
+ * It takes a JSON object with two properties, nodes and edge, and returns an array of JSON objects
+ * with two properties, nodes and edge. The nodes and edge properties are arrays of strings. The
  * strings are atoms. The atoms are extracted from the answer sets of a dlv program. The dlv program is
  * generated from the JSON object
  * @param {any} options - {
  * @param {string|null} [outputFile=null] - the file to write the output to. If null, the output is
  * returned as a string.
- * @returns An array of objects. Each object has two properties: nodes and arch.
+ * @returns An array of objects. Each object has two properties: nodes and edge.
  */
     private buildOutput(options: any, outputFile: string|null = null) {
         const nodes = this.checkAtomsSyntax(options.nodes);
-        const arch = this.checkAtomsSyntax(options.arch);
+        const edge = this.checkAtomsSyntax(options.edge);
         const node_atom = new RegExp(nodes[0]+'\(.+\)'), node_ariety = nodes[1];
-        const arch_atom = new RegExp(arch[0]+'\(.+\)'), arch_ariety = arch[1];
+        const edge_atom = new RegExp(edge[0]+'\(.+\)'), edge_ariety = edge[1];
         const answerSet = this.getJSON(this.dlv_path);
         let output = [];
         for (var i = 0; i < answerSet.length; ++i) {
@@ -89,11 +89,11 @@ export class GraphParser {
             for (var j = 0; j < _as.length; ++j) {
                 if (node_atom.test(_as[j]) && _as[j].split(",").length == node_ariety) 
                     n.push(_as[j]);               
-                else if (arch_atom.test(_as[j]) && _as[j].split(",").length == arch_ariety)
+                else if (edge_atom.test(_as[j]) && _as[j].split(",").length == edge_ariety)
                     a.push(_as[j]);
             }
             if (n.length != 0) {
-                output.push({"nodes": n, "arch": a})
+                output.push({"nodes": n, "edge": a})
             }
         }
         if (outputFile) {
