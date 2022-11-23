@@ -36,6 +36,7 @@ export class GraphImagesGenerator {
             }
             const filename = 'graph-' + index + '-' + Date.now() + '.png';
             const filepath = this.outputDirPath + '/' + filename;
+            // TODO fix: se la cartella outputDirPath non esiste, va creata
             fs.writeFileSync(filepath, base64Data, 'base64');
             if (callbacks) {
                 callbacks.onFileSaved(graph, index, filename);
