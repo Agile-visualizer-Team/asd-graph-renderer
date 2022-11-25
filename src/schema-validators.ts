@@ -14,53 +14,64 @@ const TEMPLATE_SCHEMA = {
     required: ["nodes", "edge"]
 };
 
-// const NEW_TEMPLATE_SCHEMA = {
-//     type: "object",
-//     properties: {
-//         template: {type: "string"},
-//         nodes:{
-//             type:"object",
-//             properties: {
-//                 name: {type: "string"},
-//                 variables: {type: ["string"]}
-//             }
-//         },
-//         style:{
-//             type: "object",
-//             properties:{
-//                 color: {
-//                     type:"object",
-//                     properties: {
-//                         root: {type: "string"},
-//                         leaves: {type: "string"},
-//                         nonRoot: {type: "string"}
-//                     }
-//                 }
-//             }
-//         },
-//         edge:{
-//             type:"object",
-//             properties: {
-//                 name: {type: "string"},
-//                 variables: {type: ["string"]}
-//             }
-//         },
-//         style:{
-//             type: "object",
-//             properties:{
-//                 color: {
-//                     type:"object",
-//                     properties: {
-//                         root: {type: "string"},
-//                         leaves: {type: "string"},
-//                         nonRoot: {type: "string"}
-//                     }
-//                 }
-//             }
-//         }
-//     },
-//     required: ["nodes", "edge"]
-// };
+const NEW_TEMPLATE_SCHEMA = {
+    type: "object",
+    properties: {
+        template: { type: "string" },
+        nodes: {
+            type: "object",
+            properties: {
+                atom: {
+                    type: "object",
+                    properties: {
+                        name: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9\_]*" },
+                        variables: { type: "array",uniqueItems: true, items: {type:"string"}}
+                    }
+                },
+                style: {
+                    type: "object",
+                    properties: {
+                        color: {
+                            type: "object",
+                            properties: {
+                                root: { type: "string", pattern: "^[A-Za-z]+"},
+                                leaves: { type: "string", pattern: "^[A-Za-z]+" },
+                                nonRoot: { type: "string", pattern: "^[A-Za-z]+" }
+                            }
+                        }
+                    }
+                }
+            },required: ["atom"]
+        },
+        edge: {
+          type: "object",
+          properties: {
+              atom: {
+                  type: "object",
+                  properties: {
+                      name: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9\_]*"},
+                      variables: { type: "array",uniqueItems: true, items: {type:"string"}}
+                  }
+              },
+              style: {
+                  type: "object",
+                  properties: {
+                      color: {
+                          type: "object",
+                          properties: {
+                              branch: { type: "string", pattern: "^[A-Za-z]+" },
+                              path: { type: "string", pattern: "^[A-Za-z]+" }
+                          },
+                          required:["branch"]
+                      },
+                      oriented: {type:"boolean"}
+                  }
+              }
+          },required: ["atom"]
+      }
+    },
+    required: ["template", "nodes","edge"]
+  };
 
 const ANSWER_SETS_SCHEMA = {
     type: "array"
