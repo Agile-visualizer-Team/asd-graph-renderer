@@ -1,15 +1,25 @@
 import fs from 'fs'
-import {Graph, GraphEdge, GraphNode} from "./models";
+import {createGraphEdge, createGraphNode, Graph, GraphEdge, GraphNode} from "./models";
 import {validateAnswerSetsSchema, validateTemplateSchema} from "./schema-validators";
 import assert from "assert";
 
 export class GraphParser {
     private readonly template: any;
     private readonly answerSets: any[];
-
+    private readonly MANDATORY_NODE_VARIABLE: string[] = ["label"];
+    private readonly MANDATORY_EDGE_VARIABLE: string[] = ["from", "to"];
     /**
      * It takes a template object, which is validated with a schema, and an array of answer set.
      */
+    private check_variables_name(variables: string[],mandatory_variables: string[]){
+        //TODO Remember to make case insensitive
+        const check = mandatory_variables.every(value =>{
+            return variables.includes(value);
+        })
+        if(!check)
+            throw Error(`Variables provided: \"${variables}\" must contain \"${mandatory_variables}\"`)
+    }
+
     constructor(template: any, answerSets: any[]) {
         if (!validateTemplateSchema(template)) {
             assert(validateTemplateSchema.errors);
@@ -18,12 +28,17 @@ export class GraphParser {
             throw Error("Template is not valid: " + path + " " + error.message);
         }
         this.template = template;
+        this.check_variables_name(this.template.nodes.atom.variables,this.MANDATORY_NODE_VARIABLE);
+        this.check_variables_name(this.template.edge.atom.variables, this.MANDATORY_EDGE_VARIABLE);
 
         if (!validateAnswerSetsSchema(answerSets)) {
             assert(validateTemplateSchema.errors);
             const error = validateTemplateSchema.errors[0];
             const path = error.instancePath || "answer sets";
             throw Error("Answer sets are not valid: " + path + " " + error.message);
+        }
+        if (!answerSets.length) {
+            throw Error("Answer set list is empty");
         }
         this.answerSets = answerSets;
     }
@@ -38,82 +53,68 @@ export class GraphParser {
      * returned as a string.
      * @returns An array of objects. Each object has two properties: nodes and edge.
      */
-    private buildOutput(options: any, outputFile: string|null = null) {
-        if (!this.answerSets.length) {
-            throw Error("Answer set list is empty");
-        }
-        const nodes = GraphParser.checkAtomsSyntax(options.nodes);
-        const edge = GraphParser.checkAtomsSyntax(options.edge);
-        const node_atom = new RegExp(nodes[0]+'\(.+\)'), node_ariety = nodes[1];
-        const edge_atom = new RegExp(edge[0]+'\(.+\)'), edge_ariety = edge[1];
-        let output = [];
-        for (var i = 0; i < this.answerSets.length; ++i) {
+    private oldbuildOutput(options: any, outputFile: string|null = null) {    
+        const nodes = options.node;
+        const edge = options.edge;
+        const node_atom = new RegExp(nodes[0]+'\(.+\)'), node_ariety = +nodes[1];
+        const edge_atom = new RegExp(edge[0]+'\(.+\)'), edge_ariety = +edge[1];
+        let output: any = [];
+        this.answerSets.forEach( answerSet => {
             const n: string[] = [];
             const a: string[] = [];
-            let _as = this.answerSets[i].as;
-            for (var j = 0; j < _as.length; ++j) {
-                if (node_atom.test(_as[j]) && _as[j].split(",").length == node_ariety) 
-                    n.push(_as[j]);               
-                else if (edge_atom.test(_as[j]) && _as[j].split(",").length == edge_ariety)
-                    a.push(_as[j]);
-            }
+            answerSet.as.forEach((atom: string) => {
+                if(node_atom.test(atom) && atom.split(",").length == node_ariety)
+                    n.push(atom);
+                else if(edge_atom.test(atom) && atom.split(",").length == edge_ariety)
+                    a.push(atom);
+            })
             if (n.length != 0) {
                 output.push({"nodes": n, "edge": a})
             }
-        }
+        })
         if (outputFile) {
             fs.writeFileSync(outputFile, JSON.stringify(output, null, 4));
         }
         return output
     }
 
-    /**
-     * "If the node_string doesn't match the regex, throw an error. Otherwise, return the node_string split
-     * by the slash."
-     *
-     * The regex is a simple check to make sure the node_string is in the format of "node/1".
-     *
-     * The function is private because it's only used internally by the class.
-     *
-     * @param {string} node_string - The string that is being checked for syntax.
-     * @returns The return value is an array of strings.
-     */
-    private static checkAtomsSyntax(node_string: string) {
-        if (!/^\S+\/\d+$/.test(node_string)) {
-            throw new Error("Template Error: The atom syntax is not syntactically right. Please check it: " + node_string);
+    private buildOutput(options: any, outputFile: string|null = null){
+        const node_atom = new RegExp(options.nodes.atom.name+'\(.+\)'), node_ariety = +options.nodes.atom.variables.length;
+        const edge_atom = new RegExp(options.edge.atom.name+'\(.+\)'), edge_ariety = +options.edge.atom.variables.length;
+        let output: any = [];
+        this.answerSets.forEach( answerSet => {
+            const n: string[] = [];
+            const a: string[] = [];
+            answerSet.as.forEach((atom: string) => {
+                if(node_atom.test(atom) && atom.split(",").length == node_ariety)
+                    n.push(atom);
+                else if(edge_atom.test(atom) && atom.split(",").length == edge_ariety)
+                    a.push(atom);
+            })
+            if (n.length != 0) {
+                output.push({"nodes": n, "edge": a})
+            }
+        })
+        if (outputFile) {
+            fs.writeFileSync(outputFile, JSON.stringify(output, null, 4));
         }
-
-        return node_string.split("/");
+        return output
     }
-
     /**
      * It takes a template, runs it through the ASP solver, and then parses the output into a list of graphs
      * @returns An array of Graphs.
      */
     answerSetsToGraphs(): Graph[] {
         const answerSets = this.buildOutput(this.template);
-
-        return answerSets.map(as => {
-            const nodes: GraphNode[] = as.nodes.map(atom => {
-                let variables = atom.split("(")[1].split(")")[0].split(",");
-                let name = variables[0];
-
-                return <GraphNode>{
-                    name: name
-                };
+        const node_variables = this.get_node_variables(this.template.nodes.atom.variables);
+        const edge_variables = this.get_edge_variables(this.template.edge.atom.variables);
+        return answerSets.map((as:any) => {
+            const nodes: GraphNode[] = as.nodes.map((atom:string) => {
+                return this.create_node(atom,node_variables);
             });
 
-            const edges: GraphEdge[] = as.edge.map(atom => {
-                let variables = atom.split("(")[1].split(")")[0].split(",");
-                let from = variables[0];
-                let destination = variables[1];
-                let weight = variables.length >= 3 ? variables[2] : null;
-
-                return <GraphEdge>{
-                    from: from,
-                    destination: destination,
-                    weight: weight
-                };
+            const edges: GraphEdge[] = as.edge.map((atom:string) => {
+                return this.create_edge(atom, edge_variables);
             });
 
             return <Graph>{
@@ -121,5 +122,39 @@ export class GraphParser {
                 edges: edges,
             };
         });
+    }
+
+    private get_node_variables(variables: string[]){
+        return {
+            name: variables.indexOf('label'),
+            color: variables.indexOf('color')
+        }
+    }
+
+    private get_edge_variables(variables: string[]){
+        return {
+            from: variables.indexOf('from'),
+            to: variables.indexOf('to'),
+            weight: variables.indexOf('weight'),
+            color: variables.indexOf('color')
+        }
+    }
+
+    private create_node(node: string, variables: any): GraphNode{
+        let node_var = node.split("(")[1].split(")")[0].split(",");
+        const node_name = node_var[variables['name']]
+        //TODO Check if in atom there is a color. If yes must set the color of each node accordingly.
+        return "style" in this.template.nodes ? createGraphNode({name: node_name, color: this.template.nodes.style.color}):
+                                                createGraphNode({name: node_name});
+    }
+
+    private create_edge(edge: string, variables: any): GraphEdge{   
+        let edge_var = edge.split("(")[1].split(")")[0].split(",");
+        const edge_from = edge_var[variables['from']];
+        const edge_to = edge_var[variables['to']];
+        const edge_weight = variables['weight'] != -1? edge_var[variables['weight']]: null;
+        //TODO Check if in atom there is a color. If yes must set the color of each edge accordingly.
+        return "style" in this.template.nodes ? createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight, color: this.template.edge.style.color}):
+                                                createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight});
     }
 }

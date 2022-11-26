@@ -2,12 +2,12 @@
     "template": "graph",
     "nodes": {
         "atom":{
-            "name": "dass",
-            "variables": ["label","color"]
+            "name": "node",
+            "variables": ["label"]
         },
         "style":{
             "color":{
-                "root":"green",
+                "root":"yellow",
                 "leaves":"purple",
                 "nonRoot":"blue"
             }
@@ -16,7 +16,7 @@
     "edge": {
         "atom":{
             "name": "edge",
-            "variables": ["from","to","weight","color"] 
+            "variables": ["from","to","weight"] 
         },
         "style":{
             "color":{

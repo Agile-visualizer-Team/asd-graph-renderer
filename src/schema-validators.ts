@@ -25,7 +25,7 @@ const NEW_TEMPLATE_SCHEMA = {
                     type: "object",
                     properties: {
                         name: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9\_]*" },
-                        variables: { type: "array",uniqueItems: true, items: {type:"string"}}
+                        variables: { type: "array",uniqueItems: true, items: {type:"string"}, minItems: 1}
                     }
                 },
                 style: {
@@ -50,7 +50,7 @@ const NEW_TEMPLATE_SCHEMA = {
                   type: "object",
                   properties: {
                       name: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9\_]*"},
-                      variables: { type: "array",uniqueItems: true, items: {type:"string"}}
+                      variables: { type: "array",uniqueItems: true, items: {type:"string"}, minItems: 2}
                   }
               },
               style: {
@@ -77,5 +77,5 @@ const ANSWER_SETS_SCHEMA = {
     type: "array"
 };
 
-export const validateTemplateSchema = new Ajv().compile(TEMPLATE_SCHEMA);
+export const validateTemplateSchema = new Ajv().compile(NEW_TEMPLATE_SCHEMA);
 export const validateAnswerSetsSchema = new Ajv().compile(ANSWER_SETS_SCHEMA);
