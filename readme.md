@@ -1,7 +1,8 @@
 ## Commands
     npm install
-    npm start
-    npm test
+    npm run build
+    npm run start
+    npm run test
     node build/script.js --help
 
 ## How to render from file input
