@@ -34,9 +34,9 @@ const NEW_TEMPLATE_SCHEMA = {
                         color: {
                             type: "object",
                             properties: {
-                                root: { type: "string", pattern: "^[A-Za-z]+"},
-                                leaves: { type: "string", pattern: "^[A-Za-z]+" },
-                                nonRoot: { type: "string", pattern: "^[A-Za-z]+" }
+                                root: { type: "string", default:"green", pattern: "^[A-Za-z]+"},
+                                leaves: { type: "string", default:"magenta", pattern: "^[A-Za-z]+" },
+                                nonRoot: { type: "string", default:"blue", pattern: "^[A-Za-z]+" }
                             }
                         }
                     }
@@ -49,8 +49,8 @@ const NEW_TEMPLATE_SCHEMA = {
               atom: {
                   type: "object",
                   properties: {
-                      name: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9\_]*"},
-                      variables: { type: "array",uniqueItems: true, items: {type:"string"}, minItems: 2}
+                      name: { type: "string", default:"edge", pattern: "^[A-Za-z][A-Za-z0-9\_]*"},
+                      variables: { type: "array", default:["from","to"],uniqueItems: true, items: {type:"string"}, minItems: 2}
                   }
               },
               style: {
@@ -59,12 +59,12 @@ const NEW_TEMPLATE_SCHEMA = {
                       color: {
                           type: "object",
                           properties: {
-                              branch: { type: "string", pattern: "^[A-Za-z]+" },
-                              path: { type: "string", pattern: "^[A-Za-z]+" }
+                              branch: { type: "string", default:"blue", pattern: "^[A-Za-z]+" },
+                              path: { type: "string", default:"yellow", pattern: "^[A-Za-z]+" }
                           },
                           required:["branch"]
                       },
-                      oriented: {type:"boolean"}
+                      oriented: {type:"boolean", default: true}
                   }
               }
           },required: ["atom"]
