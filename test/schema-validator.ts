@@ -131,7 +131,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
     it("should use default value if not provided", () =>{
         validateTemplateSchema(RIGHT_SCHEMA);
         expect((<any>RIGHT_SCHEMA).nodes.atom.name).eq("node");
-        expect((<any>RIGHT_SCHEMA).nodes.atom.variables).eq(["label"]);
+        expect((<any>RIGHT_SCHEMA).nodes.atom.variables).deep.equal(['label']);
     })
 });
 

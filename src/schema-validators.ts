@@ -77,5 +77,5 @@ const ANSWER_SETS_SCHEMA = {
     type: "array"
 };
 
-export const validateTemplateSchema = new Ajv().compile(NEW_TEMPLATE_SCHEMA);
+export const validateTemplateSchema = new Ajv({useDefaults:true}).compile(NEW_TEMPLATE_SCHEMA);
 export const validateAnswerSetsSchema = new Ajv().compile(ANSWER_SETS_SCHEMA);
