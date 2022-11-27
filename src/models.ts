@@ -7,9 +7,9 @@ export interface Graph {
 export interface GraphNode {
     name: string;
     color?: {
-        root?: string;
-        leaves?: string;
-        nonRoot?: string;
+        root: string;
+        leaves: string;
+        nonRoot: string;
     }| string;
 }
 
