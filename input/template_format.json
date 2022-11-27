@@ -16,7 +16,7 @@
     "edge": {
         "atom":{
             "name": "edge",
-            "variables": ["from","to","weight"] 
+            "variables": ["to","from","weight"] 
         },
         "style":{
             "color":{

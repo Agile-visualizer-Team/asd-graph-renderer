@@ -143,9 +143,9 @@ export class GraphParser {
     private create_node(node: string, variables: any): GraphNode{
         let node_var = node.split("(")[1].split(")")[0].split(",");
         const node_name = node_var[variables['name']]
-        //TODO Check if in atom there is a color. If yes must set the color of each node accordingly.
         return "style" in this.template.nodes ? createGraphNode({name: node_name, color: this.template.nodes.style.color}):
-                                                createGraphNode({name: node_name});
+                        variables['color'] != -1 ? createGraphNode({name: node_name, color:node_var[variables['color']]}):
+                                                    createGraphNode({name: node_name});
     }
 
     private create_edge(edge: string, variables: any): GraphEdge{   
@@ -153,8 +153,8 @@ export class GraphParser {
         const edge_from = edge_var[variables['from']];
         const edge_to = edge_var[variables['to']];
         const edge_weight = variables['weight'] != -1? edge_var[variables['weight']]: null;
-        //TODO Check if in atom there is a color. If yes must set the color of each edge accordingly.
         return "style" in this.template.nodes ? createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight, color: this.template.edge.style.color}):
-                                                createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight});
+                        variables['color'] != -1 ? createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight, color:edge_var[variables['color']]}):
+                                                    createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight});
     }
 }

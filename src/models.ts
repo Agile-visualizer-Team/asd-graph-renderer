@@ -10,7 +10,7 @@ export interface GraphNode {
         root: string;
         leaves: string;
         nonRoot: string;
-    }
+    }| string;
 }
 
 export interface GraphEdge {
@@ -20,8 +20,8 @@ export interface GraphEdge {
     color?:{
         branch: string;
         path: string;
-    }
-    oriented: boolean
+    } | string;
+    oriented: boolean;
 }
 
 export function createGraphNode(options?: Partial<GraphNode>):GraphNode{
