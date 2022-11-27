@@ -62,7 +62,6 @@ const NEW_TEMPLATE_SCHEMA = {
                               branch: { type: "string", default:"blue", pattern: "^[A-Za-z]+" },
                               path: { type: "string", default:"yellow", pattern: "^[A-Za-z]+" }
                           },
-                          required:["branch"]
                       },
                       oriented: {type:"boolean", default: true}
                   }
