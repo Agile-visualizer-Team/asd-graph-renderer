@@ -34,9 +34,9 @@ const NEW_TEMPLATE_SCHEMA = {
                         color: {
                             type: "object",
                             properties: {
-                                root: { type: "string", pattern: "^[A-Za-z]+"},
-                                leaves: { type: "string", pattern: "^[A-Za-z]+" },
-                                nonRoot: { type: "string", pattern: "^[A-Za-z]+" }
+                                root: { type: "string", default:"green", pattern: "^[A-Za-z]+"},
+                                leaves: { type: "string", default:"magenta", pattern: "^[A-Za-z]+" },
+                                nonRoot: { type: "string", default:"blue", pattern: "^[A-Za-z]+" }
                             }
                         }
                     }
@@ -59,10 +59,9 @@ const NEW_TEMPLATE_SCHEMA = {
                       color: {
                           type: "object",
                           properties: {
-                              branch: { type: "string", pattern: "^[A-Za-z]+" },
-                              path: { type: "string", pattern: "^[A-Za-z]+" }
-                          },
-                          required:["branch"]
+                              branch: { type: "string", default:"blue", pattern: "^[A-Za-z]+" },
+                              path: { type: "string", default:"yellow", pattern: "^[A-Za-z]+" }
+                          }
                       },
                       oriented: {type:"boolean"}
                   }
