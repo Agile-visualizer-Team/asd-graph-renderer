@@ -2,7 +2,7 @@ import { validateTemplateSchema } from "../src/schema-validators";
 import { expect } from "chai";
 //import * as sinon from "sinon";
 
-var RIGHT_SCHEMA = {
+const RIGHT_SCHEMA = {
     template: "graph",
     nodes: {
         atom:{
@@ -27,7 +27,7 @@ var RIGHT_SCHEMA = {
     }
 }
 
-var WRONG_SCHEMA = {
+const WRONG_SCHEMA = {
 
 }
 
@@ -65,6 +65,40 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
             }
         }
         expect(validateTemplateSchema(not_unique_schema)).to.be.false;
+    }),
+    it("should fail if the variable type doesn't match", ()=>{
+        const type_mismatch = {
+            template: 131,
+            nodes: {
+                atom:{
+                },
+            },
+            edge: {
+                atom:{
+                    name: "edge",
+                    variables: ["from","from","weight","color"] 
+                },
+            }
+        }
+        expect(validateTemplateSchema(type_mismatch)).to.be.false;
+    }),
+    it("should fail if the regex doesn't match", ()=>{
+        const regex_mismatch ={
+            template: "graph",
+            nodes: {
+                atom:{
+                    name:"1234_asdsa",
+                    variables: ["label"]
+                },
+            },
+            edge: {
+                atom:{
+                    name: "1234_asdsa",
+                    variables: ["from","to","weight","color"] 
+                },
+            }
+        }
+        expect(validateTemplateSchema(regex_mismatch)).to.be.false;
     })
 });
 
