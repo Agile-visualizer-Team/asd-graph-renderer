@@ -15,7 +15,7 @@
 
 Then type an example answer set as json string:
 
-    [{"as":["node(a)","node(b)","arch(a,b)"]}]
+    [{"as":["node(a)","node(b)","edge(a,b,3)"]}]
 
 ## Demo
 
