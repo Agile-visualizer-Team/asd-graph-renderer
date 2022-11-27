@@ -143,6 +143,7 @@ export class GraphParser {
     private create_node(node: string, variables: any): GraphNode{
         let node_var = node.split("(")[1].split(")")[0].split(",");
         const node_name = node_var[variables['name']]
+
         return "style" in this.template.nodes ? createGraphNode({name: node_name, color: this.template.nodes.style.color}):
                         variables['color'] != -1 ? createGraphNode({name: node_name, color:node_var[variables['color']]}):
                                                     createGraphNode({name: node_name});

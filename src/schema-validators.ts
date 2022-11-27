@@ -24,8 +24,8 @@ const NEW_TEMPLATE_SCHEMA = {
                 atom: {
                     type: "object",
                     properties: {
-                        name: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9\_]*" },
-                        variables: { type: "array",uniqueItems: true, items: {type:"string"}, minItems: 1}
+                        name: { type: "string", default:"node", pattern: "^[A-Za-z][A-Za-z0-9\_]*" },
+                        variables: { type: "array", default: ["label"], uniqueItems: true, items: {type:"string"}, minItems: 1}
                     }
                 },
                 style: {
