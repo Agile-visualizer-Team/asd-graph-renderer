@@ -101,14 +101,32 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
         expect(validateTemplateSchema(regex_mismatch)).to.be.false;
     }),
     it("should fail if there aren't the required keys ", ()=>{
-        const regex_mismatch ={
+        const required_mismatch ={
             template: "graph",
             nodes: {
             },
             edge: {
             }
         }
-        expect(validateTemplateSchema(regex_mismatch)).to.be.false;
+        expect(validateTemplateSchema(required_mismatch)).to.be.false;
+    }),
+    it("should fail if there are few arguments in array", ()=>{
+        const arguments_mismatch ={
+            template: "graph",
+            nodes: {
+                atom:{
+                    name:"node",
+                    variables: []
+                },
+            },
+            edge: {
+                atom:{
+                    name: "edge",
+                    variables: [] 
+                },
+            }
+        }
+        expect(validateTemplateSchema(arguments_mismatch)).to.be.false;
     })
 });
 
