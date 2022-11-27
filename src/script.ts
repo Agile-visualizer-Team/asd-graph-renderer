@@ -3,6 +3,7 @@ import yargs from "yargs";
 import {GraphImagesGenerator} from "./generator";
 import fs from "fs";
 import {Graph} from "./models";
+import readlineSync from "readline-sync";
 
 class GraphScript {
     constructor() {
@@ -54,12 +55,7 @@ class GraphScript {
                 'generate the graph image from json string inputs', (yargs) => {
                     return yargs
                         .option('template', {
-                            describe: 'the input json template',
-                            type: 'string',
-                            required: true
-                        })
-                        .option('as', {
-                            describe: 'the input json answer sets',
+                            describe: 'the input json template file path',
                             type: 'string',
                             required: true
                         })
@@ -69,13 +65,15 @@ class GraphScript {
                             required: true
                         })
                 }, (argv) => {
+                    const jsonStr = readlineSync.question('');
+
                     console.log(`Using input template json (${argv.template.length} chars)...`);
-                    console.log(`Using input answer set json  (${argv.as.length} chars)...`);
+                    console.log(`Using input answer set json  (${jsonStr.length} chars)...`);
                     console.log(`Using ${argv.output} as output directory...`);
                     console.log();
 
-                    const template = GraphScript.jsonStringToObject(argv.template);
-                    const answerSets = GraphScript.jsonStringToObject(argv.as);
+                    const template = GraphScript.jsonFileToObject(path.join(FILE_PATHS_RELATIVE_TO, argv.template));
+                    const answerSets = GraphScript.jsonStringToObject(jsonStr);
                     const outputDirPath = path.join(FILE_PATHS_RELATIVE_TO, argv.output);
                     GraphScript.runImagesGenerator(template, answerSets, outputDirPath);
                 })

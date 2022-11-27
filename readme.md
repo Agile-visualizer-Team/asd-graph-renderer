@@ -10,7 +10,7 @@
 
 ## How to render from string input
 
-    node build/script.js fromstr --template '{\"nodes\":\"node/1\",\"edge\":\"edge/2\"}' --as '[{\"as\":[\"node(a)\",\"node(b)\",\"edge(a,b)\"]}]' --output ./output
+    node build/script.js fromstr --template ./input/demo-template.json --output ./output
 
 ## Demo
 
@@ -20,8 +20,32 @@ In order to generate a demo graph rendering, run `npm start`. The following json
 
     {
         "template": "graph",
-        "nodes": "node/1",
-        "edge": "edge/3"
+        "nodes": {
+            "atom":{
+                "name": "node",
+                "variables": ["label"]
+            },
+            "style":{
+                "color":{
+                    "root":"yellow",
+                    "leaves":"purple",
+                    "nonRoot":"blue"
+                }
+            }
+        },
+        "edge": {
+            "atom":{
+                "name": "edge",
+                "variables": ["to","from","weight"]
+            },
+            "style":{
+                "color":{
+                    "branch":"green",
+                    "path":"yellow"
+                },
+                "oriented": true
+            }
+        }
     }
 
 **Answer sets:** (`input/demo-answer-set.json`)
