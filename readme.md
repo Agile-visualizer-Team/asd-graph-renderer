@@ -12,6 +12,10 @@
 
     node build/script.js fromstr --template ./input/demo-template.json --output ./output
 
+Then type an example answer set as json string:
+
+    [{"as":["node(a)","node(b)","arch(a,b)"]}]
+
 ## Demo
 
 In order to generate a demo graph rendering, run `npm start`. The following json files will be used as input:
