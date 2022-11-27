@@ -67,7 +67,7 @@ class GraphScript {
                 }, (argv) => {
                     const jsonStr = readlineSync.question('');
 
-                    console.log(`Using input template json (${argv.template.length} chars)...`);
+                    console.log(`Using <<${argv.template}>> as template file...`);
                     console.log(`Using input answer set json  (${jsonStr.length} chars)...`);
                     console.log(`Using ${argv.output} as output directory...`);
                     console.log();
