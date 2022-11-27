@@ -99,6 +99,16 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
             }
         }
         expect(validateTemplateSchema(regex_mismatch)).to.be.false;
+    }),
+    it("should fail if there aren't the required keys ", ()=>{
+        const regex_mismatch ={
+            template: "graph",
+            nodes: {
+            },
+            edge: {
+            }
+        }
+        expect(validateTemplateSchema(regex_mismatch)).to.be.false;
     })
 });
 
