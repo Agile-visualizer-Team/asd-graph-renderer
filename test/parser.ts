@@ -78,9 +78,49 @@ const GOOD_TEMPLATE ={
             "oriented": true
         }
     }
-}
+};
+const GOOD_AS =[
+    {
+        "as" : [
+            "node(a)",
+            "node(b)",
+            "node(c)",
+            "node(d)",
+            "node(e)",
+            "node(f)",
+            "node(g)",
+            "edge(a,b,10)",
+            "edge(a,c,5)",
+            "edge(b,d,6)",
+            "edge(b,e,7)",
+            "edge(b,f,5)",
+            "edge(c,d,4)",
+            "edge(d,g,3)"
+        ],
+        "cost" : "1@2"
+    },
+    {
+        "as" : [
+            "node(a)",
+            "node(b)",
+            "node(g)",
+            "edge(a,b,10)",
+            "edge(b,g,5)",
+            "edge(a,g,3)"
+        ],
+        "cost" : "1@2"
+    }
+]
 
 describe("PARSER TEST", () =>{
+    // const graph_sandbox = sinon.createSandbox()
+
+    // beforeEach(function(){
+    //     graph_sandbox.spy(GraphParser.prototype);
+    // }),
+    // afterEach(function(){
+
+    // })
     it("should throw an exception if the template is not valid", ()=>{
         expect(function(){
             new GraphParser({}, [])
@@ -172,7 +212,12 @@ describe("PARSER TEST", () =>{
         }).to.throw(Error,"Answer set list is empty")
     }),
     it("should call buildOutput with the correct parameters", ()=> {
-        
+        const buildOutputSpy = sinon.spy(GraphParser.prototype,<any>"buildOutput");
+        const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
+        parser.answerSetsToGraphs()
+        expect(buildOutputSpy.calledOnce).to.be.true;
+        expect(buildOutputSpy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE);
+        expect(buildOutputSpy.getCall(0).args[1]).to.be.eq(undefined);
     })
 })
 
