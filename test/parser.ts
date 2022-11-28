@@ -58,7 +58,7 @@ describe("PARSER TEST", () =>{
     }),
     it("should throw an exception if nodes key does not contain at least one variable", ()=>{
         expect(function(){
-            const no_label_template = {
+            const no_param_template = {
                 "template": "graph",
                 "nodes": {
                     "atom":{
@@ -73,8 +73,28 @@ describe("PARSER TEST", () =>{
                     },
                 }
         };
-            new GraphParser(no_label_template,[]);
+            new GraphParser(no_param_template,[]);
         }).to.throw(Error,"Template is not valid: /nodes/atom/variables must NOT have fewer than 1 items")
+    }),
+    it("should throw an error if nodes key does not contain <label> in variables", ()=>{
+        expect(function(){
+            const no_label_template = {
+                "template": "graph",
+                "nodes": {
+                    "atom":{
+                        "name": "node",
+                        "variables": ["test"]
+                    },
+                },
+                "edge": {
+                    "atom":{
+                        "name": "edge",
+                        "variables": ["to","from","weight"]
+                    },
+                }
+        };
+            new GraphParser(no_label_template,[]);
+        }).to.throw(Error,"Variables provided: \"test\" must contain \"label\"")
     })
 })
 
