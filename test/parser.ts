@@ -240,7 +240,15 @@ describe("PARSER TEST", () =>{
         expect(edge_variables_spy.calledOnce).to.be.true;
         expect(edge_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.edge.atom.variables);
     }),
-    it("should generate a correct node from a string")
+    it("should generate a correct node from a string", () =>{
+        const create_node_spy = sinon.spy(GraphParser.prototype,<any>"create_node");
+        const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
+        parser.answerSetsToGraphs();
+        expect(create_node_spy.called).to.be.true;
+        const expected_value = ["node(a)","node(b)","node(c)","node(d)","node(e)","node(f)","node(g)"];
+        for(let i = 0; i < expected_value.length; ++i)
+            expect(create_node_spy.getCall(i).args[0]).to.be.eq(expected_value[i]);
+    })
 })
 
 
