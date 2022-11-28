@@ -218,6 +218,13 @@ describe("PARSER TEST", () =>{
         expect(buildOutputSpy.calledOnce).to.be.true;
         expect(buildOutputSpy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE);
         expect(buildOutputSpy.getCall(0).args[1]).to.be.eq(undefined);
+        buildOutputSpy.restore();
+    }),
+    it("buildOutput should generate a JSON file if a file path is provided", () =>{
+        const fs_stub = sinon.stub(fs,"readFileSync");
+        const parser = new GraphParser(GOOD_TEMPLATE, GOOD_AS);
+        parser.answerSetsToGraphs()
+        expect(fs_stub.calledOnce).to.be.true;
     })
 })
 
