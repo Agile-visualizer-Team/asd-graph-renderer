@@ -220,11 +220,18 @@ describe("PARSER TEST", () =>{
         expect(buildOutputSpy.getCall(0).args[1]).to.be.eq(undefined);
         buildOutputSpy.restore();
     }),
-    it("buildOutput should generate a JSON file if a file path is provided", () =>{
-        const fs_stub = sinon.stub(fs,"readFileSync");
-        const parser = new GraphParser(GOOD_TEMPLATE, GOOD_AS);
-        parser.answerSetsToGraphs()
-        expect(fs_stub.calledOnce).to.be.true;
+    // it("buildOutput should generate a JSON file if a file path is provided", () =>{
+    //     const fs_stub = sinon.stub(fs,"readFileSync");
+    //     const parser = new GraphParser(GOOD_TEMPLATE, GOOD_AS);
+    //     parser.answerSetsToGraphs()
+    //     expect(fs_stub.calledOnce).to.be.true;
+    // }),
+    it("should get the correct node variables", () =>{
+        const node_variables_spy = sinon.spy(GraphParser.prototype,<any>"get_node_variables");
+        const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
+        parser.answerSetsToGraphs();
+        expect(node_variables_spy.calledOnce).to.be.true;
+        expect(node_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.nodes.atom.variables);
     })
 })
 
