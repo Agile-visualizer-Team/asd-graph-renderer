@@ -265,6 +265,23 @@ describe("PARSER TEST", () =>{
             expect(create_edge_spy.getCall(i).args[0]).to.be.eq(expected_value[i]);
         
         create_edge_spy.restore();
+    }),
+    it("should create, given the same template and as, always the same result", () =>{
+        const parser1 = new GraphParser(GOOD_TEMPLATE, GOOD_AS);
+        const parser2 = new GraphParser(GOOD_TEMPLATE, GOOD_AS);
+        const res1 = parser1.answerSetsToGraphs();
+        const res2 = parser2.answerSetsToGraphs();
+        expect(res1.length).to.be.eq(res2.length);
+        for(let i = 0; i < res1.length; ++i){
+            for(let j = 0; j < res1[i].nodes.length; ++j){
+                expect(res1[i].nodes[j].name).to.be.eq(res2[i].nodes[j].name);
+            }
+            for(let j = 0; j < res1[i].edges.length; ++j){
+                expect(res1[i].edges[j].from).to.be.eq(res2[i].edges[j].from);
+                expect(res1[i].edges[j].destination).to.be.eq(res2[i].edges[j].destination);
+                expect(res1[i].edges[j].weight).to.be.eq(res2[i].edges[j].weight);
+            }
+        }
     })
 })
 
