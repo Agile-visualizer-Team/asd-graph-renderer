@@ -57,14 +57,28 @@ const GOOD_TEMPLATE ={
             "name": "node",
             "variables": ["label"]
         },
+        "style":{
+            "color":{
+                "root":"yellow",
+                "leaves":"purple",
+                "nonRoot":"blue"
+            }
+        }
     },
     "edge": {
         "atom":{
             "name": "edge",
-            "variables": ["from","to","weight"]
+            "variables": ["to","from","weight"]
         },
+        "style":{
+            "color":{
+                "branch":"green",
+                "path":"yellow"
+            },
+            "oriented": true
+        }
     }
-};
+}
 
 describe("PARSER TEST", () =>{
     it("should throw an exception if the template is not valid", ()=>{
@@ -156,6 +170,9 @@ describe("PARSER TEST", () =>{
         expect(function(){
             new GraphParser(GOOD_TEMPLATE,[]);
         }).to.throw(Error,"Answer set list is empty")
+    }),
+    it("should call buildOutput with the correct parameters", ()=> {
+        
     })
 })
 
