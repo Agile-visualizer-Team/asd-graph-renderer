@@ -154,7 +154,7 @@ export class GraphParser {
         const edge_from = edge_var[variables['from']];
         const edge_to = edge_var[variables['to']];
         const edge_weight = variables['weight'] != -1? edge_var[variables['weight']]: null;
-        return "style" in this.template.nodes ? createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight, color: this.template.edge.style.color}):
+        return "style" in this.template.edge ? createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight, color: this.template.edge.style.color}):
                         variables['color'] != -1 ? createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight, color:edge_var[variables['color']]}):
                                                     createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight});
     }
