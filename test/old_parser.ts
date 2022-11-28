@@ -50,7 +50,7 @@ function get_expected() {
   ]);
 }
 
-describe("Parser_Test", () => {
+describe("OLD PARSER", () => {
   afterEach(function(){
     sinon.restore();
   })

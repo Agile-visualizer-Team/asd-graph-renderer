@@ -232,7 +232,15 @@ describe("PARSER TEST", () =>{
         parser.answerSetsToGraphs();
         expect(node_variables_spy.calledOnce).to.be.true;
         expect(node_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.nodes.atom.variables);
-    })
+    }),
+    it("should get the correct edge variables", () =>{
+        const edge_variables_spy = sinon.spy(GraphParser.prototype,<any>"get_edge_variables");
+        const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
+        parser.answerSetsToGraphs();
+        expect(edge_variables_spy.calledOnce).to.be.true;
+        expect(edge_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.edge.atom.variables);
+    }),
+    it("should generate a correct node from a string")
 })
 
 
