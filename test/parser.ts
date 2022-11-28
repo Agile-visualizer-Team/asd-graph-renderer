@@ -95,6 +95,26 @@ describe("PARSER TEST", () =>{
         };
             new GraphParser(no_label_template,[]);
         }).to.throw(Error,"Variables provided: \"test\" must contain \"label\"")
+    }),
+    it("should throw an error if edge key does not contain at least two variables", ()=>{
+        expect(function(){
+            const no_param_template = {
+                "template": "graph",
+                "nodes": {
+                    "atom":{
+                        "name": "node",
+                        "variables": ["label"]
+                    },
+                },
+                "edge": {
+                    "atom":{
+                        "name": "edge",
+                        "variables": []
+                    },
+                }
+        };
+            new GraphParser(no_param_template,[]);
+        }).to.throw(Error,"Template is not valid: /edge/atom/variables must NOT have fewer than 2 items")
     })
 })
 
