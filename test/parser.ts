@@ -115,6 +115,26 @@ describe("PARSER TEST", () =>{
         };
             new GraphParser(no_param_template,[]);
         }).to.throw(Error,"Template is not valid: /edge/atom/variables must NOT have fewer than 2 items")
+    }),
+    it("should throw an error if edge key does not contain <from, to> in variables", ()=>{
+        expect(function(){
+            const no_label_template = {
+                "template": "graph",
+                "nodes": {
+                    "atom":{
+                        "name": "node",
+                        "variables": ["label"]
+                    },
+                },
+                "edge": {
+                    "atom":{
+                        "name": "edge",
+                        "variables": ["test1","test2","weight"]
+                    },
+                }
+        };
+            new GraphParser(no_label_template,[]);
+        }).to.throw(Error,"Variables provided: \"test1,test2,weight\" must contain \"from,to\"")
     })
 })
 
