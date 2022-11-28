@@ -50,6 +50,22 @@ import Ajv from "ajv";
 //   ]);
 // }
 
+const GOOD_TEMPLATE ={
+    "template": "graph",
+    "nodes": {
+        "atom":{
+            "name": "node",
+            "variables": ["label"]
+        },
+    },
+    "edge": {
+        "atom":{
+            "name": "edge",
+            "variables": ["from","to","weight"]
+        },
+    }
+};
+
 describe("PARSER TEST", () =>{
     it("should throw an exception if the template is not valid", ()=>{
         expect(function(){
@@ -76,7 +92,7 @@ describe("PARSER TEST", () =>{
             new GraphParser(no_param_template,[]);
         }).to.throw(Error,"Template is not valid: /nodes/atom/variables must NOT have fewer than 1 items")
     }),
-    it("should throw an error if nodes key does not contain <label> in variables", ()=>{
+    it("should throw an exception if nodes key does not contain <label> in variables", ()=>{
         expect(function(){
             const no_label_template = {
                 "template": "graph",
@@ -96,7 +112,7 @@ describe("PARSER TEST", () =>{
             new GraphParser(no_label_template,[]);
         }).to.throw(Error,"Variables provided: \"test\" must contain \"label\"")
     }),
-    it("should throw an error if edge key does not contain at least two variables", ()=>{
+    it("should throw an exception if edge key does not contain at least two variables", ()=>{
         expect(function(){
             const no_param_template = {
                 "template": "graph",
@@ -116,7 +132,7 @@ describe("PARSER TEST", () =>{
             new GraphParser(no_param_template,[]);
         }).to.throw(Error,"Template is not valid: /edge/atom/variables must NOT have fewer than 2 items")
     }),
-    it("should throw an error if edge key does not contain <from, to> in variables", ()=>{
+    it("should throw an exception if edge key does not contain <from, to> in variables", ()=>{
         expect(function(){
             const no_label_template = {
                 "template": "graph",
@@ -135,6 +151,11 @@ describe("PARSER TEST", () =>{
         };
             new GraphParser(no_label_template,[]);
         }).to.throw(Error,"Variables provided: \"test1,test2,weight\" must contain \"from,to\"")
+    }),
+    it("should throw an exception if the answersets is empty",()=>{
+        expect(function(){
+            new GraphParser(GOOD_TEMPLATE,[]);
+        }).to.throw(Error,"Answer set list is empty")
     })
 })
 
