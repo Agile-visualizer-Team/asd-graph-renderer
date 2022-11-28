@@ -32,8 +32,8 @@ export class GraphParser {
         this.check_variables_name(this.template.edge.atom.variables, this.MANDATORY_EDGE_VARIABLE);
 
         if (!validateAnswerSetsSchema(answerSets)) {
-            assert(validateTemplateSchema.errors);
-            const error = validateTemplateSchema.errors[0];
+            assert(validateAnswerSetsSchema.errors);
+            const error = validateAnswerSetsSchema.errors[0];
             const path = error.instancePath || "answer sets";
             throw Error("Answer sets are not valid: " + path + " " + error.message);
         }
@@ -53,30 +53,30 @@ export class GraphParser {
      * returned as a string.
      * @returns An array of objects. Each object has two properties: nodes and edge.
      */
-    private oldbuildOutput(options: any, outputFile: string|null = null) {    
-        const nodes = options.node;
-        const edge = options.edge;
-        const node_atom = new RegExp(nodes[0]+'\(.+\)'), node_ariety = +nodes[1];
-        const edge_atom = new RegExp(edge[0]+'\(.+\)'), edge_ariety = +edge[1];
-        let output: any = [];
-        this.answerSets.forEach( answerSet => {
-            const n: string[] = [];
-            const a: string[] = [];
-            answerSet.as.forEach((atom: string) => {
-                if(node_atom.test(atom) && atom.split(",").length == node_ariety)
-                    n.push(atom);
-                else if(edge_atom.test(atom) && atom.split(",").length == edge_ariety)
-                    a.push(atom);
-            })
-            if (n.length != 0) {
-                output.push({"nodes": n, "edge": a})
-            }
-        })
-        if (outputFile) {
-            fs.writeFileSync(outputFile, JSON.stringify(output, null, 4));
-        }
-        return output
-    }
+    // private oldbuildOutput(options: any, outputFile: string|null = null) {    
+    //     const nodes = options.node;
+    //     const edge = options.edge;
+    //     const node_atom = new RegExp(nodes[0]+'\(.+\)'), node_ariety = +nodes[1];
+    //     const edge_atom = new RegExp(edge[0]+'\(.+\)'), edge_ariety = +edge[1];
+    //     let output: any = [];
+    //     this.answerSets.forEach( answerSet => {
+    //         const n: string[] = [];
+    //         const a: string[] = [];
+    //         answerSet.as.forEach((atom: string) => {
+    //             if(node_atom.test(atom) && atom.split(",").length == node_ariety)
+    //                 n.push(atom);
+    //             else if(edge_atom.test(atom) && atom.split(",").length == edge_ariety)
+    //                 a.push(atom);
+    //         })
+    //         if (n.length != 0) {
+    //             output.push({"nodes": n, "edge": a})
+    //         }
+    //     })
+    //     if (outputFile) {
+    //         fs.writeFileSync(outputFile, JSON.stringify(output, null, 4));
+    //     }
+    //     return output
+    // }
 
     private buildOutput(options: any, outputFile: string|null = null){
         const node_atom = new RegExp(options.nodes.atom.name+'\(.+\)'), node_ariety = +options.nodes.atom.variables.length;

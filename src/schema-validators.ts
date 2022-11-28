@@ -73,7 +73,8 @@ const NEW_TEMPLATE_SCHEMA = {
   };
 
 const ANSWER_SETS_SCHEMA = {
-    type: "array"
+    type: "array",
+    items:  {type: "object"}
 };
 
 export const validateTemplateSchema = new Ajv({useDefaults:true}).compile(NEW_TEMPLATE_SCHEMA);

@@ -153,6 +153,11 @@ describe("PARSER TEST", () =>{
             new GraphParser(no_label_template,[]);
         }).to.throw(Error,"Variables provided: \"test1,test2,weight\" must contain \"from,to\"")
     }),
+    it("should throw an exception if the answersets is not valid", () =>{
+        expect(function(){
+            const g = new GraphParser(GOOD_TEMPLATE, [1,2,3,4,5])
+        }).to.throw(Error, "Answer sets are not valid: /0 must be object")
+    }),
     it("should throw an exception if the answersets is empty",()=>{
         expect(function(){
             new GraphParser(GOOD_TEMPLATE,[]);
