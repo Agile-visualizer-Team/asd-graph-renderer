@@ -9,6 +9,8 @@ import path from "path";
 describe("Renderer_Test", function () {
     this.timeout(100000);
 
+    // TODO aggiornare con le nuove interface
+
     // it("should generate the correct image base64 data according to the input graph and a pre-rendered image", (done) => {
     //     const nodes: GraphNode[] = [new GraphNode("a"), new GraphNode("b")];
     //     const edges: GraphEdge[] = [new GraphEdge(nodes[0], nodes[1])];
