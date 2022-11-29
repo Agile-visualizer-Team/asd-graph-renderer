@@ -117,9 +117,44 @@ export class GraphParser {
                 return this.create_edge(atom, edge_variables);
             });
 
+            let nodeDefaultColors: any;
+            if (this.template.nodes.style.color) {
+                nodeDefaultColors = this.template.nodes.style.color;
+            } else {
+                nodeDefaultColors = { // TODO
+                    root:"yellow",
+                    leaves:"purple",
+                    nonRoot:"blue"
+                };
+            }
+            nodes.filter(n => !n.color).forEach(n => {
+                if (!edges.find(e => e.destination == n.name)) {
+                    n.color = nodeDefaultColors.root;
+                } else if (!edges.find(e => e.from == n.name)) {
+                    n.color = nodeDefaultColors.leaves;
+                } else {
+                    n.color = nodeDefaultColors.nonRoot;
+                }
+            });
+
+            let edgesDefaultColors: any;
+            if (this.template.edge.style.color) {
+                edgesDefaultColors = this.template.edge.style.color;
+            } else {
+                edgesDefaultColors = { // TODO
+                    branch:"green",
+                    path:"yellow"
+                };
+            }
+            edges.filter(e => !e.color)
+                .map(n => n.color = edgesDefaultColors.branch);
+
             return <Graph>{
                 nodes: nodes,
                 edges: edges,
+                oriented: this.template.edge.style
+                    ? this.template.edge.style.oriented
+                    : false
             };
         });
     }
@@ -144,9 +179,10 @@ export class GraphParser {
         let node_var = node.split("(")[1].split(")")[0].split(",");
         const node_name = node_var[variables['name']]
 
-        return "style" in this.template.nodes ? createGraphNode({name: node_name, color: this.template.nodes.style.color}):
-                        variables['color'] != -1 ? createGraphNode({name: node_name, color:node_var[variables['color']]}):
-                                                    createGraphNode({name: node_name});
+        return createGraphNode({
+            name: node_name,
+            color: variables['color'] != -1 ? node_var[variables['color']] : null
+        });
     }
 
     private create_edge(edge: string, variables: any): GraphEdge{   
@@ -154,8 +190,12 @@ export class GraphParser {
         const edge_from = edge_var[variables['from']];
         const edge_to = edge_var[variables['to']];
         const edge_weight = variables['weight'] != -1? edge_var[variables['weight']]: null;
-        return "style" in this.template.edge ? createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight, color: this.template.edge.style.color}):
-                        variables['color'] != -1 ? createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight, color:edge_var[variables['color']]}):
-                                                    createGraphEdge({from: edge_from, destination: edge_to, weight:edge_weight});
+
+        return createGraphEdge({
+            from: edge_from,
+            destination: edge_to,
+            weight: edge_weight,
+            color: variables['color'] != -1 ? edge_var[variables['color']] : null,
+        });
     }
 }

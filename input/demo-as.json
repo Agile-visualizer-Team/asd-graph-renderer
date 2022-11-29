@@ -20,9 +20,9 @@
     },
     {
         "as" : [
-            "node(a)",
-            "node(b)",
-            "node(g)",
+            "node(a,caccapupu)",
+            "node(b,green)",
+            "node(g,blue)",
             "edge(a,b,10)",
             "edge(b,g,5)",
             "edge(a,g,3)"

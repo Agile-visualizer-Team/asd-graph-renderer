@@ -3,7 +3,7 @@
     "nodes": {
         "atom":{
             "name": "node",
-            "variables": ["label"]
+            "variables": ["label","color"]
         },
         "style":{
             "color":{
@@ -22,8 +22,7 @@
             "color":{
                 "branch":"green",
                 "path":"yellow"
-            },
-            "oriented": true
+            }
         }
     }
 }

@@ -15,15 +15,7 @@ export class GraphRenderer {
     private generateCytoscapeElements(graph: Graph): object[] {
         const elements: any[] = [];
 
-        // TODO nodi colorabili
         graph.nodes.forEach(n => {
-            const classes: string[] = [];
-            if (!graph.edges.find(e => e.destination == n.name)) {
-                classes.push('root');
-            } else if (!graph.edges.find(e => e.from == n.name)) {
-                classes.push('leaf');
-            }
-
             let shape, width, height;
             if (n.name.length > 1) {
                 shape = "round-rectangle";
@@ -41,21 +33,21 @@ export class GraphRenderer {
                     label: n.name,
                     shape: shape,
                     width: width,
-                    height: height
-                },
-                classes: classes
+                    height: height,
+                    color: n.color
+                }
             });
         });
 
-        // TODO edgei colorabili
-        // TODO edgei non orientati
         graph.edges.forEach(e => {
             elements.push({
                 data: {
                     id: e.from + '-' + e.destination,
                     source: e.from,
                     target: e.destination,
-                    weight: e.weight
+                    weight: e.weight,
+                    color: e.color,
+                    arrowShape: graph.oriented ? 'triangle' : 'none'
                 }
             });
         });
@@ -97,7 +89,8 @@ export class GraphRenderer {
                     'text-valign': 'center',
                     'text-halign': 'center',
                     'border-width': '1px',
-                    'border-color': this.theme.node.borderColor,
+                    'border-color': 'data(color)',
+                    // 'border-color': this.theme.node.borderColor,
                     'color': this.theme.node.textColor,
                     'padding': '0 0 0 100px',
                     'width': 'data(width)',
@@ -105,40 +98,42 @@ export class GraphRenderer {
                     'shape': 'data(shape)'
                 }
             },
-            {
-                selector: 'node.root',
-                style: {
-                    'font-family': this.theme.rootNode.fontFamily,
-                    'font-size': this.theme.rootNode.fontSize,
-                    'font-weight': this.theme.rootNode.fontWeight,
-                    'background-color': this.theme.rootNode.backgroundColor,
-                    'border-color': this.theme.rootNode.borderColor,
-                    'color': this.theme.rootNode.textColor,
-                }
-            },
-            {
-                selector: 'node.leaf',
-                style: {
-                    'font-family': this.theme.leafNode.fontFamily,
-                    'font-size': this.theme.leafNode.fontSize,
-                    'font-weight': this.theme.leafNode.fontWeight,
-                    'background-color': this.theme.leafNode.backgroundColor,
-                    'border-color': this.theme.leafNode.borderColor,
-                    'color': this.theme.leafNode.textColor,
-                }
-            },
+            // {
+            //     selector: 'node.root',
+            //     style: {
+            //         'font-family': this.theme.rootNode.fontFamily,
+            //         'font-size': this.theme.rootNode.fontSize,
+            //         'font-weight': this.theme.rootNode.fontWeight,
+            //         'background-color': this.theme.rootNode.backgroundColor,
+            //         'border-color': this.theme.rootNode.borderColor,
+            //         'color': this.theme.rootNode.textColor,
+            //     }
+            // },
+            // {
+            //     selector: 'node.leaf',
+            //     style: {
+            //         'font-family': this.theme.leafNode.fontFamily,
+            //         'font-size': this.theme.leafNode.fontSize,
+            //         'font-weight': this.theme.leafNode.fontWeight,
+            //         'background-color': this.theme.leafNode.backgroundColor,
+            //         'border-color': this.theme.leafNode.borderColor,
+            //         'color': this.theme.leafNode.textColor,
+            //     }
+            // },
             {
                 selector: 'edge',
                 style: {
                     'width': 1,
-                    'line-color': this.theme.edge.lineColor,
+                    'line-color': 'data(color)',
+                    //'line-color': this.theme.edge.lineColor,
                     'line-style': 'dashed',
                     'line-dash-pattern': [6, 3],
                     'line-dash-offset': 0,
                     'curve-style': 'bezier',
                     'arrow-scale': 0.7,
-                    'target-arrow-shape': 'triangle',
-                    'target-arrow-color': this.theme.edge.arrowColor,
+                    'target-arrow-shape': 'data(arrowShape)',
+                    'target-arrow-color': 'data(color)',
+                    // 'target-arrow-color': this.theme.edge.arrowColor,
                     'source-label': 'data(weight)',
                     'source-text-offset': 18,
                     'font-family': this.theme.edge.fontFamily,
