@@ -36,7 +36,7 @@ function getMockedGraph(): Graph {
 describe("RENDERER TEST", function () {
     this.timeout(100000);
 
-    it("should generate the correct image base64 data according to the input graph and a pre-rendered image", (done) => {
+    it("should generate the correct image base64 data according to the input graph and a pre-rendered expected image", (done) => {
         const graph = getMockedGraph();
         const renderer = new GraphRenderer();
         renderer.width = 1280;
@@ -55,12 +55,21 @@ describe("RENDERER TEST", function () {
     it("should throw an exception if the layout type is not supported", () => {
         const graph = getMockedGraph();
         const renderer = new GraphRenderer();
-        renderer.width = 1280;
-        renderer.height = 1280;
-        renderer.theme = VSCODE_THEME;
         renderer.layout = GraphRendererLayout.Klay;
         expect(() => {
             renderer.render([graph]);
         }).to.throw(Error, "Unsupported layout type");
+    });
+
+    it("should map a generic color name to the mapped by the template", () => {
+        const renderer = new GraphRenderer();
+        renderer.theme = VSCODE_THEME;
+        expect(renderer.convertColorWithThemePalette('red')).to.be.equal(VSCODE_THEME.palette.red);
+    });
+
+    it("should not map a generic color name which is not supported by the template", () => {
+        const renderer = new GraphRenderer();
+        renderer.theme = VSCODE_THEME;
+        expect(renderer.convertColorWithThemePalette('cornflowerblue')).to.be.equal('cornflowerblue');
     });
 });

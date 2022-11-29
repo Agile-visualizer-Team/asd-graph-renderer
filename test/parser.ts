@@ -188,7 +188,7 @@ describe("PARSER TEST", () =>{
                 "cost" : "1@2"
             }
         ];
-        expect(() => new GraphParser(template, as).answerSetsToGraphs()).to.throw(
+        expect(() => new GraphParser(template, as).parse()).to.throw(
             Error, `node fact <node(a,red)> has arity 2, expected value from template was 1`);
     }),
     it("should detect edges facts with an arity different from the one specified in the template",()=>{
@@ -217,7 +217,7 @@ describe("PARSER TEST", () =>{
                 "cost" : "1@2"
             }
         ];
-        expect(() => new GraphParser(template, as).answerSetsToGraphs()).to.throw(
+        expect(() => new GraphParser(template, as).parse()).to.throw(
             Error, `edge fact <edge(a,b,red)> has arity 3, expected value from template was 2`);
     }),
     it("should detect edges which have an non-existing from node",()=>{
@@ -231,7 +231,7 @@ describe("PARSER TEST", () =>{
                 "cost" : "1@2"
             }
         ];
-        expect(() => new GraphParser(GOOD_TEMPLATE, as).answerSetsToGraphs()).to.throw(
+        expect(() => new GraphParser(GOOD_TEMPLATE, as).parse()).to.throw(
             Error, `edge from <c> to <b> is invalid, from node <c> does not exist`);
     }),
     it("should detect edges which have an non-existing destination node",()=>{
@@ -245,19 +245,19 @@ describe("PARSER TEST", () =>{
                 "cost" : "1@2"
             }
         ];
-        expect(() => new GraphParser(GOOD_TEMPLATE, as).answerSetsToGraphs()).to.throw(
+        expect(() => new GraphParser(GOOD_TEMPLATE, as).parse()).to.throw(
             Error, `edge from <a> to <c> is invalid, destination node <c> does not exist`);
     }),
-    // it("buildOutput should generate a JSON file if a file path is provided", () =>{
-    //     const fs_stub = sinon.stub(fs,"writeFileSync");
-    //     const parser = new GraphParser(GOOD_TEMPLATE, GOOD_AS);
-    //     parser.answerSetsToGraphs()
-    //     expect(fs_stub.calledOnce).to.be.true;
-    // }),
+    it("extractNodesAndEdgesFromAs should generate a JSON file if an output file path is provided", () =>{
+        const fs_stub = sinon.stub(fs,"writeFileSync");
+        const parser = new GraphParser(GOOD_TEMPLATE, GOOD_AS);
+        parser.extractNodesAndEdgesFromAs('any_path');
+        expect(fs_stub.calledOnce).to.be.true;
+    }),
     it("should get the correct node variables", () =>{
         const node_variables_spy = sinon.spy(GraphParser.prototype,<any>"get_node_variables");
         const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
-        parser.answerSetsToGraphs();
+        parser.parse();
         expect(node_variables_spy.calledOnce).to.be.true;
         expect(node_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.nodes.atom.variables);
         node_variables_spy.restore();
@@ -265,7 +265,7 @@ describe("PARSER TEST", () =>{
     it("should get the correct edge variables", () =>{
         const edge_variables_spy = sinon.spy(GraphParser.prototype,<any>"get_edge_variables");
         const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
-        parser.answerSetsToGraphs();
+        parser.parse();
         expect(edge_variables_spy.calledOnce).to.be.true;
         expect(edge_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.edges.atom.variables);
         edge_variables_spy.restore()
@@ -273,7 +273,7 @@ describe("PARSER TEST", () =>{
     it("should generate a correct node from a string", () =>{
         const create_node_spy = sinon.spy(GraphParser.prototype,<any>"create_node");
         const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
-        parser.answerSetsToGraphs();
+        parser.parse();
         expect(create_node_spy.called).to.be.true;
         const expected_value = ["node(a)","node(b)","node(c)","node(d)","node(e)","node(f)","node(g)"];
         for(let i = 0; i < expected_value.length; ++i)
@@ -284,7 +284,7 @@ describe("PARSER TEST", () =>{
     it("should generate a correct edge from a string", () =>{
         const create_edge_spy = sinon.spy(GraphParser.prototype,<any>"create_edge");
         const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
-        parser.answerSetsToGraphs();
+        parser.parse();
         expect(create_edge_spy.called).to.be.true;
         const expected_value = ["edge(a,b,10)","edge(a,c,5)","edge(b,d,6)","edge(b,e,7)",
                                 "edge(b,f,5)","edge(c,d,4)","edge(d,g,3)"];
@@ -297,8 +297,8 @@ describe("PARSER TEST", () =>{
     it("should create, given the same template and as, always the same result", () =>{
         const parser1 = new GraphParser(GOOD_TEMPLATE, GOOD_AS);
         const parser2 = new GraphParser(GOOD_TEMPLATE, GOOD_AS);
-        const res1 = parser1.answerSetsToGraphs();
-        const res2 = parser2.answerSetsToGraphs();
+        const res1 = parser1.parse();
+        const res2 = parser2.parse();
         expect(res1.length).to.be.eq(res2.length);
         for(let i = 0; i < res1.length; ++i){
             for(let j = 0; j < res1[i].nodes.length; ++j){

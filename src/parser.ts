@@ -48,7 +48,7 @@ export class GraphParser {
      * returned as an array of objects.
      * @returns An array of objects. Each object has two properties: nodes and edges.
      */
-    private parseAnswerSets(outputFile: string|null = null){
+    public extractNodesAndEdgesFromAs(outputFile: string|null = null){
         const node_atom = new RegExp(this.template.nodes.atom.name+'\(.+\)'),
               node_arity_template = this.template.nodes.atom.variables.length;
 
@@ -89,8 +89,8 @@ export class GraphParser {
     /**
      * @returns An array of Graphs.
      */
-    public answerSetsToGraphs(): Graph[] {
-        const answerSets = this.parseAnswerSets();
+    public parse(): Graph[] {
+        const answerSets = this.extractNodesAndEdgesFromAs();
         const node_variables = this.get_node_variables(this.template.nodes.atom.variables);
         const edge_variables = this.get_edge_variables(this.template.edges.atom.variables);
 

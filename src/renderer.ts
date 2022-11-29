@@ -60,7 +60,7 @@ export class GraphRenderer {
         return elements;
     }
 
-    private convertColorWithThemePalette(colorName: string) {
+    public convertColorWithThemePalette(colorName: string) {
         if (colorName in this.theme.palette) {
             return this.theme.palette[colorName];
         }

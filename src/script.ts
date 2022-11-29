@@ -101,7 +101,7 @@ class GraphScript {
         renderer.outputType = 'base64';
 
         const parser = new GraphParser(template, answerSets);
-        const graphs = parser.answerSetsToGraphs();
+        const graphs = parser.parse();
 
         renderer.render(graphs, (index, graph) => {
             console.log(`Rendering graph ${index}...`);
