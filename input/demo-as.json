@@ -1,31 +1,31 @@
 [
     {
         "as" : [
-            "node(a)",
-            "node(b)",
-            "node(c)",
-            "node(d)",
-            "node(e)",
-            "node(f)",
-            "node(g)",
-            "edge(a,b,10)",
-            "edge(a,c,5)",
-            "edge(b,d,6)",
-            "edge(b,e,7)",
-            "edge(b,f,5)",
-            "edge(c,d,4)",
-            "edge(d,g,3)"
+            "node(a,green)",
+            "node(b,blue)",
+            "node(c,grey)",
+            "node(d,blue)",
+            "node(e,grey)",
+            "node(f,grey)",
+            "node(g,fuchsia)",
+            "edge(a,b,2,green)",
+            "edge(a,c,10,grey)",
+            "edge(b,d,6,green)",
+            "edge(b,e,7,grey)",
+            "edge(b,f,5,grey)",
+            "edge(c,d,4,grey)",
+            "edge(d,g,3,green)"
         ],
         "cost" : "1@2"
     },
     {
         "as" : [
-            "node(a)",
-            "node(b)",
-            "node(g)",
-            "edge(a,b,10)",
-            "edge(b,g,5)",
-            "edge(a,g,3)"
+            "node(a,green)",
+            "node(b,green)",
+            "node(g,green)",
+            "edge(a,b,1,blue)",
+            "edge(b,g,2,blue)",
+            "edge(a,g,10,grey)"
         ],
         "cost" : "1@2"
     }

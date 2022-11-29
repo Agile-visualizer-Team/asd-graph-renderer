@@ -44,52 +44,72 @@ export class GraphParser {
     }
 
     /**
-     * It takes a JSON object with two properties, nodes and edges, and returns an array of JSON objects
-     * with two properties, nodes and edges. The nodes and edges properties are arrays of strings. The
-     * strings are atoms. The atoms are extracted from the answer sets of a dlv program. The dlv program is
-     * generated from the JSON object
-     * @param {any} options - {
      * @param {string|null} [outputFile=null] - the file to write the output to. If null, the output is
-     * returned as a string.
+     * returned as an array of objects.
      * @returns An array of objects. Each object has two properties: nodes and edges.
      */
-    private buildOutput(options: any, outputFile: string|null = null){
-        const node_atom = new RegExp(options.nodes.atom.name+'\(.+\)'), node_ariety = +options.nodes.atom.variables.length;
-        const edge_atom = new RegExp(options.edges.atom.name+'\(.+\)'), edge_ariety = +options.edges.atom.variables.length;
-        let output: any = [];
-        this.answerSets.forEach( answerSet => {
-            const n: string[] = [];
-            const a: string[] = [];
+    private parseAnswerSets(outputFile: string|null = null){
+        const node_atom = new RegExp(this.template.nodes.atom.name+'\(.+\)'),
+              node_arity_template = this.template.nodes.atom.variables.length;
+
+        const edge_atom = new RegExp(this.template.edges.atom.name+'\(.+\)'),
+              edge_arity_template = this.template.edges.atom.variables.length;
+
+        const output: any = [];
+        this.answerSets.forEach(answerSet => {
+            const nodes: string[] = [];
+            const edges: string[] = [];
             answerSet.as.forEach((atom: string) => {
-                if(node_atom.test(atom) && atom.split(",").length == node_ariety)
-                    n.push(atom);
-                else if(edge_atom.test(atom) && atom.split(",").length == edge_ariety)
-                    a.push(atom);
+                if (node_atom.test(atom)) {
+                    let arity = atom.split(",").length;
+                    if (arity == node_arity_template) {
+                        nodes.push(atom);
+                    } else {
+                        throw Error(`node fact <${atom}> has arity ${arity}, expected value from template was ${node_arity_template}`);
+                    }
+                } else if (edge_atom.test(atom)) {
+                    let arity = atom.split(",").length;
+                    if (arity == edge_arity_template) {
+                        edges.push(atom);
+                    } else {
+                        throw Error(`edge fact <${atom}> has arity ${arity}, expected value from template was ${edge_arity_template}`);
+                    }
+                }
             })
-            if (n.length != 0) {
-                output.push({"nodes": n, "edges": a})
+            if (nodes) {
+                output.push({"nodes": nodes, "edges": edges});
             }
         })
         if (outputFile) {
             fs.writeFileSync(outputFile, JSON.stringify(output, null, 4));
         }
-        return output
+        return output;
     }
+    
     /**
-     * It takes a template, runs it through the ASP solver, and then parses the output into a list of graphs
      * @returns An array of Graphs.
      */
-    answerSetsToGraphs(): Graph[] {
-        const answerSets = this.buildOutput(this.template);
+    public answerSetsToGraphs(): Graph[] {
+        const answerSets = this.parseAnswerSets();
         const node_variables = this.get_node_variables(this.template.nodes.atom.variables);
         const edge_variables = this.get_edge_variables(this.template.edges.atom.variables);
-        return answerSets.map((as:any) => {
+
+        return answerSets.map((as: any) => {
             const nodes: GraphNode[] = as.nodes.map((atom:string) => {
                 return this.create_node(atom,node_variables);
             });
 
             const edges: GraphEdge[] = as.edges.map((atom:string) => {
                 return this.create_edge(atom, edge_variables);
+            });
+
+            edges.forEach((e: GraphEdge) => {
+                if (!nodes.find(n => n.name == e.from)) {
+                    throw Error(`edge from <${e.from}> to <${e.destination}> is invalid, from node <${e.from}> does not exist`);
+                }
+                if (!nodes.find(n => n.name == e.destination)) {
+                    throw Error(`edge from <${e.from}> to <${e.destination}> is invalid, destination node <${e.destination}> does not exist`);
+                }
             });
 
             if (this.template.nodes.style.color) {

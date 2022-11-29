@@ -3,12 +3,12 @@
     "nodes": {
         "atom": {
             "name": "node",
-            "variables": ["label","color"]
+            "variables": ["label", "color"]
         },
         "style": {
             "color": {
                 "root": "yellow",
-                "leaves": "purple",
+                "leaves": "fuchsia",
                 "nonRoot": "blue"
             }
         }
@@ -16,13 +16,14 @@
     "edges": {
         "atom": {
             "name": "edge",
-            "variables": ["from","to","weight"]
+            "variables": ["from", "to", "weight", "color"]
         },
         "style": {
             "color": {
                 "branch": "green",
                 "path": "yellow"
-            }
+            },
+            "oriented": true
         }
     }
 }

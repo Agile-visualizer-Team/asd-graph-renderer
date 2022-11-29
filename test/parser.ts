@@ -15,7 +15,7 @@ const GOOD_TEMPLATE ={
         "style":{
             "color":{
                 "root":"yellow",
-                "leaves":"purple",
+                "leaves":"fuchsia",
                 "nonRoot":"blue"
             }
         }
@@ -23,7 +23,7 @@ const GOOD_TEMPLATE ={
     "edges": {
         "atom":{
             "name": "edge",
-            "variables": ["to","from","weight"]
+            "variables": ["from","to","weight"]
         },
         "style":{
             "color":{
@@ -163,14 +163,90 @@ describe("PARSER TEST", () =>{
             new GraphParser(GOOD_TEMPLATE,[]);
         }).to.throw(Error,"Answer set list is empty")
     }),
-    it("should call buildOutput with the correct parameters", ()=> {
-        const buildOutputSpy = sinon.spy(GraphParser.prototype,<any>"buildOutput");
-        const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
-        parser.answerSetsToGraphs()
-        expect(buildOutputSpy.calledOnce).to.be.true;
-        expect(buildOutputSpy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE);
-        expect(buildOutputSpy.getCall(0).args[1]).to.be.eq(undefined);
-        buildOutputSpy.restore();
+    it("should detect nodes facts with an arity different from the one specified in the template",()=>{
+        const template = {
+            "template": "graph",
+            "nodes": {
+                "atom":{
+                    "name": "node",
+                    "variables": ["label"]
+                },
+            },
+            "edges": {
+                "atom":{
+                    "name": "edge",
+                    "variables": ["from","to"]
+                },
+            }
+        };
+        const as = [
+            {
+                "as" : [
+                    "node(a,red)",
+                    "node(b)",
+                ],
+                "cost" : "1@2"
+            }
+        ];
+        expect(() => new GraphParser(template, as).answerSetsToGraphs()).to.throw(
+            Error, `node fact <node(a,red)> has arity 2, expected value from template was 1`);
+    }),
+    it("should detect edges facts with an arity different from the one specified in the template",()=>{
+        const template = {
+            "template": "graph",
+            "nodes": {
+                "atom":{
+                    "name": "node",
+                    "variables": ["label", "color"]
+                },
+            },
+            "edges": {
+                "atom":{
+                    "name": "edge",
+                    "variables": ["from","to"]
+                },
+            }
+        };
+        const as = [
+            {
+                "as" : [
+                    "node(a,red)",
+                    "node(b,blue)",
+                    "edge(a,b,red)",
+                ],
+                "cost" : "1@2"
+            }
+        ];
+        expect(() => new GraphParser(template, as).answerSetsToGraphs()).to.throw(
+            Error, `edge fact <edge(a,b,red)> has arity 3, expected value from template was 2`);
+    }),
+    it("should detect edges which have an non-existing from node",()=>{
+        const as = [
+            {
+                "as" : [
+                    "node(a)",
+                    "node(b)",
+                    "edge(c,b,10)"
+                ],
+                "cost" : "1@2"
+            }
+        ];
+        expect(() => new GraphParser(GOOD_TEMPLATE, as).answerSetsToGraphs()).to.throw(
+            Error, `edge from <c> to <b> is invalid, from node <c> does not exist`);
+    }),
+    it("should detect edges which have an non-existing destination node",()=>{
+        const as = [
+            {
+                "as" : [
+                    "node(a)",
+                    "node(b)",
+                    "edge(a,c,10)"
+                ],
+                "cost" : "1@2"
+            }
+        ];
+        expect(() => new GraphParser(GOOD_TEMPLATE, as).answerSetsToGraphs()).to.throw(
+            Error, `edge from <a> to <c> is invalid, destination node <c> does not exist`);
     }),
     // it("buildOutput should generate a JSON file if a file path is provided", () =>{
     //     const fs_stub = sinon.stub(fs,"writeFileSync");
