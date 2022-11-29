@@ -48,7 +48,7 @@ export class GraphParser {
      * returned as an array of objects.
      * @returns An array of objects. Each object has two properties: nodes and edges.
      */
-    public extractNodesAndEdgesFromAs(outputFile: string|null = null){
+    public extractNodesAndEdgesFromAnswerSets(outputFile: string|null = null){
         const node_atom = new RegExp(this.template.nodes.atom.name+'\(.+\)'),
               node_arity_template = this.template.nodes.atom.variables.length;
 
@@ -90,7 +90,7 @@ export class GraphParser {
      * @returns An array of Graphs.
      */
     public parse(): Graph[] {
-        const answerSets = this.extractNodesAndEdgesFromAs();
+        const answerSets = this.extractNodesAndEdgesFromAnswerSets();
         const node_variables = this.get_node_variables(this.template.nodes.atom.variables);
         const edge_variables = this.get_edge_variables(this.template.edges.atom.variables);
 
@@ -103,32 +103,9 @@ export class GraphParser {
                 return this.create_edge(atom, edge_variables);
             });
 
-            edges.forEach((e: GraphEdge) => {
-                if (!nodes.find(n => n.name == e.from)) {
-                    throw Error(`edge from <${e.from}> to <${e.destination}> is invalid, from node <${e.from}> does not exist`);
-                }
-                if (!nodes.find(n => n.name == e.destination)) {
-                    throw Error(`edge from <${e.from}> to <${e.destination}> is invalid, destination node <${e.destination}> does not exist`);
-                }
-            });
-
-            if (this.template.nodes.style.color) {
-                nodes.filter(n => !n.color).forEach(n => {
-                    if (!edges.find(e => e.destination == n.name)) {
-                        n.color = this.template.nodes.style.color.root;
-                    } else if (!edges.find(e => e.from == n.name)) {
-                        n.color = this.template.nodes.style.color.leaves;
-                    } else {
-                        n.color = this.template.nodes.style.color.nonRoot;
-                    }
-                });
-            }
-
-            if (this.template.edges.style.color) {
-                edges.filter(e => !e.color).forEach(n => {
-                    n.color = this.template.edges.style.color.branch
-                });
-            }
+            this.checkEdgesConnections(edges, nodes);
+            this.assignDefaultNodesColors(nodes, edges);
+            this.assignDefaultEdgesColors(edges);
 
             return <Graph>{
                 nodes: nodes,
@@ -137,6 +114,57 @@ export class GraphParser {
                     ? this.template.edges.style.oriented
                     : false
             };
+        });
+    }
+
+    /**
+     * If specified, assign the default color to edges which are not colored
+     * @param nodes
+     * @param edges
+     * @private
+     */
+    private assignDefaultEdgesColors(edges: GraphEdge[]) {
+        if (this.template.edges.style.color) {
+            edges.filter(e => !e.color).forEach(n => {
+                n.color = this.template.edges.style.color.branch
+            });
+        }
+    }
+
+    /**
+     * If specified, assign the default colors to nodes which are not colored
+     * @param nodes
+     * @param edges
+     * @private
+     */
+    private assignDefaultNodesColors(nodes: GraphNode[], edges: GraphEdge[]) {
+        if (this.template.nodes.style.color) {
+            nodes.filter(n => !n.color).forEach(n => {
+                if (!edges.find(e => e.destination == n.name)) {
+                    n.color = this.template.nodes.style.color.root;
+                } else if (!edges.find(e => e.from == n.name)) {
+                    n.color = this.template.nodes.style.color.leaves;
+                } else {
+                    n.color = this.template.nodes.style.color.nonRoot;
+                }
+            });
+        }
+    }
+
+    /**
+     * Check if edges are connected to existing nodes
+     * @param edges
+     * @param nodes
+     * @private
+     */
+    private checkEdgesConnections(edges: GraphEdge[], nodes: GraphNode[]) {
+        edges.forEach((e: GraphEdge) => {
+            if (!nodes.find(n => n.name == e.from)) {
+                throw Error(`edge from <${e.from}> to <${e.destination}> is invalid, from node <${e.from}> does not exist`);
+            }
+            if (!nodes.find(n => n.name == e.destination)) {
+                throw Error(`edge from <${e.from}> to <${e.destination}> is invalid, destination node <${e.destination}> does not exist`);
+            }
         });
     }
 

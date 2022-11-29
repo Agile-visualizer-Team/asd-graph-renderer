@@ -15,7 +15,7 @@
 
 Then type an example answer set as json string:
 
-    [{"as":["node(a)","node(b)","edge(a,b,3)"]}]
+    [{"as":["node(a,red)","node(b,green)","edge(a,b,3,blue)"]}]
 
 ## Demo
 

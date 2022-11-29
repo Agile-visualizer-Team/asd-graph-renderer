@@ -251,7 +251,7 @@ describe("PARSER TEST", () =>{
     it("extractNodesAndEdgesFromAs should generate a JSON file if an output file path is provided", () =>{
         const fs_stub = sinon.stub(fs,"writeFileSync");
         const parser = new GraphParser(GOOD_TEMPLATE, GOOD_AS);
-        parser.extractNodesAndEdgesFromAs('any_path');
+        parser.extractNodesAndEdgesFromAnswerSets('any_path');
         expect(fs_stub.calledOnce).to.be.true;
     }),
     it("should get the correct node variables", () =>{
