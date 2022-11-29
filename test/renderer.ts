@@ -36,7 +36,7 @@ function getMockedGraph(): Graph {
 describe("RENDERER TEST", function () {
     this.timeout(100000);
 
-    it("should generate the correct image base64 data according to the input graph and a pre-rendered expected image", (done) => {
+    it("should generate the correct output image according to an input graph and a pre-rendered expected image", (done) => {
         const graph = getMockedGraph();
         const renderer = new GraphRenderer();
         renderer.width = 1280;
