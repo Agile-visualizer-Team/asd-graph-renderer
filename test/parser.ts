@@ -310,6 +310,86 @@ describe("PARSER TEST", () =>{
                 expect(res1[i].edges[j].weight).to.be.eq(res2[i].edges[j].weight);
             }
         }
+    }),
+    it("should create, given two template with from-to switched, create a mirror graph", ()=>{
+        const FROM_TO ={
+            "template": "graph",
+            "nodes": {
+                "atom":{
+                    "name": "node",
+                    "variables": ["label"]
+                },
+                "style":{
+                    "color":{
+                        "root":"yellow",
+                        "leaves":"fuchsia",
+                        "nonRoot":"blue"
+                    }
+                }
+            },
+            "edges": {
+                "atom":{
+                    "name": "edge",
+                    "variables": ["from","to","weight"]
+                },
+                "style":{
+                    "color":{
+                        "branch":"green",
+                        "path":"yellow"
+                    }
+                }
+            }
+        };
+        const TO_FROM ={
+            "template": "graph",
+            "nodes": {
+                "atom":{
+                    "name": "node",
+                    "variables": ["label"]
+                },
+                "style":{
+                    "color":{
+                        "root":"yellow",
+                        "leaves":"fuchsia",
+                        "nonRoot":"blue"
+                    }
+                }
+            },
+            "edges": {
+                "atom":{
+                    "name": "edge",
+                    "variables": ["to","from","weight"]
+                },
+                "style":{
+                    "color":{
+                        "branch":"green",
+                        "path":"yellow"
+                    }
+                }
+            }
+        }
+        const AS = [        
+            {
+                "as" : [
+                    "node(a)",
+                    "node(b)",
+                    "node(g)",
+                    "edge(a,b,10)",
+                    "edge(b,g,5)",
+                    "edge(a,g,3)"
+                ]
+        }];
+        const parserTO = new GraphParser(TO_FROM, AS);
+        const parserFROM = new GraphParser(FROM_TO, AS);
+        const resTO = parserTO.parse();
+        const resFROM= parserFROM.parse();
+        for(let i = 0; i < resTO.length; ++i){
+            for(let j = 0; j < resTO[i].edges.length; ++j){
+                expect(resTO[i].edges[j].from).to.be.eq(resFROM[i].edges[j].destination);
+                expect(resTO[i].edges[j].destination).to.be.eq(resFROM[i].edges[j].from);
+                expect(resTO[i].edges[j].weight).to.be.eq(resFROM[i].edges[j].weight);
+            }
+        }
     })
     // it("should pass colors in createNodeGraph if the provided template contains style", ()=>{
     //     const createGraphNode_spy = sinon.spy(createGraphNode);
