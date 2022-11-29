@@ -61,7 +61,7 @@ describe("RENDERER TEST", function () {
         }).to.throw(Error, "Unsupported layout type");
     });
 
-    it("should map a generic color name to the mapped by the template", () => {
+    it("should map a generic color name to the one mapped by the template", () => {
         const renderer = new GraphRenderer();
         renderer.theme = VSCODE_THEME;
         expect(renderer.convertColorWithThemePalette('red')).to.be.equal(VSCODE_THEME.palette.red);
