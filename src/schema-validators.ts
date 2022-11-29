@@ -155,16 +155,6 @@ const TEMPLATE_COLORS_LIST = [
     'yellowgreen',
 ];
 
-const TEMPLATE_SCHEMA = {
-    type: "object",
-    properties: {
-        template: {type: "string"},
-        nodes: {type: "string"},
-        edge: {type: "string"},
-    },
-    required: ["nodes", "edge"]
-};
-
 const NEW_TEMPLATE_SCHEMA = {
     type: "object",
     properties: {
@@ -194,7 +184,7 @@ const NEW_TEMPLATE_SCHEMA = {
                 }
             },required: ["atom"]
         },
-        edge: {
+        edges: {
           type: "object",
           properties: {
               atom: {
@@ -220,7 +210,7 @@ const NEW_TEMPLATE_SCHEMA = {
           },required: ["atom"]
       }
     },
-    required: ["template", "nodes","edge"]
+    required: ["template", "nodes","edges"]
   };
 
 const ANSWER_SETS_SCHEMA = {

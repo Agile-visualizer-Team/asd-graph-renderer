@@ -1,14 +1,16 @@
 import path from "path";
 import yargs from "yargs";
-import {GraphImagesGenerator} from "./generator";
 import fs from "fs";
-import {Graph} from "./models";
 import readlineSync from "readline-sync";
+import {GraphRenderer} from "./renderer";
+import {VSCODE_THEME} from "./renderer-themes";
+import {GraphRendererLayout} from "./renderer-layout";
+import {GraphParser} from "./parser";
 
 class GraphScript {
     constructor() {
         try {
-            this.run();
+            this.runCliScript();
         } catch (error) {
             if (error instanceof Error) {
                 console.error(error.message);
@@ -18,7 +20,15 @@ class GraphScript {
         }
     }
 
-    private run() {
+    private static jsonFileToObject(path: string) {
+        return JSON.parse(fs.readFileSync(path, 'utf8'));
+    }
+
+    private static jsonStringToObject(jsonStr: string) {
+        return JSON.parse(jsonStr);
+    }
+
+    private runCliScript() {
         const FILE_PATHS_RELATIVE_TO = process.cwd();
 
         yargs
@@ -49,7 +59,7 @@ class GraphScript {
                     const template = GraphScript.jsonFileToObject(path.join(FILE_PATHS_RELATIVE_TO, argv.template));
                     const answerSets = GraphScript.jsonFileToObject(path.join(FILE_PATHS_RELATIVE_TO, argv.as));
                     const outputDirPath = path.join(FILE_PATHS_RELATIVE_TO, argv.output);
-                    GraphScript.runImagesGenerator(template, answerSets, outputDirPath);
+                    GraphScript.runRendering(template, answerSets, outputDirPath);
                 })
             .command('fromstr',
                 'generate the graph image from json string inputs', (yargs) => {
@@ -76,31 +86,38 @@ class GraphScript {
                     const template = GraphScript.jsonFileToObject(path.join(FILE_PATHS_RELATIVE_TO, argv.template));
                     const answerSets = GraphScript.jsonStringToObject(jsonStr);
                     const outputDirPath = path.join(FILE_PATHS_RELATIVE_TO, argv.output);
-                    GraphScript.runImagesGenerator(template, answerSets, outputDirPath);
+                    GraphScript.runRendering(template, answerSets, outputDirPath);
                 })
             .version(false)
             .parseSync();
     }
 
-    private static jsonFileToObject(path: string) {
-        return JSON.parse(fs.readFileSync(path, 'utf8'));
-    }
+    private static runRendering(template: any, answerSets: any[], outputDirPath: string) {
+        const renderer = new GraphRenderer();
+        renderer.width = 1280;
+        renderer.height = 1280;
+        renderer.theme = VSCODE_THEME;
+        renderer.layout = GraphRendererLayout.Dagre;
+        renderer.outputType = 'base64';
 
-    private static jsonStringToObject(jsonStr: string) {
-        return JSON.parse(jsonStr);
-    }
+        const parser = new GraphParser(template, answerSets);
+        const graphs = parser.answerSetsToGraphs();
 
-    private static runImagesGenerator(template: any, answerSets: any[], outputDirPath: string) {
-        new GraphImagesGenerator(template, answerSets, outputDirPath).run({
-            onBeforeRendering: (graph: Graph, index: number) => {
-                console.log(`Rendering graph ${index}...`);
-            },
-            onAfterRendering: (graph: Graph, index: number, imgBase64: string) => {
-                console.log(`Graph ${index} rendered successfully...`);
-            },
-            onFileSaved: (graph: Graph, index: number, filename: string) => {
-                console.log(`Graph ${index} saved as ${filename}`);
+        renderer.render(graphs, (index, graph) => {
+            console.log(`Rendering graph ${index}...`);
+        }, (index, graph, output) => {
+            console.log(`Graph ${index} rendered successfully...`);
+            const filename = 'graph-' + index + '-' + Date.now() + '.png';
+            const filepath = outputDirPath + '/' + filename;
+
+            if (!fs.existsSync(outputDirPath)){
+                fs.mkdirSync(outputDirPath, {
+                    recursive: true
+                });
             }
+
+            fs.writeFileSync(filepath, output, 'base64');
+            console.log(`Graph ${index} saved as ${filename}`);
         });
     }
 }

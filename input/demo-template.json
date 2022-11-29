@@ -1,27 +1,27 @@
 {
     "template": "graph",
     "nodes": {
-        "atom":{
+        "atom": {
             "name": "node",
             "variables": ["label","color"]
         },
-        "style":{
-            "color":{
-                "root":"yellow",
-                "leaves":"purple",
-                "nonRoot":"blue"
+        "style": {
+            "color": {
+                "root": "yellow",
+                "leaves": "purple",
+                "nonRoot": "blue"
             }
         }
     },
-    "edge": {
-        "atom":{
+    "edges": {
+        "atom": {
             "name": "edge",
-            "variables": ["to","from","weight"]
+            "variables": ["from","to","weight"]
         },
-        "style":{
-            "color":{
-                "branch":"green",
-                "path":"yellow"
+        "style": {
+            "color": {
+                "branch": "green",
+                "path": "yellow"
             }
         }
     }

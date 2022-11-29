@@ -20,7 +20,7 @@ const GOOD_TEMPLATE ={
             }
         }
     },
-    "edge": {
+    "edges": {
         "atom":{
             "name": "edge",
             "variables": ["to","from","weight"]
@@ -83,7 +83,7 @@ describe("PARSER TEST", () =>{
                         "variables": []
                     },
                 },
-                "edge": {
+                "edges": {
                     "atom":{
                         "name": "edge",
                         "variables": ["to","from","weight"]
@@ -103,7 +103,7 @@ describe("PARSER TEST", () =>{
                         "variables": ["test"]
                     },
                 },
-                "edge": {
+                "edges": {
                     "atom":{
                         "name": "edge",
                         "variables": ["to","from","weight"]
@@ -123,7 +123,7 @@ describe("PARSER TEST", () =>{
                         "variables": ["label"]
                     },
                 },
-                "edge": {
+                "edges": {
                     "atom":{
                         "name": "edge",
                         "variables": []
@@ -131,7 +131,7 @@ describe("PARSER TEST", () =>{
                 }
         };
             new GraphParser(no_param_template,[]);
-        }).to.throw(Error,"Template is not valid: /edge/atom/variables must NOT have fewer than 2 items")
+        }).to.throw(Error,"Template is not valid: /edges/atom/variables must NOT have fewer than 2 items")
     }),
     it("should throw an exception if edge key does not contain <from, to> in variables", ()=>{
         expect(function(){
@@ -143,7 +143,7 @@ describe("PARSER TEST", () =>{
                         "variables": ["label"]
                     },
                 },
-                "edge": {
+                "edges": {
                     "atom":{
                         "name": "edge",
                         "variables": ["test1","test2","weight"]
@@ -191,7 +191,7 @@ describe("PARSER TEST", () =>{
         const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
         parser.answerSetsToGraphs();
         expect(edge_variables_spy.calledOnce).to.be.true;
-        expect(edge_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.edge.atom.variables);
+        expect(edge_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.edges.atom.variables);
         edge_variables_spy.restore()
     }),
     it("should generate a correct node from a string", () =>{

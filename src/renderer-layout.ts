@@ -1,4 +1,4 @@
 export enum GraphRendererLayout {
-    Graph,
-    Tree
+    Dagre,
+    Klay
 }

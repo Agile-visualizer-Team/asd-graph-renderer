@@ -20,7 +20,6 @@ export interface GraphEdge {
 export function createGraphNode(options?: Partial<GraphNode>):GraphNode{
     const defaults ={
         name: "node",
-
     }
     return {
         ...defaults,
@@ -33,10 +32,6 @@ export function createGraphEdge(options?: Partial<GraphEdge>):GraphEdge{
         from: "a",
         destination:"b",
         weight: null,
-        // color: {
-        //     branch: "blue",
-        //     path: "yellow",
-        // },
         oriented: true
     }
     return {

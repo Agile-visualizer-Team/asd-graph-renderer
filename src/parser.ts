@@ -29,7 +29,7 @@ export class GraphParser {
         }
         this.template = template;
         this.check_variables_name(this.template.nodes.atom.variables,this.MANDATORY_NODE_VARIABLE);
-        this.check_variables_name(this.template.edge.atom.variables, this.MANDATORY_EDGE_VARIABLE);
+        this.check_variables_name(this.template.edges.atom.variables, this.MANDATORY_EDGE_VARIABLE);
 
         if (!validateAnswerSetsSchema(answerSets)) {
             assert(validateAnswerSetsSchema.errors);
@@ -44,43 +44,18 @@ export class GraphParser {
     }
 
     /**
-     * It takes a JSON object with two properties, nodes and edge, and returns an array of JSON objects
-     * with two properties, nodes and edge. The nodes and edge properties are arrays of strings. The
+     * It takes a JSON object with two properties, nodes and edges, and returns an array of JSON objects
+     * with two properties, nodes and edges. The nodes and edges properties are arrays of strings. The
      * strings are atoms. The atoms are extracted from the answer sets of a dlv program. The dlv program is
      * generated from the JSON object
      * @param {any} options - {
      * @param {string|null} [outputFile=null] - the file to write the output to. If null, the output is
      * returned as a string.
-     * @returns An array of objects. Each object has two properties: nodes and edge.
+     * @returns An array of objects. Each object has two properties: nodes and edges.
      */
-    // private oldbuildOutput(options: any, outputFile: string|null = null) {    
-    //     const nodes = options.node;
-    //     const edge = options.edge;
-    //     const node_atom = new RegExp(nodes[0]+'\(.+\)'), node_ariety = +nodes[1];
-    //     const edge_atom = new RegExp(edge[0]+'\(.+\)'), edge_ariety = +edge[1];
-    //     let output: any = [];
-    //     this.answerSets.forEach( answerSet => {
-    //         const n: string[] = [];
-    //         const a: string[] = [];
-    //         answerSet.as.forEach((atom: string) => {
-    //             if(node_atom.test(atom) && atom.split(",").length == node_ariety)
-    //                 n.push(atom);
-    //             else if(edge_atom.test(atom) && atom.split(",").length == edge_ariety)
-    //                 a.push(atom);
-    //         })
-    //         if (n.length != 0) {
-    //             output.push({"nodes": n, "edge": a})
-    //         }
-    //     })
-    //     if (outputFile) {
-    //         fs.writeFileSync(outputFile, JSON.stringify(output, null, 4));
-    //     }
-    //     return output
-    // }
-
     private buildOutput(options: any, outputFile: string|null = null){
         const node_atom = new RegExp(options.nodes.atom.name+'\(.+\)'), node_ariety = +options.nodes.atom.variables.length;
-        const edge_atom = new RegExp(options.edge.atom.name+'\(.+\)'), edge_ariety = +options.edge.atom.variables.length;
+        const edge_atom = new RegExp(options.edges.atom.name+'\(.+\)'), edge_ariety = +options.edges.atom.variables.length;
         let output: any = [];
         this.answerSets.forEach( answerSet => {
             const n: string[] = [];
@@ -92,7 +67,7 @@ export class GraphParser {
                     a.push(atom);
             })
             if (n.length != 0) {
-                output.push({"nodes": n, "edge": a})
+                output.push({"nodes": n, "edges": a})
             }
         })
         if (outputFile) {
@@ -107,53 +82,39 @@ export class GraphParser {
     answerSetsToGraphs(): Graph[] {
         const answerSets = this.buildOutput(this.template);
         const node_variables = this.get_node_variables(this.template.nodes.atom.variables);
-        const edge_variables = this.get_edge_variables(this.template.edge.atom.variables);
+        const edge_variables = this.get_edge_variables(this.template.edges.atom.variables);
         return answerSets.map((as:any) => {
             const nodes: GraphNode[] = as.nodes.map((atom:string) => {
                 return this.create_node(atom,node_variables);
             });
 
-            const edges: GraphEdge[] = as.edge.map((atom:string) => {
+            const edges: GraphEdge[] = as.edges.map((atom:string) => {
                 return this.create_edge(atom, edge_variables);
             });
 
-            let nodeDefaultColors: any;
             if (this.template.nodes.style.color) {
-                nodeDefaultColors = this.template.nodes.style.color;
-            } else {
-                nodeDefaultColors = { // TODO
-                    root:"yellow",
-                    leaves:"purple",
-                    nonRoot:"blue"
-                };
+                nodes.filter(n => !n.color).forEach(n => {
+                    if (!edges.find(e => e.destination == n.name)) {
+                        n.color = this.template.nodes.style.color.root;
+                    } else if (!edges.find(e => e.from == n.name)) {
+                        n.color = this.template.nodes.style.color.leaves;
+                    } else {
+                        n.color = this.template.nodes.style.color.nonRoot;
+                    }
+                });
             }
-            nodes.filter(n => !n.color).forEach(n => {
-                if (!edges.find(e => e.destination == n.name)) {
-                    n.color = nodeDefaultColors.root;
-                } else if (!edges.find(e => e.from == n.name)) {
-                    n.color = nodeDefaultColors.leaves;
-                } else {
-                    n.color = nodeDefaultColors.nonRoot;
-                }
-            });
 
-            let edgesDefaultColors: any;
-            if (this.template.edge.style.color) {
-                edgesDefaultColors = this.template.edge.style.color;
-            } else {
-                edgesDefaultColors = { // TODO
-                    branch:"green",
-                    path:"yellow"
-                };
+            if (this.template.edges.style.color) {
+                edges.filter(e => !e.color).forEach(n => {
+                    n.color = this.template.edges.style.color.branch
+                });
             }
-            edges.filter(e => !e.color)
-                .map(n => n.color = edgesDefaultColors.branch);
 
             return <Graph>{
                 nodes: nodes,
                 edges: edges,
-                oriented: this.template.edge.style
-                    ? this.template.edge.style.oriented
+                oriented: this.template.edges.style
+                    ? this.template.edges.style.oriented
                     : false
             };
         });

@@ -1,14 +1,12 @@
 export interface GraphRendererTheme {
     backgroundColor: string;
     node: GraphRendererNodeTheme;
-    rootNode: GraphRendererNodeTheme;
-    leafNode: GraphRendererNodeTheme;
     edge: GraphRendererEdgeTheme;
+    palette: {[key: string]: string};
 }
 
 export interface GraphRendererEdgeTheme {
     lineColor: string;
-    arrowColor: string;
     textColor: string;
     fontFamily: string;
     fontSize: string;
@@ -31,15 +29,13 @@ export interface GraphRendererNodeTheme {
     }
 }
 
-const VSCODE_THEME_FONT = 'Cascadia Code'; // TODO fix: se non c'è il font installato non viene renderizzato
-
-export const VSCODE_THEME = {
+export const VSCODE_THEME = <GraphRendererTheme>{
     backgroundColor: '#1e1e1e',
     node: <GraphRendererNodeTheme>{
         backgroundColor: '#252526',
-        borderColor: '#2765ab',
+        borderColor: '#666',
         textColor: '#fff',
-        fontFamily: VSCODE_THEME_FONT,
+        fontFamily: 'Cascadia Code, Arial',
         fontSize: '18px',
         fontWeight: '400',
         ellipse: {
@@ -50,28 +46,20 @@ export const VSCODE_THEME = {
             heightMultiplier: 26
         }
     },
-    rootNode: {
-        backgroundColor: '#252526',
-        borderColor: '#12674a',
-        textColor: '#fff',
-        fontFamily: VSCODE_THEME_FONT,
-        fontSize: '18px',
-        fontWeight: '500',
-    },
-    leafNode: {
-        backgroundColor: '#252526',
-        borderColor: '#a12d7c',
-        textColor: '#fff',
-        fontFamily: VSCODE_THEME_FONT,
-        fontSize: '18px',
-        fontWeight: '400',
-    },
     edge: {
         lineColor: '#3794ff',
-        arrowColor: '#3794ff',
-        textColor: '#cccccc',
-        fontFamily: VSCODE_THEME_FONT,
+        textColor: '#eeeeee',
+        fontFamily: 'Cascadia Code, Arial',
         fontSize: '7px',
         fontWeight: '300',
+    },
+    palette: {
+        red: '#ee273e',
+        green: '#18af6c',
+        blue: '#3794ff',
+        yellow: '#fec20e',
+        magenta: '#d82983',
+        violet: '#7261ab',
+        orange: '#f47a20'
     }
-} as GraphRendererTheme;
+};

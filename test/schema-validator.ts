@@ -12,7 +12,7 @@ const RIGHT_SCHEMA = {
             }
         }
     },
-    edge: {
+    edges: {
         atom:{
             name: "edge",
             variables: ["from","to","weight","color"] 
@@ -50,7 +50,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
                     }
                 }
             },
-            edge: {
+            edges: {
                 atom:{
                     name: "edge",
                     variables: ["from","from","weight","color"] 
@@ -73,7 +73,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
                 atom:{
                 },
             },
-            edge: {
+            edges: {
                 atom:{
                     name: "edge",
                     variables: ["from","from","weight","color"] 
@@ -91,7 +91,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
                     variables: ["label"]
                 },
             },
-            edge: {
+            edges: {
                 atom:{
                     name: "1234_asdsa",
                     variables: ["from","to","weight","color"] 
@@ -105,7 +105,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
             template: "graph",
             nodes: {
             },
-            edge: {
+            edges: {
             }
         }
         expect(validateTemplateSchema(required_mismatch)).to.be.false;
@@ -119,7 +119,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
                     variables: []
                 },
             },
-            edge: {
+            edges: {
                 atom:{
                     name: "edge",
                     variables: [] 

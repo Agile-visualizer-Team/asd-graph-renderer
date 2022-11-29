@@ -38,7 +38,7 @@ In order to generate a demo graph rendering, run `npm start`. The following json
                 }
             }
         },
-        "edge": {
+        "edges": {
             "atom":{
                 "name": "edge",
                 "variables": ["to","from","weight"]

@@ -1,5 +1,6 @@
 {
     "exclude": [
+        "./coverage",
         "./node_modules",
         "./build",
         "./test"

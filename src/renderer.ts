@@ -4,13 +4,14 @@ import {GraphRendererLayout} from "./renderer-layout";
 
 declare function require(name: string): any;
 const cytosnap = require('cytosnap');
-cytosnap.use(['cytoscape-dagre', 'cytoscape-klay']);
+cytosnap.use(['cytoscape-dagre']);
 
 export class GraphRenderer {
     public width: number = 800;
     public height: number = 600;
     public theme: GraphRendererTheme = VSCODE_THEME;
-    public layout: GraphRendererLayout = GraphRendererLayout.Tree;
+    public layout: GraphRendererLayout = GraphRendererLayout.Dagre;
+    public outputType = 'base64';
 
     private generateCytoscapeElements(graph: Graph): object[] {
         const elements: any[] = [];
@@ -35,6 +36,8 @@ export class GraphRenderer {
                     width: width,
                     height: height,
                     color: n.color
+                        ? this.convertColorWithThemePalette(n.color)
+                        : this.theme.node.borderColor
                 }
             });
         });
@@ -46,7 +49,9 @@ export class GraphRenderer {
                     source: e.from,
                     target: e.destination,
                     weight: e.weight,
-                    color: e.color,
+                    color: e.color
+                        ? this.convertColorWithThemePalette(e.color)
+                        : this.theme.edge.lineColor,
                     arrowShape: graph.oriented ? 'triangle' : 'none'
                 }
             });
@@ -55,24 +60,21 @@ export class GraphRenderer {
         return elements;
     }
 
-    private generateCytoscapeLayout(): object {
-        if (this.layout == GraphRendererLayout.Graph) {
-            return {
-                name: 'klay',
-                klay: {
-                    direction: 'DOWN'
-                }
-            };
+    private convertColorWithThemePalette(colorName: string) {
+        if (colorName in this.theme.palette) {
+            return this.theme.palette[colorName];
         }
+        return colorName;
+    }
 
-        if (this.layout == GraphRendererLayout.Tree) {
+    private generateCytoscapeLayout(): object {
+        if (this.layout == GraphRendererLayout.Dagre) {
             return {
                 name: 'dagre',
                 edgeSep: 50,
                 rankDir: 'TB',
             };
         }
-
         throw new Error("Unsupported layout type");
     }
 
@@ -90,7 +92,6 @@ export class GraphRenderer {
                     'text-halign': 'center',
                     'border-width': '1px',
                     'border-color': 'data(color)',
-                    // 'border-color': this.theme.node.borderColor,
                     'color': this.theme.node.textColor,
                     'padding': '0 0 0 100px',
                     'width': 'data(width)',
@@ -98,34 +99,11 @@ export class GraphRenderer {
                     'shape': 'data(shape)'
                 }
             },
-            // {
-            //     selector: 'node.root',
-            //     style: {
-            //         'font-family': this.theme.rootNode.fontFamily,
-            //         'font-size': this.theme.rootNode.fontSize,
-            //         'font-weight': this.theme.rootNode.fontWeight,
-            //         'background-color': this.theme.rootNode.backgroundColor,
-            //         'border-color': this.theme.rootNode.borderColor,
-            //         'color': this.theme.rootNode.textColor,
-            //     }
-            // },
-            // {
-            //     selector: 'node.leaf',
-            //     style: {
-            //         'font-family': this.theme.leafNode.fontFamily,
-            //         'font-size': this.theme.leafNode.fontSize,
-            //         'font-weight': this.theme.leafNode.fontWeight,
-            //         'background-color': this.theme.leafNode.backgroundColor,
-            //         'border-color': this.theme.leafNode.borderColor,
-            //         'color': this.theme.leafNode.textColor,
-            //     }
-            // },
             {
                 selector: 'edge',
                 style: {
                     'width': 1,
                     'line-color': 'data(color)',
-                    //'line-color': this.theme.edge.lineColor,
                     'line-style': 'dashed',
                     'line-dash-pattern': [6, 3],
                     'line-dash-offset': 0,
@@ -133,7 +111,6 @@ export class GraphRenderer {
                     'arrow-scale': 0.7,
                     'target-arrow-shape': 'data(arrowShape)',
                     'target-arrow-color': 'data(color)',
-                    // 'target-arrow-color': this.theme.edge.arrowColor,
                     'source-label': 'data(weight)',
                     'source-text-offset': 18,
                     'font-family': this.theme.edge.fontFamily,
@@ -150,32 +127,38 @@ export class GraphRenderer {
     }
 
     render(graphs: Graph[],
-           onGraphStarted: (index: number, graph: Graph) => void,
-           onGraphCompleted: (index: number, graph: Graph, base64Data: string) => void) {
+           onGraphStarted?: (index: number, graph: Graph) => void,
+           onGraphCompleted?: (index: number, graph: Graph, output: string) => void) {
         const that = this;
         const snap = cytosnap({
             args: ['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage'] // ubuntu fix
         });
 
-        // TODo aggiungere catch per gestire le promise fallite
+        const layout = that.generateCytoscapeLayout();
+        const style = that.generateCytoscapeStyle();
+
         snap.start().then(() => {
             const renderedPromises: Promise<any>[] = [];
 
             graphs.forEach((graph, index) => {
-                onGraphStarted(index, graph);
+                if (onGraphStarted) {
+                    onGraphStarted(index, graph);
+                }
 
                 const renderingPromise = snap.shot({
                     elements: that.generateCytoscapeElements(graph),
-                    layout: that.generateCytoscapeLayout(),
-                    style: that.generateCytoscapeStyle(),
-                    resolvesTo: 'base64',
+                    layout: layout,
+                    style: style,
+                    resolvesTo: this.outputType,
                     format: 'png',
                     quality: 100,
                     width: that.width,
                     height: that.height,
                     background: that.theme.backgroundColor
-                }).then(function (base64Data: any) {
-                    onGraphCompleted(index, graph, base64Data);
+                }).then(function (output: any) {
+                    if (onGraphCompleted) {
+                        onGraphCompleted(index, graph, output);
+                    }
                 });
                 renderedPromises.push(renderingPromise);
             });
@@ -185,9 +168,4 @@ export class GraphRenderer {
             });
         });
     }
-}
-
-export interface OnRenderingComplete {
-    index: number;
-    base64Data: string;
 }

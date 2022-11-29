@@ -1,31 +1,66 @@
-import {GraphRenderer, OnRenderingComplete} from "../src/renderer";
+import {GraphRenderer} from "../src/renderer";
 import {VSCODE_THEME} from "../src/renderer-themes";
 import {GraphRendererLayout} from "../src/renderer-layout";
 import {Graph, GraphEdge, GraphNode} from "../src/models";
 import * as assert from "assert";
 import * as fs from "fs";
 import path from "path";
+import {expect} from "chai";
 
-describe("Renderer_Test", function () {
+function getMockedGraph(): Graph {
+    const nodes: GraphNode[] = [
+        <GraphNode>{
+            name: "a",
+            color: "red"
+        },
+        <GraphNode> {
+            name: "foo",
+            color: "blue"
+        }
+    ];
+    const edges: GraphEdge[] = [
+        {
+            from: "a",
+            destination: "foo",
+            weight: null,
+            color: "orange"
+        }
+    ];
+    return <Graph>{
+        nodes: nodes,
+        edges: edges,
+        oriented: true
+    };
+}
+
+describe("RENDERER TEST", function () {
     this.timeout(100000);
 
-    // TODO aggiornare con le nuove interface
+    it("should generate the correct image base64 data according to the input graph and a pre-rendered image", (done) => {
+        const graph = getMockedGraph();
+        const renderer = new GraphRenderer();
+        renderer.width = 1280;
+        renderer.height = 1280;
+        renderer.theme = VSCODE_THEME;
+        renderer.layout = GraphRendererLayout.Dagre;
+        renderer.render([graph], () => {},
+            (index, graph, generatedBase64) => {
+            let testImagePath = path.join(__dirname, "renderer-expected-image.png");
+            let expectedBase64 = fs.readFileSync(testImagePath).toString('base64');
+            assert.equal(generatedBase64, expectedBase64);
+            done();
+        });
+    });
 
-    // it("should generate the correct image base64 data according to the input graph and a pre-rendered image", (done) => {
-    //     const nodes: GraphNode[] = [new GraphNode("a"), new GraphNode("b")];
-    //     const edges: GraphEdge[] = [new GraphEdge(nodes[0], nodes[1])];
-    //     const graph = new Graph(nodes, edges);
-
-    //     const renderer = new GraphRenderer();
-    //     renderer.width = 1280;
-    //     renderer.height = 1280;
-    //     renderer.theme = VSCODE_THEME;
-    //     renderer.layout = GraphRendererLayout.Tree;
-    //     renderer.render(graph).then((img: OnRenderingComplete) => {
-    //         let expectedBase64 = fs.readFileSync(path.join(__dirname, "renderer_base64_img"), {encoding:'utf8', flag:'r'});
-    //         let generatedBase64 = img.base64Data;
-    //         assert.equal(generatedBase64, expectedBase64);
-    //         done();
-    //     });
-    // });
+    it("should throw an exception if the layout type is not supported", () => {
+        const graph = getMockedGraph();
+        const renderer = new GraphRenderer();
+        renderer.width = 1280;
+        renderer.height = 1280;
+        renderer.theme = VSCODE_THEME;
+        renderer.layout = GraphRendererLayout.Klay;
+        expect(() => {
+            renderer.render([graph]);
+        }).to.throw(Error, "Unsupported layout type");
+    });
 });
