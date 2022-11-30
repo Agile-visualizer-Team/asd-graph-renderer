@@ -92,7 +92,7 @@ class GraphScript {
             .parseSync();
     }
 
-    private static runRendering(template: any, answerSets: any[], outputDirPath: string) {
+    public static runRendering(template: any, answerSets: any[], outputDirPath: string) {
         const renderer = new GraphRenderer();
         renderer.width = 1280;
         renderer.height = 1280;
