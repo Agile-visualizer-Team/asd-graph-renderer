@@ -128,10 +128,37 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
         }
         expect(validateTemplateSchema(arguments_mismatch)).to.be.false;
     }),
+    it("should fail if the user set an invalid color", ()=>{
+        const wrong_color_schema = {    
+            template: "graph",
+            nodes: {
+                atom:{
+                },
+                style:{
+                    color:{
+                    }
+                }
+            },
+            edges: {
+                atom:{
+                    name: "edge",
+                    variables: ["from","to","weight","color"] 
+                },
+                style:{
+                    color:{
+                        branch:"prova",
+                    },
+                    oriented: true
+                }
+            }
+        }
+        expect(validateTemplateSchema(wrong_color_schema)).to.be.false;
+    }),
     it("should use default value if not provided", () =>{
         validateTemplateSchema(RIGHT_SCHEMA);
         expect((<any>RIGHT_SCHEMA).nodes.atom.name).eq("node");
         expect((<any>RIGHT_SCHEMA).nodes.atom.variables).deep.equal(['label']);
     })
+
 });
 
