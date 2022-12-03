@@ -1,11 +1,11 @@
 import path from "path";
 import yargs from "yargs";
 import fs from "fs";
-import readlineSync from "readline-sync";
 import {GraphRenderer} from "./renderer";
 import {VSCODE_THEME} from "./renderer-themes";
 import {GraphRendererLayout} from "./renderer-layout";
 import {GraphParser} from "./parser";
+import readline from 'readline';
 
 class GraphScript {
     constructor() {
@@ -75,18 +75,24 @@ class GraphScript {
                             required: true
                         })
                 }, (argv) => {
-                    const jsonStr = readlineSync.question('');
-
-                    console.log();
-                    console.log(`Using <<${argv.template}>> as template file...`);
-                    console.log(`Using answer set json from stdin (${jsonStr.length} chars)...`);
-                    console.log(`Using ${argv.output} as output directory...`);
-                    console.log();
-
-                    const template = GraphScript.jsonFileToObject(path.join(FILE_PATHS_RELATIVE_TO, argv.template));
-                    const answerSets = GraphScript.jsonStringToObject(jsonStr);
-                    const outputDirPath = path.join(FILE_PATHS_RELATIVE_TO, argv.output);
-                    GraphScript.runRendering(template, answerSets, outputDirPath);
+                    const rl = readline.createInterface({
+                        input: process.stdin,
+                        output: process.stdout,
+                        terminal: false
+                      });  
+                    rl.question("",(jsonStr) =>{
+                          console.log();
+                          console.log(`Using <<${argv.template}>> as template file...`);
+                          console.log(`Using answer set json from stdin (${jsonStr.length} chars)...`);
+                          console.log(`Using ${argv.output} as output directory...`);
+                          console.log();
+      
+                          const template = GraphScript.jsonFileToObject(path.join(FILE_PATHS_RELATIVE_TO, argv.template));
+                          const answerSets = GraphScript.jsonStringToObject(jsonStr);
+                          const outputDirPath = path.join(FILE_PATHS_RELATIVE_TO, argv.output);
+                          GraphScript.runRendering(template, answerSets, outputDirPath);
+                          rl.close()
+                    });
                 })
             .version(false)
             .parseSync();
