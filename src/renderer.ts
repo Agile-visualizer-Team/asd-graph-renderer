@@ -71,7 +71,7 @@ export class GraphRenderer {
         if (this.layout == GraphRendererLayout.Dagre) {
             return {
                 name: 'dagre',
-                edgeSep: 50,
+                edgeSep: 70,
                 rankDir: 'TB',
             };
         }
