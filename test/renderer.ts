@@ -37,6 +37,9 @@ describe("RENDERER TEST", function () {
     this.timeout(100000);
 
     it("should generate the correct output image according to an input graph and a pre-rendered expected image", (done) => {
+        let testImagePath = path.join(__dirname, "renderer-expected-image.png");
+        let expectedBase64 = fs.readFileSync(testImagePath).toString('base64');
+
         const graph = getMockedGraph();
         const renderer = new GraphRenderer();
         renderer.width = 1280;
@@ -45,10 +48,12 @@ describe("RENDERER TEST", function () {
         renderer.layout = GraphRendererLayout.Dagre;
         renderer.render([graph], () => {},
             (index, graph, generatedBase64) => {
-            let testImagePath = path.join(__dirname, "renderer-expected-image.png");
-            let expectedBase64 = fs.readFileSync(testImagePath).toString('base64');
-            assert.equal(generatedBase64, expectedBase64);
-            done();
+            try {
+                assert.equal(generatedBase64, expectedBase64);
+                done();
+            } catch (e) {
+                done(e);
+            }
         });
     });
 
