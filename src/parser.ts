@@ -60,21 +60,10 @@ export class GraphParser {
             const nodes: string[] = [];
             const edges: string[] = [];
             answerSet.as.forEach((atom: string) => {
-                if (node_atom.test(atom)) {
-                    let arity = atom.split(",").length;
-                    if (arity == node_arity_template) {
-                        nodes.push(atom);
-                    } else {
-                        throw Error(`node fact <${atom}> has arity ${arity}, expected value from template was ${node_arity_template}`);
-                    }
-                } else if (edge_atom.test(atom)) {
-                    let arity = atom.split(",").length;
-                    if (arity == edge_arity_template) {
-                        edges.push(atom);
-                    } else {
-                        throw Error(`edge fact <${atom}> has arity ${arity}, expected value from template was ${edge_arity_template}`);
-                    }
-                }
+                if (node_atom.test(atom))
+                    nodes.push(atom);
+                else if (edge_atom.test(atom)) 
+                    edges.push(atom);
             })
             if (nodes) {
                 output.push({"nodes": nodes, "edges": edges});
