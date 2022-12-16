@@ -11,8 +11,7 @@
                 "leaves": {
                     "if": [
                         {"variable": "label", "matches": "a", "color": "green"},
-                        {"variable": "label", "less_than": 5, "color": "green"},
-                        {"variable": "label", "matches": "b", "color": "red"}
+                        {"variable": "label", "matches": "b", "color": "blue"}
                     ],
                     "default_color": "red"
                 },
@@ -29,9 +28,10 @@
             "color": {
                 "branch": {
                     "if": [
-                        {"variable": "label", "matches": "a", "color": "green"},
-                        {"variable": "label", "less_than": 5, "color": "green"},
-                        {"variable": "label", "matches": "b", "color": "red"}
+                        {"variable": "from", "matches": "a", "color": "green"},
+                        {"variable": "to", "matches": "b", "color": "blue"},
+                        {"variable": "weight", "lte": 3, "color": "red"},
+                        {"variable": "weight", "gt": 3, "color": "orange"}
                     ],
                     "default_color": "red"
                 }
