@@ -1,0 +1,42 @@
+{
+    "template": "graph",
+    "nodes": {
+        "atom": {
+            "name": "node",
+            "variables": ["label", "color"]
+        },
+        "style": {
+            "color": {
+                "root": "yellow",
+                "leaves": {
+                    "if": [
+                        {"variable": "label", "matches": "a", "color": "green"},
+                        {"variable": "label", "less_than": 5, "color": "green"},
+                        {"variable": "label", "matches": "b", "color": "red"}
+                    ],
+                    "default_color": "red"
+                },
+                "nonRoot": "blue"
+            }
+        }
+    },
+    "edges": {
+        "atom": {
+            "name": "edge",
+            "variables": ["from", "to", "weight", "color"]
+        },
+        "style": {
+            "color": {
+                "branch": {
+                    "if": [
+                        {"variable": "label", "matches": "a", "color": "green"},
+                        {"variable": "label", "less_than": 5, "color": "green"},
+                        {"variable": "label", "matches": "b", "color": "red"}
+                    ],
+                    "default_color": "red"
+                }
+            },
+            "oriented": true
+        }
+    }
+}

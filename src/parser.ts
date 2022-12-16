@@ -151,6 +151,19 @@ export class GraphParser {
         }
     }
 
+    // parseColor(color: string|object[], variables) {
+    //     // variables = {"from": "a", "to": "b", "weight", "color"}
+    //
+    //     if (typeof color === 'string') {
+    //         return color;
+    //     }
+    //
+    //     // è un espressione
+    //     color.if.forEach(expression => {
+    //         // valuto l'espressione, se true mi fermo e faccio return expression.color
+    //     });
+    // }
+
     /**
      * Check if edges are connected to existing nodes
      * @param edges
