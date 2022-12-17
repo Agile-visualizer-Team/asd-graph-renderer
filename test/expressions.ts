@@ -131,7 +131,7 @@ describe("EXPRESSIONS TEST", () => {
         };
         expect(new ExpressionEvaluator(expression).evaluate(variables)).to.be.equal('bar');
     });
-    it("should return foo (hello matches HELLO with the case insensitive condition imatches)", () => {
+    it("should return foo (hello matches HELLO because imatches is used)", () => {
         const expression: Expression = <Expression>{
             if: [
                 <ExpressionCondition>{
@@ -173,7 +173,7 @@ describe("EXPRESSIONS TEST", () => {
      * icontains
      */
 
-    it("should return foo (the variable mycoolgraph contains cool because icontains is used)", () => {
+    it("should return foo (the variable MYCOOLGRAPH contains cool because icontains is used)", () => {
         const expression: Expression = <Expression>{
             if: [
                 <ExpressionCondition>{
