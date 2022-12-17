@@ -91,7 +91,7 @@ export class ExpressionEvaluator {
                 return CONDITION_OPERATORS[operatorName](condition, variables);
             }
         }
-        console.error("Invalid condition type: ", condition);
+        console.error("Invalid/missing condition operator: ", condition);
         return false;
     }
 }
