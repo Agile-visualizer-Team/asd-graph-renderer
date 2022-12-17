@@ -3,23 +3,35 @@
     "nodes": {
         "atom": {
             "name": "node",
-            "variables": ["label", "color"]
+            "variables": ["label"]
         },
         "style": {
             "color": {
-                "root": "yellow",
-                "leaves": "fuchsia",
-                "nonRoot": "blue"
+                "all": {
+                    "if": [
+                        {"variable": "label", "matches": "b", "then": "blue"},
+                        {"variable": "label", "matches": "e", "then": "green"},
+                    ],
+                    "else": "red"
+                },
+                "nonRoot": "yellow"
             }
         }
     },
     "edges": {
         "atom": {
             "name": "edge",
-            "variables": ["from", "to", "weight", "color"]
+            "variables": ["from", "to", "weight", "deepness"]
         },
         "style": {
-            "color": "green",
+            "color": {
+                "if": [
+                    {"variable": "deepness", "matches": "1", "then": "yellow"},
+                    {"variable": "deepness", "matches": "2", "then": "orange"},
+                    {"variable": "deepness", "gte": "3", "then": "red"}
+                ],
+                "else": "grey"
+            },
             "oriented": true
         }
     }

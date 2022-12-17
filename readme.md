@@ -28,23 +28,35 @@ In order to generate a demo graph rendering, run `npm start`. The following json
         "nodes": {
             "atom": {
                 "name": "node",
-                "variables": ["label", "color"]
+                "variables": ["label"]
             },
             "style": {
                 "color": {
-                    "root": "yellow",
-                    "leaves": "fuchsia",
-                    "nonRoot": "blue"
+                    "all": {
+                        "if": [
+                            {"variable": "label", "matches": "b", "then": "blue"},
+                            {"variable": "label", "matches": "e", "then": "green"},
+                        ],
+                        "else": "red"
+                    },
+                    "nonRoot": "yellow"
                 }
             }
         },
         "edges": {
             "atom": {
                 "name": "edge",
-                "variables": ["from", "to", "weight", "color"]
+                "variables": ["from", "to", "weight", "deepness"]
             },
             "style": {
-                "color": "green",
+                "color": {
+                    "if": [
+                        {"variable": "deepness", "matches": "1", "then": "yellow"},
+                        {"variable": "deepness", "matches": "2", "then": "orange"},
+                        {"variable": "deepness", "gte": "3", "then": "red"}
+                    ],
+                    "else": "grey"
+                },
                 "oriented": true
             }
         }
@@ -62,13 +74,13 @@ In order to generate a demo graph rendering, run `npm start`. The following json
                 "node(e,grey)",
                 "node(f,grey)",
                 "node(g,fuchsia)",
-                "edge(a,b,2,green)",
-                "edge(a,c,10,grey)",
-                "edge(b,d,6,green)",
-                "edge(b,e,7,grey)",
-                "edge(b,f,5,grey)",
-                "edge(c,d,4,grey)",
-                "edge(d,g,3,green)"
+                "edge(a,b,2,1)",
+                "edge(a,c,10,1)",
+                "edge(b,d,6,2)",
+                "edge(c,d,4,2)",
+                "edge(b,e,7,2)",
+                "edge(b,f,5,2)",
+                "edge(d,g,3,3)"
             ],
             "cost" : "1@2"
         },
@@ -77,9 +89,9 @@ In order to generate a demo graph rendering, run `npm start`. The following json
                 "node(a,green)",
                 "node(b,green)",
                 "node(g,green)",
-                "edge(a,b,1,blue)",
-                "edge(b,g,2,blue)",
-                "edge(a,g,10,grey)"
+                "edge(a,b,1,1)",
+                "edge(b,g,2,2)",
+                "edge(a,g,10,1)"
             ],
             "cost" : "1@2"
         }
@@ -87,10 +99,18 @@ In order to generate a demo graph rendering, run `npm start`. The following json
 
 After the script execution is completed check the `output` folder, you should get a graph-*.png image for each input answer set.
 
-The first answer set will generate an image like this:
 
-![demo as 1](demo-graph-1.png "Demo graph from answer set 1")
+## Template schema
 
-while the second one will be:
+### IF condition operators
 
-![demo as 2](demo-graph-2.png "Demo graph from answer set 2")
+| IF Condition operator | Description and example |
+|-----------------------|-------------------------|
+| `matches: foo` | True if the fact variable is exactly `foo` (case sensitive equal comparator) |
+| `imatches: foo` | True if the fact variable is `FOO` or `foo` (case insensitive equal comparator) |
+| `contains: bar` | True if the fact variable contains `bar`, example: `foobar` (case sensitive) |
+| `icontains: bar` | True if the fact variable contains `bar` or `BAR`, example: `fooBAR` (case insensitive) |
+| `lt: 25` | True if the fact variable is less than `25`, example: `24` |
+| `lte: 25` | True if the fact variable is less than `25` or equal to `25`, example: `25` or `24` |
+| `gt: 50` | True if the fact variable is greater than `50`, example: `51` |
+| `gte: 50` | True if the fact variable is greater than `50` or equal to `50`, example: `51` or `52` |
