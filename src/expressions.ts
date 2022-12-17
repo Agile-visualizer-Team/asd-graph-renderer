@@ -18,7 +18,7 @@ export interface ExpressionCondition {
     gte?: string|number;
 }
 
-const CONDITION_EVALUATORS_BY_TYPE: {[key: string]: (condition: ExpressionCondition, variables: GraphVariables) => boolean} = {
+const CONDITION_OPERATORS: {[key: string]: (condition: ExpressionCondition, variables: GraphVariables) => boolean} = {
 
     matches: (condition: ExpressionCondition, variables: GraphVariables) => {
         return variables[condition.variable] == condition.matches;
@@ -86,9 +86,9 @@ export class ExpressionEvaluator {
 
     // noinspection JSMethodCanBeStatic
     private evaluateIf(condition: ExpressionCondition, variables: GraphVariables) {
-        for (let type in CONDITION_EVALUATORS_BY_TYPE) {
-            if (type in condition) {
-                return CONDITION_EVALUATORS_BY_TYPE[type](condition, variables);
+        for (let operatorName in CONDITION_OPERATORS) {
+            if (operatorName in condition) {
+                return CONDITION_OPERATORS[operatorName](condition, variables);
             }
         }
         console.error("Invalid condition type: ", condition);
