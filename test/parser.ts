@@ -1,5 +1,4 @@
 import { GraphParser } from "../src/parser";
-import {createGraphNode} from "../src/models"
 import { expect } from "chai";
 import * as sinon from "sinon";
 import fs from "fs";

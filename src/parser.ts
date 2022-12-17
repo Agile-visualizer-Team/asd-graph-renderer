@@ -2,6 +2,7 @@ import fs from 'fs'
 import {createGraphEdge, createGraphNode, Graph, GraphEdge, GraphNode} from "./models";
 import {validateAnswerSetsSchema, validateTemplateSchema} from "./schema-validators";
 import assert from "assert";
+import exp from "constants";
 
 export class GraphParser {
     private readonly template: any;
@@ -115,7 +116,7 @@ export class GraphParser {
     private assignDefaultEdgesColors(edges: GraphEdge[]) {
         if (this.template.edges.style.color) {
             edges.filter(e => !e.color).forEach(n => {
-                n.color = this.template.edges.style.color.branch
+                n.color = this.parseColor(this.template.edges.style.color.branch, {})
             });
         }
     }
@@ -130,28 +131,63 @@ export class GraphParser {
         if (this.template.nodes.style.color) {
             nodes.filter(n => !n.color).forEach(n => {
                 if (!edges.find(e => e.destination == n.name)) {
-                    n.color = this.template.nodes.style.color.root;
+                    n.color = this.parseColor(this.template.nodes.style.color.root, {});
                 } else if (!edges.find(e => e.from == n.name)) {
-                    n.color = this.template.nodes.style.color.leaves;
+                    n.color = this.parseColor(this.template.nodes.style.color.leaves, {});
                 } else {
-                    n.color = this.template.nodes.style.color.nonRoot;
+                    n.color = this.parseColor(this.template.nodes.style.color.nonRoot, {});
                 }
             });
         }
     }
 
-    // parseColor(color: string|object[], variables) {
-    //     // variables = {"from": "a", "to": "b", "weight", "color"}
-    //
-    //     if (typeof color === 'string') {
-    //         return color;
-    //     }
-    //
-    //     // è un espressione
-    //     color.if.forEach(expression => {
-    //         // valuto l'espressione, se true mi fermo e faccio return expression.color
-    //     });
-    // }
+    // TODO any per color non va bene, specificare un'interface
+    // TODO in input servono le variabiles con i relativi valori,ad es: {"from": "a", "to": "b", "weight", "color"}
+    private parseColor(color: string|any, variables: {[key: string]: any}): string {
+        // color is a string, just return it
+        if (typeof color === 'string') {
+            return color;
+        }
+        // color is a set of OR conditions + default case that must be evaluated
+        return this.evaluateConditions(color, variables);
+    }
+
+    private evaluateConditions(conditions: any, variables: {[key: string]: any}) {
+        for (let condition of conditions.if) {
+            if (this.evaluateCondition(condition, variables)) {
+                return condition.then;
+            }
+        }
+        return conditions.default;
+    }
+
+    private evaluateCondition(condition: any, variables: {[key: string]: any}) {
+        if ('matches' in condition) {
+            return variables[condition.variable] == condition.matches;
+        }
+        if ('imatches' in condition) {
+            return variables[condition.variable].toUpperCase() == condition.imatches.toUpperCase();
+        }
+        if ('contains' in condition) {
+            return variables[condition.variable].indexOf(condition.contains) >= 0;
+        }
+        if ('icontains' in condition) {
+            return variables[condition.variable].toUpperCase().indexOf(condition.icontains.toUpperCase()) >= 0;
+        }
+        if ('lt' in condition) {
+            return variables[condition.variable] < condition.lt;
+        }
+        if ('lte' in condition) {
+            return variables[condition.variable] < condition.lte;
+        }
+        if ('gt' in condition) {
+            return variables[condition.variable] < condition.gt;
+        }
+        if ('gte' in condition) {
+            return variables[condition.variable] < condition.gte;
+        }
+        // TODO invalid condition, throw an exception?
+    }
 
     /**
      * Check if edges are connected to existing nodes

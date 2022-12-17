@@ -10,10 +10,10 @@
                 "root": "yellow",
                 "leaves": {
                     "if": [
-                        {"variable": "label", "matches": "a", "color": "green"},
-                        {"variable": "label", "matches": "b", "color": "blue"}
+                        {"variable": "label", "matches": "a", "then": "green"},
+                        {"variable": "label", "matches": "b", "then": "blue"}
                     ],
-                    "default_color": "red"
+                    "default": "red"
                 },
                 "nonRoot": "blue"
             }
@@ -28,12 +28,12 @@
             "color": {
                 "branch": {
                     "if": [
-                        {"variable": "from", "matches": "a", "color": "green"},
-                        {"variable": "to", "matches": "b", "color": "blue"},
-                        {"variable": "weight", "lte": 3, "color": "red"},
-                        {"variable": "weight", "gt": 3, "color": "orange"}
+                        {"variable": "from", "matches": "a", "then": "green"},
+                        {"variable": "to", "matches": "b", "then": "blue"},
+                        {"variable": "weight", "lte": 3, "then": "red"},
+                        {"variable": "weight", "gt": 3, "then": "orange"}
                     ],
-                    "default_color": "red"
+                    "default": "red"
                 }
             },
             "oriented": true
