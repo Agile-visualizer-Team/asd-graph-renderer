@@ -13,12 +13,12 @@ export class GraphParser {
     /**
      * It takes a template object, which is validated with a schema, and an array of answer set.
      */
-    private check_variables_name(variables: string[], mandatory_variables: string[]){
+    private check_variables_name(variables: string[], mandatory_variables: string[]) {
         //TODO Remember to make case insensitive
-        const check = mandatory_variables.every(value =>{
+        const check = mandatory_variables.every(value => {
             return variables.includes(value);
         })
-        if(!check)
+        if (!check)
             throw Error(`Variables provided: \"${variables}\" must contain \"${mandatory_variables}\"`)
     }
 
@@ -30,7 +30,7 @@ export class GraphParser {
             throw Error("Template is not valid: " + path + " " + error.message);
         }
         this.template = template;
-        this.check_variables_name(this.template.nodes.atom.variables,this.MANDATORY_NODE_VARIABLE);
+        this.check_variables_name(this.template.nodes.atom.variables, this.MANDATORY_NODE_VARIABLE);
         this.check_variables_name(this.template.edges.atom.variables, this.MANDATORY_EDGE_VARIABLE);
 
         if (!validateAnswerSetsSchema(answerSets)) {
@@ -50,9 +50,9 @@ export class GraphParser {
      * returned as an array of objects.
      * @returns An array of objects. Each object has two properties: nodes and edges.
      */
-    public extractNodesAndEdgesFromAnswerSets(outputFile: string|null = null){
-        const node_atom = new RegExp(this.template.nodes.atom.name+'\(.+\)');
-        const edge_atom = new RegExp(this.template.edges.atom.name+'\(.+\)');
+    public extractNodesAndEdgesFromAnswerSets(outputFile: string | null = null) {
+        const node_atom = new RegExp(this.template.nodes.atom.name + '\(.+\)');
+        const edge_atom = new RegExp(this.template.edges.atom.name + '\(.+\)');
 
         const output: any = [];
         this.answerSets.forEach(answerSet => {
@@ -61,7 +61,7 @@ export class GraphParser {
             answerSet.as.forEach((atom: string) => {
                 if (node_atom.test(atom))
                     nodes.push(atom);
-                else if (edge_atom.test(atom)) 
+                else if (edge_atom.test(atom))
                     edges.push(atom);
             })
             if (nodes) {
@@ -73,22 +73,22 @@ export class GraphParser {
         }
         return output;
     }
-    
+
     /**
      * @returns An array of Graphs.
      */
     public parse(): Graph[] {
         const answerSets = this.extractNodesAndEdgesFromAnswerSets();
-        const node_variables = this.findVariableIndexes(this.template.nodes.atom.variables);
-        const edge_variables = this.findVariableIndexes(this.template.edges.atom.variables);
+        const nodeVariablesIndex = this.findVariableIndexes(this.template.nodes.atom.variables);
+        const edgeVariablesIndex = this.findVariableIndexes(this.template.edges.atom.variables);
 
         return answerSets.map((as: any) => {
-            const nodes: GraphNode[] = as.nodes.map((atom:string) => {
-                return this.createNode(atom,node_variables);
+            const nodes: GraphNode[] = as.nodes.map((atom: string) => {
+                return this.createNode(atom, nodeVariablesIndex);
             });
 
-            const edges: GraphEdge[] = as.edges.map((atom:string) => {
-                return this.createEdge(atom, edge_variables);
+            const edges: GraphEdge[] = as.edges.map((atom: string) => {
+                return this.createEdge(atom, edgeVariablesIndex);
             });
 
             this.checkEdgesConnections(edges, nodes);
@@ -101,7 +101,6 @@ export class GraphParser {
                 oriented: this.template.edges.style
                     ? this.template.edges.style.oriented
                     : false,
-
             };
         });
     }
@@ -146,7 +145,7 @@ export class GraphParser {
     }
 
     // noinspection JSMethodCanBeStatic
-    private parseColor(color: string|any, variables: GraphVariables): string {
+    private parseColor(color: string | any, variables: GraphVariables): string {
         // color is a string, just return it
         if (typeof color === 'string') {
             return color;
@@ -173,8 +172,8 @@ export class GraphParser {
     }
 
     // noinspection JSMethodCanBeStatic
-    private findVariableIndexes(variables: string[]): {[key: string]: number} {
-        let values:  {[key: string]: number} = {};
+    private findVariableIndexes(variables: string[]): { [key: string]: number } {
+        let values: { [key: string]: number } = {};
         for (let i = 0; i < variables.length; i++) {
             values[variables[i]] = i;
         }
@@ -182,7 +181,7 @@ export class GraphParser {
     }
 
     // noinspection JSMethodCanBeStatic
-    private createNode(node: string, variableIndexes: {[key: string]: number}): GraphNode{
+    private createNode(node: string, variableIndexes: { [key: string]: number }): GraphNode {
         let node_var = node.split("(")[1].split(")")[0].split(",");
 
         const variables: GraphVariables = {};
@@ -199,7 +198,7 @@ export class GraphParser {
     }
 
     // noinspection JSMethodCanBeStatic
-    private createEdge(edge: string, variableIndexes: {[key: string]: number}): GraphEdge {
+    private createEdge(edge: string, variableIndexes: { [key: string]: number }): GraphEdge {
         let edge_var = edge.split("(")[1].split(")")[0].split(",");
 
         const variables: GraphVariables = {};

@@ -193,16 +193,16 @@ describe("PARSER TEST", () =>{
         parser.extractNodesAndEdgesFromAnswerSets('any_path');
         expect(fs_stub.calledOnce).to.be.true;
     }),
-    it("should get the correct node variables", () =>{
+    it("should get an index for each node/edge variables", () =>{
         const node_variables_spy = sinon.spy(GraphParser.prototype,<any>"findVariableIndexes");
         const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
         parser.parse();
-        expect(node_variables_spy.calledOnce).to.be.true;
-        expect(node_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.nodes.atom.variables);
+        expect(node_variables_spy.calledTwice).to.be.true;
+        expect(node_variables_spy.getCall(0).args[0].length).to.be.eq(GOOD_TEMPLATE.nodes.atom.variables.length);
         node_variables_spy.restore();
     }),
     it("should generate a correct node from a string", () =>{
-        const create_node_spy = sinon.spy(GraphParser.prototype,<any>"create_node");
+        const create_node_spy = sinon.spy(GraphParser.prototype,<any>"createNode");
         const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
         parser.parse();
         expect(create_node_spy.called).to.be.true;
@@ -213,7 +213,7 @@ describe("PARSER TEST", () =>{
         create_node_spy.restore();
     }),
     it("should generate a correct edge from a string", () =>{
-        const create_edge_spy = sinon.spy(GraphParser.prototype,<any>"create_edge");
+        const create_edge_spy = sinon.spy(GraphParser.prototype,<any>"createEdge");
         const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
         parser.parse();
         expect(create_edge_spy.called).to.be.true;
