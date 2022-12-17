@@ -18,9 +18,9 @@ export class GraphRenderer {
 
         graph.nodes.forEach(n => {
             let shape, width, height;
-            if (n.name.length > 1) {
+            if (n.label.length > 1) {
                 shape = "round-rectangle";
-                width = n.name.length * this.theme.node.roundRectangle.widthMultiplier;
+                width = n.label.length * this.theme.node.roundRectangle.widthMultiplier;
                 height = this.theme.node.roundRectangle.heightMultiplier;
             } else {
                 shape = "ellipse";
@@ -30,8 +30,8 @@ export class GraphRenderer {
 
             elements.push({
                 data: {
-                    id: n.name,
-                    label: n.name,
+                    id: n.label,
+                    label: n.label,
                     shape: shape,
                     width: width,
                     height: height,
@@ -45,9 +45,9 @@ export class GraphRenderer {
         graph.edges.forEach(e => {
             elements.push({
                 data: {
-                    id: e.from + '-' + e.destination,
+                    id: e.from + '-' + e.to,
                     source: e.from,
-                    target: e.destination,
+                    target: e.to,
                     weight: e.weight,
                     color: e.color
                         ? this.convertColorWithThemePalette(e.color)

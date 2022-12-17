@@ -18,10 +18,7 @@ const RIGHT_SCHEMA = {
             variables: ["from","to","weight","color"] 
         },
         style:{
-            color:{
-                branch:"green",
-                path:"yellow"
-            },
+            color: "green",
             oriented: true
         }
     }
@@ -56,10 +53,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
                     variables: ["from","from","weight","color"] 
                 },
                 style:{
-                    color:{
-                        branch:"green",
-                        path:"yellow"
-                    },
+                    color: "green",
                     oriented: true
                 }
             }
@@ -145,9 +139,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
                     variables: ["from","to","weight","color"] 
                 },
                 style:{
-                    color:{
-                        branch:"prova",
-                    },
+                    color: "prova",
                     oriented: true
                 }
             }

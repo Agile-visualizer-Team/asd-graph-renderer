@@ -25,10 +25,7 @@ const GOOD_TEMPLATE ={
             "variables": ["from","to","weight"]
         },
         "style":{
-            "color":{
-                "branch":"green",
-                "path":"yellow"
-            },
+            "color": "green",
             "oriented": true
         }
     }
@@ -162,63 +159,6 @@ describe("PARSER TEST", () =>{
             new GraphParser(GOOD_TEMPLATE,[]);
         }).to.throw(Error,"Answer set list is empty")
     }),
-    it("should detect nodes facts with an arity different from the one specified in the template",()=>{
-        const template = {
-            "template": "graph",
-            "nodes": {
-                "atom":{
-                    "name": "node",
-                    "variables": ["label"]
-                },
-            },
-            "edges": {
-                "atom":{
-                    "name": "edge",
-                    "variables": ["from","to"]
-                },
-            }
-        };
-        const as = [
-            {
-                "as" : [
-                    "node(a,red)",
-                    "node(b)",
-                ],
-                "cost" : "1@2"
-            }
-        ];
-        expect(() => new GraphParser(template, as).parse()).to.throw(
-            Error, `node fact <node(a,red)> has arity 2, expected value from template was 1`);
-    }),
-    it("should detect edges facts with an arity different from the one specified in the template",()=>{
-        const template = {
-            "template": "graph",
-            "nodes": {
-                "atom":{
-                    "name": "node",
-                    "variables": ["label", "color"]
-                },
-            },
-            "edges": {
-                "atom":{
-                    "name": "edge",
-                    "variables": ["from","to"]
-                },
-            }
-        };
-        const as = [
-            {
-                "as" : [
-                    "node(a,red)",
-                    "node(b,blue)",
-                    "edge(a,b,red)",
-                ],
-                "cost" : "1@2"
-            }
-        ];
-        expect(() => new GraphParser(template, as).parse()).to.throw(
-            Error, `edge fact <edge(a,b,red)> has arity 3, expected value from template was 2`);
-    }),
     it("should detect edges which have an non-existing from node",()=>{
         const as = [
             {
@@ -233,7 +173,7 @@ describe("PARSER TEST", () =>{
         expect(() => new GraphParser(GOOD_TEMPLATE, as).parse()).to.throw(
             Error, `edge from <c> to <b> is invalid, from node <c> does not exist`);
     }),
-    it("should detect edges which have an non-existing destination node",()=>{
+    it("should detect edges which have an non-existing to node",()=>{
         const as = [
             {
                 "as" : [
@@ -245,7 +185,7 @@ describe("PARSER TEST", () =>{
             }
         ];
         expect(() => new GraphParser(GOOD_TEMPLATE, as).parse()).to.throw(
-            Error, `edge from <a> to <c> is invalid, destination node <c> does not exist`);
+            Error, `edge from <a> to <c> is invalid, to node <c> does not exist`);
     }),
     it("extractNodesAndEdgesFromAs should generate a JSON file if an output file path is provided", () =>{
         const fs_stub = sinon.stub(fs,"writeFileSync");
@@ -254,20 +194,12 @@ describe("PARSER TEST", () =>{
         expect(fs_stub.calledOnce).to.be.true;
     }),
     it("should get the correct node variables", () =>{
-        const node_variables_spy = sinon.spy(GraphParser.prototype,<any>"get_node_variables");
+        const node_variables_spy = sinon.spy(GraphParser.prototype,<any>"findVariableIndexes");
         const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
         parser.parse();
         expect(node_variables_spy.calledOnce).to.be.true;
         expect(node_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.nodes.atom.variables);
         node_variables_spy.restore();
-    }),
-    it("should get the correct edge variables", () =>{
-        const edge_variables_spy = sinon.spy(GraphParser.prototype,<any>"get_edge_variables");
-        const parser = new GraphParser(GOOD_TEMPLATE,GOOD_AS);
-        parser.parse();
-        expect(edge_variables_spy.calledOnce).to.be.true;
-        expect(edge_variables_spy.getCall(0).args[0]).to.be.eq(GOOD_TEMPLATE.edges.atom.variables);
-        edge_variables_spy.restore()
     }),
     it("should generate a correct node from a string", () =>{
         const create_node_spy = sinon.spy(GraphParser.prototype,<any>"create_node");
@@ -301,11 +233,11 @@ describe("PARSER TEST", () =>{
         expect(res1.length).to.be.eq(res2.length);
         for(let i = 0; i < res1.length; ++i){
             for(let j = 0; j < res1[i].nodes.length; ++j){
-                expect(res1[i].nodes[j].name).to.be.eq(res2[i].nodes[j].name);
+                expect(res1[i].nodes[j].label).to.be.eq(res2[i].nodes[j].label);
             }
             for(let j = 0; j < res1[i].edges.length; ++j){
                 expect(res1[i].edges[j].from).to.be.eq(res2[i].edges[j].from);
-                expect(res1[i].edges[j].destination).to.be.eq(res2[i].edges[j].destination);
+                expect(res1[i].edges[j].to).to.be.eq(res2[i].edges[j].to);
                 expect(res1[i].edges[j].weight).to.be.eq(res2[i].edges[j].weight);
             }
         }
@@ -332,10 +264,7 @@ describe("PARSER TEST", () =>{
                     "variables": ["from","to","weight"]
                 },
                 "style":{
-                    "color":{
-                        "branch":"green",
-                        "path":"yellow"
-                    }
+                    "color": "green"
                 }
             }
         };
@@ -360,10 +289,7 @@ describe("PARSER TEST", () =>{
                     "variables": ["to","from","weight"]
                 },
                 "style":{
-                    "color":{
-                        "branch":"green",
-                        "path":"yellow"
-                    }
+                    "color": "green"
                 }
             }
         }
@@ -384,8 +310,8 @@ describe("PARSER TEST", () =>{
         const resFROM= parserFROM.parse();
         for(let i = 0; i < resTO.length; ++i){
             for(let j = 0; j < resTO[i].edges.length; ++j){
-                expect(resTO[i].edges[j].from).to.be.eq(resFROM[i].edges[j].destination);
-                expect(resTO[i].edges[j].destination).to.be.eq(resFROM[i].edges[j].from);
+                expect(resTO[i].edges[j].from).to.be.eq(resFROM[i].edges[j].to);
+                expect(resTO[i].edges[j].to).to.be.eq(resFROM[i].edges[j].from);
                 expect(resTO[i].edges[j].weight).to.be.eq(resFROM[i].edges[j].weight);
             }
         }

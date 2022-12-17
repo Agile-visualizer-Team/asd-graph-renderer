@@ -10,20 +10,26 @@ import {expect} from "chai";
 function getMockedGraph(): Graph {
     const nodes: GraphNode[] = [
         <GraphNode>{
-            name: "a",
+            label: "a",
             color: "red"
         },
         <GraphNode> {
-            name: "foo",
+            label: "foo",
             color: "blue"
         }
     ];
     const edges: GraphEdge[] = [
         {
             from: "a",
-            destination: "foo",
+            to: "foo",
             weight: null,
-            color: "orange"
+            color: "orange",
+            variables: {
+                from: "a",
+                to: "foo",
+                weight: null,
+                color: "orange",
+            }
         }
     ];
     return <Graph>{

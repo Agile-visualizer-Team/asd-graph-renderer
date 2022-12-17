@@ -2,7 +2,7 @@ import fs from 'fs'
 import {createGraphEdge, createGraphNode, Graph, GraphEdge, GraphNode} from "./models";
 import {validateAnswerSetsSchema, validateTemplateSchema} from "./schema-validators";
 import assert from "assert";
-import exp from "constants";
+import {ExpressionEvaluator} from "./expressions";
 
 export class GraphParser {
     private readonly template: any;
@@ -81,8 +81,8 @@ export class GraphParser {
      */
     public parse(): Graph[] {
         const answerSets = this.extractNodesAndEdgesFromAnswerSets();
-        const node_variables = this.get_node_variables(this.template.nodes.atom.variables);
-        const edge_variables = this.get_edge_variables(this.template.edges.atom.variables);
+        const node_variables = this.findVariableIndexes(this.template.nodes.atom.variables);
+        const edge_variables = this.findVariableIndexes(this.template.edges.atom.variables);
 
         return answerSets.map((as: any) => {
             const nodes: GraphNode[] = as.nodes.map((atom:string) => {
@@ -102,7 +102,8 @@ export class GraphParser {
                 edges: edges,
                 oriented: this.template.edges.style
                     ? this.template.edges.style.oriented
-                    : false
+                    : false,
+
             };
         });
     }
@@ -115,8 +116,8 @@ export class GraphParser {
      */
     private assignDefaultEdgesColors(edges: GraphEdge[]) {
         if (this.template.edges.style.color) {
-            edges.filter(e => !e.color).forEach(n => {
-                n.color = this.parseColor(this.template.edges.style.color.branch, {})
+            edges.filter(e => !e.color).forEach(e => {
+                e.color = this.parseColor(this.template.edges.style.color, e.variables)
             });
         }
     }
@@ -130,63 +131,30 @@ export class GraphParser {
     private assignDefaultNodesColors(nodes: GraphNode[], edges: GraphEdge[]) {
         if (this.template.nodes.style.color) {
             nodes.filter(n => !n.color).forEach(n => {
-                if (!edges.find(e => e.destination == n.name)) {
-                    n.color = this.parseColor(this.template.nodes.style.color.root, {});
-                } else if (!edges.find(e => e.from == n.name)) {
-                    n.color = this.parseColor(this.template.nodes.style.color.leaves, {});
+                if (!edges.find(e => e.to == n.label)) {
+                    // Root
+                    n.color = this.parseColor(
+                        this.template.nodes.style.color.root || this.template.nodes.style.color.all, n.variables);
+                } else if (!edges.find(e => e.from == n.label)) {
+                    // Leave
+                    n.color = this.parseColor(
+                        this.template.nodes.style.color.leaves || this.template.nodes.style.color.all, n.variables);
                 } else {
-                    n.color = this.parseColor(this.template.nodes.style.color.nonRoot, {});
+                    // Non-root
+                    n.color = this.parseColor(
+                        this.template.nodes.style.color.nonRoot || this.template.nodes.style.color.all, n.variables);
                 }
             });
         }
     }
 
-    // TODO any per color non va bene, specificare un'interface
-    // TODO in input servono le variabiles con i relativi valori,ad es: {"from": "a", "to": "b", "weight": ..}
     private parseColor(color: string|any, variables: {[key: string]: any}): string {
         // color is a string, just return it
         if (typeof color === 'string') {
             return color;
         }
-        // color is a set of OR conditions + default case that must be evaluated
-        return this.evaluateConditions(color, variables);
-    }
-
-    private evaluateConditions(conditions: any, variables: {[key: string]: any}) {
-        for (let condition of conditions.if) {
-            if (this.evaluateCondition(condition, variables)) {
-                return condition.then;
-            }
-        }
-        return conditions.default;
-    }
-
-    private evaluateCondition(condition: any, variables: {[key: string]: any}) {
-        if ('matches' in condition) {
-            return variables[condition.variable] == condition.matches;
-        }
-        if ('imatches' in condition) {
-            return variables[condition.variable].toUpperCase() == condition.imatches.toUpperCase();
-        }
-        if ('contains' in condition) {
-            return variables[condition.variable].indexOf(condition.contains) >= 0;
-        }
-        if ('icontains' in condition) {
-            return variables[condition.variable].toUpperCase().indexOf(condition.icontains.toUpperCase()) >= 0;
-        }
-        if ('lt' in condition) {
-            return variables[condition.variable] < condition.lt;
-        }
-        if ('lte' in condition) {
-            return variables[condition.variable] <= condition.lte;
-        }
-        if ('gt' in condition) {
-            return variables[condition.variable] < condition.gt;
-        }
-        if ('gte' in condition) {
-            return variables[condition.variable] <= condition.gte;
-        }
-        // TODO exception?
+        // color is an object with "if conditions + else" that must be evaluated
+        return new ExpressionEvaluator(color).evaluate(variables);
     }
 
     /**
@@ -197,52 +165,54 @@ export class GraphParser {
      */
     private checkEdgesConnections(edges: GraphEdge[], nodes: GraphNode[]) {
         edges.forEach((e: GraphEdge) => {
-            if (!nodes.find(n => n.name == e.from)) {
-                throw Error(`edge from <${e.from}> to <${e.destination}> is invalid, from node <${e.from}> does not exist`);
+            if (!nodes.find(n => n.label == e.from)) {
+                throw Error(`edge from <${e.from}> to <${e.to}> is invalid, from node <${e.from}> does not exist`);
             }
-            if (!nodes.find(n => n.name == e.destination)) {
-                throw Error(`edge from <${e.from}> to <${e.destination}> is invalid, destination node <${e.destination}> does not exist`);
+            if (!nodes.find(n => n.label == e.to)) {
+                throw Error(`edge from <${e.from}> to <${e.to}> is invalid, to node <${e.to}> does not exist`);
             }
         });
     }
 
-    private get_node_variables(variables: string[]){
-        return {
-            name: variables.indexOf('label'),
-            color: variables.indexOf('color')
+    private findVariableIndexes(variables: string[]): {[key: string]: number} {
+        let values:  {[key: string]: number} = {};
+        for (let i = 0; i < variables.length; i++) {
+            values[variables[i]] = i;
         }
+        return values;
     }
 
-    private get_edge_variables(variables: string[]){
-        return {
-            from: variables.indexOf('from'),
-            to: variables.indexOf('to'),
-            weight: variables.indexOf('weight'),
-            color: variables.indexOf('color')
-        }
-    }
-
-    private create_node(node: string, variables: any): GraphNode{
+    private create_node(node: string, variableIndexes: {[key: string]: number}): GraphNode{
         let node_var = node.split("(")[1].split(")")[0].split(",");
-        const node_name = node_var[variables['name']]
+
+        const variables: {[key: string]: any} = {};
+        for (let key in variableIndexes) {
+            const index = variableIndexes[key];
+            variables[key] = node_var[index];
+        }
 
         return createGraphNode({
-            name: node_name,
-            color: variables['color'] != -1 ? node_var[variables['color']] : null
+            label: variables['label'],
+            color: 'color' in variables ? variables['color'] : null,
+            variables: variables
         });
     }
 
-    private create_edge(edge: string, variables: any): GraphEdge{   
+    private create_edge(edge: string, variableIndexes: {[key: string]: number}): GraphEdge {
         let edge_var = edge.split("(")[1].split(")")[0].split(",");
-        const edge_from = edge_var[variables['from']];
-        const edge_to = edge_var[variables['to']];
-        const edge_weight = variables['weight'] != -1? edge_var[variables['weight']]: null;
+
+        const variables: {[key: string]: any} = {};
+        for (let key in variableIndexes) {
+            const index = variableIndexes[key];
+            variables[key] = edge_var[index];
+        }
 
         return createGraphEdge({
-            from: edge_from,
-            destination: edge_to,
-            weight: edge_weight,
-            color: variables['color'] != -1 ? edge_var[variables['color']] : null,
+            from: variables['from'],
+            to: variables['to'],
+            weight: variables['weight'],
+            color: 'color' in variables ? variables['color'] : null,
+            variables: variables
         });
     }
 }

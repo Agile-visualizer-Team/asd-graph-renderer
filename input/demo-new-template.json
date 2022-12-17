@@ -3,38 +3,35 @@
     "nodes": {
         "atom": {
             "name": "node",
-            "variables": ["label", "color"]
+            "variables": ["label"]
         },
         "style": {
             "color": {
-                "root": "yellow",
-                "leaves": {
+                "all": {
                     "if": [
-                        {"variable": "label", "matches": "a", "then": "green"},
-                        {"variable": "label", "matches": "b", "then": "blue"}
+                        {"variable": "label", "matches": "b", "then": "blue"},
+                        {"variable": "label", "matches": "e", "then": "green"},
+                        {"variable": "label", "contains": "br", "then": "fuchsia"}
                     ],
-                    "default": "red"
+                    "else": "red"
                 },
-                "nonRoot": "blue"
+                "nonRoot": "yellow"
             }
         }
     },
     "edges": {
         "atom": {
             "name": "edge",
-            "variables": ["from", "to", "weight", "color"]
+            "variables": ["from", "to", "weight", "deepness"]
         },
         "style": {
             "color": {
-                "branch": {
-                    "if": [
-                        {"variable": "from", "matches": "a", "then": "green"},
-                        {"variable": "to", "matches": "b", "then": "blue"},
-                        {"variable": "weight", "lte": 3, "then": "red"},
-                        {"variable": "weight", "gt": 3, "then": "orange"}
-                    ],
-                    "default": "red"
-                }
+                "if": [
+                    {"variable": "deepness", "matches": "1", "then": "yellow"},
+                    {"variable": "deepness", "matches": "2", "then": "orange"},
+                    {"variable": "deepness", "gte": "3", "then": "red"}
+                ],
+                "else": "grey"
             },
             "oriented": true
         }

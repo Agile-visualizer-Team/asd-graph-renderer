@@ -44,10 +44,7 @@ In order to generate a demo graph rendering, run `npm start`. The following json
                 "variables": ["from", "to", "weight", "color"]
             },
             "style": {
-                "color": {
-                    "branch": "green",
-                    "path": "yellow"
-                },
+                "color": "green",
                 "oriented": true
             }
         }

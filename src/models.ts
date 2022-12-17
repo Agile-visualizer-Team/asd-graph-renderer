@@ -1,4 +1,3 @@
-
 export interface Graph {
     nodes: GraphNode[];
     edges: GraphEdge[];
@@ -6,20 +5,23 @@ export interface Graph {
 }
 
 export interface GraphNode {
-    name: string;
-    color?: string|null;
+    label: string;
+    color?: string | null;
+    variables: { [key: string]: any };
 }
 
 export interface GraphEdge {
     from: string;
-    destination: string;
-    weight: string|null;
-    color?: string|null;
+    to: string;
+    weight: string | null;
+    color?: string | null;
+    variables: { [key: string]: any };
 }
 
-export function createGraphNode(options?: Partial<GraphNode>):GraphNode{
-    const defaults ={
-        name: "node",
+export function createGraphNode(options?: Partial<GraphNode>): GraphNode {
+    const defaults = {
+        label: "node",
+        variables: {}
     }
     return {
         ...defaults,
@@ -27,12 +29,13 @@ export function createGraphNode(options?: Partial<GraphNode>):GraphNode{
     }
 }
 
-export function createGraphEdge(options?: Partial<GraphEdge>):GraphEdge{
-    const defaults ={
+export function createGraphEdge(options?: Partial<GraphEdge>): GraphEdge {
+    const defaults = {
         from: "a",
-        destination:"b",
+        to: "b",
         weight: null,
-        oriented: true
+        oriented: true,
+        variables: {}
     }
     return {
         ...defaults,

@@ -6,15 +6,15 @@
             "node(c,grey)",
             "node(d,blue)",
             "node(e,grey)",
-            "node(f,grey)",
+            "node(fabrizio,grey)",
             "node(g,fuchsia)",
-            "edge(a,b,2,green)",
-            "edge(a,c,10,grey)",
-            "edge(b,d,6,green)",
-            "edge(b,e,7,grey)",
-            "edge(b,f,5,grey)",
-            "edge(c,d,4,grey)",
-            "edge(d,g,3,green)"
+            "edge(a,b,2,1)",
+            "edge(a,c,10,1)",
+            "edge(b,d,6,2)",
+            "edge(c,d,4,2)",
+            "edge(b,e,7,2)",
+            "edge(b,fabrizio,5,2)",
+            "edge(d,g,3,3)"
         ],
         "cost" : "1@2"
     },
@@ -23,9 +23,9 @@
             "node(a,green)",
             "node(b,green)",
             "node(g,green)",
-            "edge(a,b,1,blue)",
-            "edge(b,g,2,blue)",
-            "edge(a,g,10,grey)"
+            "edge(a,b,1,1)",
+            "edge(b,g,2,2)",
+            "edge(a,g,10,1)"
         ],
         "cost" : "1@2"
     }
