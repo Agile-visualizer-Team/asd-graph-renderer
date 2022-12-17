@@ -6,14 +6,14 @@
             "node(c,grey)",
             "node(d,blue)",
             "node(e,grey)",
-            "node(fabrizio,grey)",
+            "node(f,grey)",
             "node(g,fuchsia)",
             "edge(a,b,2,1)",
             "edge(a,c,10,1)",
             "edge(b,d,6,2)",
             "edge(c,d,4,2)",
             "edge(b,e,7,2)",
-            "edge(b,fabrizio,5,2)",
+            "edge(b,f,5,2)",
             "edge(d,g,3,3)"
         ],
         "cost" : "1@2"

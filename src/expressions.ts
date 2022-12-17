@@ -20,50 +20,50 @@ export interface ExpressionCondition {
 
 const CONDITION_EVALUATORS_BY_TYPE: {[key: string]: (condition: ExpressionCondition, variables: GraphVariables) => boolean} = {
 
-    'matches': (condition: ExpressionCondition, variables: GraphVariables) => {
+    matches: (condition: ExpressionCondition, variables: GraphVariables) => {
         return variables[condition.variable] == condition.matches;
     },
 
-    'imatches': (condition: ExpressionCondition, variables: GraphVariables) => {
+    imatches: (condition: ExpressionCondition, variables: GraphVariables) => {
         if (typeof condition.imatches !== 'string') {
             return false;
         }
         return variables[condition.variable].toUpperCase() == condition.imatches.toUpperCase();
     },
 
-    'contains': (condition: ExpressionCondition, variables: GraphVariables) => {
+    contains: (condition: ExpressionCondition, variables: GraphVariables) => {
         return variables[condition.variable].indexOf(condition.contains) >= 0;
     },
 
-    'icontains': (condition: ExpressionCondition, variables: GraphVariables) => {
+    icontains: (condition: ExpressionCondition, variables: GraphVariables) => {
         if (typeof condition.icontains !== 'string') {
             return false;
         }
         return variables[condition.variable].toUpperCase().indexOf(condition.icontains.toUpperCase()) >= 0;
     },
 
-    'lt': (condition: ExpressionCondition, variables: GraphVariables) => {
+    lt: (condition: ExpressionCondition, variables: GraphVariables) => {
         if (typeof condition.lt === 'undefined') {
             return false;
         }
         return variables[condition.variable] < condition.lt;
     },
 
-    'lte': (condition: ExpressionCondition, variables: GraphVariables) => {
+    lte: (condition: ExpressionCondition, variables: GraphVariables) => {
         if (typeof condition.lte === 'undefined') {
             return false;
         }
         return variables[condition.variable] <= condition.lte;
     },
 
-    'gt': (condition: ExpressionCondition, variables: GraphVariables) => {
+    gt: (condition: ExpressionCondition, variables: GraphVariables) => {
         if (typeof condition.gt === 'undefined') {
             return false;
         }
         return variables[condition.variable] > condition.gt;
     },
 
-    'gte': (condition: ExpressionCondition, variables: GraphVariables) => {
+    gte: (condition: ExpressionCondition, variables: GraphVariables) => {
         if (typeof condition.gte === 'undefined') {
             return false;
         }

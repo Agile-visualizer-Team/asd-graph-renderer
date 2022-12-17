@@ -181,10 +181,10 @@ const NEW_TEMPLATE_SCHEMA = {
                         color: {
                             type: "object",
                             properties: {
-                                all: {type: "string", default: "green", enum: TEMPLATE_COLORS_LIST,pattern: "^[A-Za-z]+"}, // TODO
-                                root: {type: "string", enum: TEMPLATE_COLORS_LIST,pattern: "^[A-Za-z]+"}, // TODO
-                                leaves: {type: "string", enum: TEMPLATE_COLORS_LIST, pattern: "^[A-Za-z]+"}, // TODO
-                                nonRoot: {type: "string", enum: TEMPLATE_COLORS_LIST, pattern: "^[A-Za-z]+"} // TODO
+                                //all: {type: "string", default: "green", enum: TEMPLATE_COLORS_LIST,pattern: "^[A-Za-z]+"}, // TODO
+                                //root: {type: "string", enum: TEMPLATE_COLORS_LIST,pattern: "^[A-Za-z]+"}, // TODO
+                                //leaves: {type: "string", enum: TEMPLATE_COLORS_LIST, pattern: "^[A-Za-z]+"}, // TODO
+                                //nonRoot: {type: "string", enum: TEMPLATE_COLORS_LIST, pattern: "^[A-Za-z]+"} // TODO
                             }
                         }
                     }
@@ -210,7 +210,7 @@ const NEW_TEMPLATE_SCHEMA = {
                 style: {
                     type: "object",
                     properties: {
-                        color: {type: "string", default: "blue", enum: TEMPLATE_COLORS_LIST, pattern: "^[A-Za-z]+"}, // TODO
+                        //color: {type: "string", default: "blue", enum: TEMPLATE_COLORS_LIST, pattern: "^[A-Za-z]+"}, // TODO
                         oriented: {type: "boolean", default: true}
                     }
                 }
