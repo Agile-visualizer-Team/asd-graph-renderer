@@ -57,7 +57,7 @@ describe("EXPRESSIONS TEST", () => {
         };
         expect(new ExpressionEvaluator(expression).evaluate(variables)).to.be.equal('pippo');
     });
-    it("should return pippo (the first if condition is true, the second one must be ignored)", () => {
+    it("should return foo (the first if condition is true, the second one must be ignored)", () => {
         const expression: Expression = <Expression>{
             if: [
                 <ExpressionCondition>{variable: 'a', imatches: 'hello', then: 'foo'},
