@@ -4,10 +4,14 @@ export interface Graph {
     oriented: boolean;
 }
 
+export interface GraphVariables {
+    [key: string]: any;
+}
+
 export interface GraphNode {
     label: string;
     color?: string | null;
-    variables: { [key: string]: any };
+    variables: GraphVariables;
 }
 
 export interface GraphEdge {
@@ -15,7 +19,7 @@ export interface GraphEdge {
     to: string;
     weight: string | null;
     color?: string | null;
-    variables: { [key: string]: any };
+    variables: GraphVariables;
 }
 
 export function createGraphNode(options?: Partial<GraphNode>): GraphNode {

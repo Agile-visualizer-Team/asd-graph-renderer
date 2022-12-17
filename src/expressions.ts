@@ -1,13 +1,13 @@
+import {GraphVariables} from "./models";
 
-interface Expression {
+export interface Expression {
     if: ExpressionCondition[];
     else: string;
 }
 
-interface ExpressionCondition {
+export interface ExpressionCondition {
     variable: string;
     then: string;
-
     matches?: string
     imatches?: string;
     contains?: string;
@@ -18,14 +18,64 @@ interface ExpressionCondition {
     gte?: string|number;
 }
 
-export class ExpressionEvaluator {
-    private expression: Expression;
+const CONDITION_EVALUATORS_BY_TYPE: {[key: string]: (condition: ExpressionCondition, variables: GraphVariables) => boolean} = {
 
-    constructor(expression: Expression) {
-        this.expression = expression;
+    'matches': (condition: ExpressionCondition, variables: GraphVariables) => {
+        return variables[condition.variable] == condition.matches;
+    },
+
+    'imatches': (condition: ExpressionCondition, variables: GraphVariables) => {
+        if (typeof condition.imatches !== 'string') {
+            return false;
+        }
+        return variables[condition.variable].toUpperCase() == condition.imatches.toUpperCase();
+    },
+
+    'contains': (condition: ExpressionCondition, variables: GraphVariables) => {
+        return variables[condition.variable].indexOf(condition.contains) >= 0;
+    },
+
+    'icontains': (condition: ExpressionCondition, variables: GraphVariables) => {
+        if (typeof condition.icontains !== 'string') {
+            return false;
+        }
+        return variables[condition.variable].toUpperCase().indexOf(condition.icontains.toUpperCase()) >= 0;
+    },
+
+    'lt': (condition: ExpressionCondition, variables: GraphVariables) => {
+        if (typeof condition.lt === 'undefined') {
+            return false;
+        }
+        return variables[condition.variable] < condition.lt;
+    },
+
+    'lte': (condition: ExpressionCondition, variables: GraphVariables) => {
+        if (typeof condition.lte === 'undefined') {
+            return false;
+        }
+        return variables[condition.variable] <= condition.lte;
+    },
+
+    'gt': (condition: ExpressionCondition, variables: GraphVariables) => {
+        if (typeof condition.gt === 'undefined') {
+            return false;
+        }
+        return variables[condition.variable] > condition.gt;
+    },
+
+    'gte': (condition: ExpressionCondition, variables: GraphVariables) => {
+        if (typeof condition.gte === 'undefined') {
+            return false;
+        }
+        return variables[condition.variable] >= condition.gte;
+    }
+};
+
+export class ExpressionEvaluator {
+    constructor(private readonly expression: Expression) {
     }
 
-    public evaluate(variables: {[key: string]: any}) {
+    public evaluate(variables: GraphVariables) {
         for (let condition of this.expression.if) {
             if (this.evaluateIf(condition, variables)) {
                 return condition.then;
@@ -35,58 +85,13 @@ export class ExpressionEvaluator {
     }
 
     // noinspection JSMethodCanBeStatic
-    private evaluateIf(condition: ExpressionCondition, variables: {[key: string]: any}) {
-        if ('matches' in condition) {
-            return variables[condition.variable] == condition.matches;
-        }
-
-        if ('imatches' in condition) {
-            if (typeof condition.imatches !== 'string') {
-                return false;
+    private evaluateIf(condition: ExpressionCondition, variables: GraphVariables) {
+        for (let type in CONDITION_EVALUATORS_BY_TYPE) {
+            if (type in condition) {
+                return CONDITION_EVALUATORS_BY_TYPE[type](condition, variables);
             }
-            return variables[condition.variable].toUpperCase() == condition.imatches.toUpperCase();
         }
-
-        if ('contains' in condition) {
-            return variables[condition.variable].indexOf(condition.contains) >= 0;
-        }
-
-        if ('icontains' in condition) {
-            if (typeof condition.icontains !== 'string') {
-                return false;
-            }
-            return variables[condition.variable].toUpperCase().indexOf(condition.icontains.toUpperCase()) >= 0;
-        }
-
-        if ('lt' in condition) {
-            if (typeof condition.lt === 'undefined') {
-                return false;
-            }
-            return variables[condition.variable] < condition.lt;
-        }
-
-        if ('lte' in condition) {
-            if (typeof condition.lte === 'undefined') {
-                return false;
-            }
-            return variables[condition.variable] <= condition.lte;
-        }
-
-        if ('gt' in condition) {
-            if (typeof condition.gt === 'undefined') {
-                return false;
-            }
-            return variables[condition.variable] > condition.gt;
-        }
-
-        if ('gte' in condition) {
-            if (typeof condition.gte === 'undefined') {
-                return false;
-            }
-            return variables[condition.variable] >= condition.gte;
-        }
-
-        console.error("Invalid if type: ", condition);
+        console.error("Invalid condition type: ", condition);
         return false;
     }
 }

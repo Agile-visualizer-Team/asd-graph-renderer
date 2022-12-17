@@ -2,7 +2,7 @@ export interface GraphRendererTheme {
     backgroundColor: string;
     node: GraphRendererNodeTheme;
     edge: GraphRendererEdgeTheme;
-    palette: {[key: string]: string};
+    palette: { [key: string]: string };
 }
 
 export interface GraphRendererEdgeTheme {
