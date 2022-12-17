@@ -32,10 +32,10 @@ const WRONG_SCHEMA = {
 describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
     it("should evaluate correctly the schema", () =>{
         expect(validateTemplateSchema(RIGHT_SCHEMA)).to.be.true;
-    }),
+    });
     it("should fail if the schema provided is wrong", ()=>{
         expect(validateTemplateSchema(WRONG_SCHEMA)).to.be.false;
-    }),
+    });
     it("should fail if the item provided are not unique", ()=>{
         const not_unique_schema = {
             template: "graph",
@@ -59,7 +59,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
             }
         }
         expect(validateTemplateSchema(not_unique_schema)).to.be.false;
-    }),
+    });
     it("should fail if the variable type doesn't match", ()=>{
         const type_mismatch = {
             template: 131,
@@ -75,7 +75,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
             }
         }
         expect(validateTemplateSchema(type_mismatch)).to.be.false;
-    }),
+    });
     it("should fail if the regex doesn't match", ()=>{
         const regex_mismatch ={
             template: "graph",
@@ -93,7 +93,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
             }
         }
         expect(validateTemplateSchema(regex_mismatch)).to.be.false;
-    }),
+    });
     it("should fail if there aren't the required keys ", ()=>{
         const required_mismatch ={
             template: "graph",
@@ -103,7 +103,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
             }
         }
         expect(validateTemplateSchema(required_mismatch)).to.be.false;
-    }),
+    });
     it("should fail if there are few arguments in array", ()=>{
         const arguments_mismatch ={
             template: "graph",
@@ -121,7 +121,7 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
             }
         }
         expect(validateTemplateSchema(arguments_mismatch)).to.be.false;
-    }),
+    });
     it("should fail if the user set an invalid color", ()=>{
         const wrong_color_schema = {    
             template: "graph",
@@ -145,12 +145,12 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
             }
         }
         expect(validateTemplateSchema(wrong_color_schema)).to.be.false;
-    }),
+    });
     it("should use default value if not provided", () =>{
         validateTemplateSchema(RIGHT_SCHEMA);
         expect((<any>RIGHT_SCHEMA).nodes.atom.name).eq("node");
         expect((<any>RIGHT_SCHEMA).nodes.atom.variables).deep.equal(['label']);
-    })
+    });
 
 });
 
