@@ -142,7 +142,7 @@ export class GraphParser {
     }
 
     // TODO any per color non va bene, specificare un'interface
-    // TODO in input servono le variabiles con i relativi valori,ad es: {"from": "a", "to": "b", "weight", "color"}
+    // TODO in input servono le variabiles con i relativi valori,ad es: {"from": "a", "to": "b", "weight": ..}
     private parseColor(color: string|any, variables: {[key: string]: any}): string {
         // color is a string, just return it
         if (typeof color === 'string') {
@@ -178,15 +178,15 @@ export class GraphParser {
             return variables[condition.variable] < condition.lt;
         }
         if ('lte' in condition) {
-            return variables[condition.variable] < condition.lte;
+            return variables[condition.variable] <= condition.lte;
         }
         if ('gt' in condition) {
             return variables[condition.variable] < condition.gt;
         }
         if ('gte' in condition) {
-            return variables[condition.variable] < condition.gte;
+            return variables[condition.variable] <= condition.gte;
         }
-        // TODO invalid condition, throw an exception?
+        // TODO exception?
     }
 
     /**
