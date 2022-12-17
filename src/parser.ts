@@ -86,11 +86,11 @@ export class GraphParser {
 
         return answerSets.map((as: any) => {
             const nodes: GraphNode[] = as.nodes.map((atom:string) => {
-                return this.create_node(atom,node_variables);
+                return this.createNode(atom,node_variables);
             });
 
             const edges: GraphEdge[] = as.edges.map((atom:string) => {
-                return this.create_edge(atom, edge_variables);
+                return this.createEdge(atom, edge_variables);
             });
 
             this.checkEdgesConnections(edges, nodes);
@@ -182,7 +182,7 @@ export class GraphParser {
         return values;
     }
 
-    private create_node(node: string, variableIndexes: {[key: string]: number}): GraphNode{
+    private createNode(node: string, variableIndexes: {[key: string]: number}): GraphNode{
         let node_var = node.split("(")[1].split(")")[0].split(",");
 
         const variables: {[key: string]: any} = {};
@@ -198,7 +198,7 @@ export class GraphParser {
         });
     }
 
-    private create_edge(edge: string, variableIndexes: {[key: string]: number}): GraphEdge {
+    private createEdge(edge: string, variableIndexes: {[key: string]: number}): GraphEdge {
         let edge_var = edge.split("(")[1].split(")")[0].split(",");
 
         const variables: {[key: string]: any} = {};
