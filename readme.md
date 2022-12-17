@@ -32,14 +32,14 @@ In order to generate a demo graph rendering, run `npm start`. The following json
             },
             "style": {
                 "color": {
+                    "nonRoot": "yellow",
                     "all": {
                         "if": [
                             {"variable": "label", "matches": "b", "then": "blue"},
-                            {"variable": "label", "matches": "e", "then": "green"},
+                            {"variable": "label", "matches": "e", "then": "green"}
                         ],
                         "else": "red"
-                    },
-                    "nonRoot": "yellow"
+                    }
                 }
             }
         },
@@ -100,7 +100,7 @@ In order to generate a demo graph rendering, run `npm start`. The following json
 After the script execution is completed check the `output` folder, you should get a graph-*.png image for each input answer set.
 
 
-## Template schema
+## Template
 
 ### IF condition operators
 
