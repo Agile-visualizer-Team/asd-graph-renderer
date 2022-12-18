@@ -27,6 +27,7 @@ export class GraphParser {
             assert(validateTemplateSchema.errors);
             const error = validateTemplateSchema.errors[0];
             const path = error.instancePath || "template";
+            console.log(validateTemplateSchema.errors)
             throw Error("Template is not valid: " + path + " " + error.message);
         }
         this.template = template;
