@@ -67,13 +67,13 @@ In order to generate a demo graph rendering, run `npm start`. The following json
     [
         {
             "as" : [
-                "node(a,green)",
-                "node(b,blue)",
-                "node(c,grey)",
-                "node(d,blue)",
-                "node(e,grey)",
-                "node(f,grey)",
-                "node(g,fuchsia)",
+                "node(a)",
+                "node(b)",
+                "node(c)",
+                "node(d)",
+                "node(e)",
+                "node(f)",
+                "node(g)",
                 "edge(a,b,2,1)",
                 "edge(a,c,10,1)",
                 "edge(b,d,6,2)",
@@ -86,9 +86,9 @@ In order to generate a demo graph rendering, run `npm start`. The following json
         },
         {
             "as" : [
-                "node(a,green)",
-                "node(b,green)",
-                "node(g,green)",
+                "node(a)",
+                "node(b)",
+                "node(g)",
                 "edge(a,b,1,1)",
                 "edge(b,g,2,2)",
                 "edge(a,g,10,1)"
