@@ -1,23 +1,51 @@
 {
     "template": "graph",
-    "layout": "avsdf",
+    "layout": "dagre",
     "nodes": [
         {
             "atom": {
-                "name": "colored",
-                "variables": ["label", "color"]
+                "name": "inNode",
+                "variables": ["label"]
+            },
+            "style": {
+                "color": {
+                    "root": "green",
+                    "nonRoot": "blue",
+                    "leaf": "fuchsia"
+                }
+            }
+        },
+        {
+            "atom": {
+                "name": "outNode",
+                "variables": ["label"]
+            },
+            "style": {
+                "color": {
+                    "all": "grey"
+                }
             }
         }
     ],
     "edges": [
         {
             "atom": {
-                "name": "arc",
-                "variables": ["from", "to"]
+                "name": "inEdge",
+                "variables": ["from", "to", "weight"]
             },
             "style": {
-                "oriented": false,
-                "color": "grey"
+                "color": "blue",
+                "oriented": true
+            }
+        },
+        {
+            "atom": {
+                "name": "outEdge",
+                "variables": ["from", "to", "weight"]
+            },
+            "style": {
+                "color": "grey",
+                "oriented": false
             }
         }
     ]

@@ -1,21 +1,22 @@
 [
     {
         "as" : [
-            "colored(a,blue)",
-            "colored(b,red)",
-            "colored(c,green)",
-            "colored(d,blue)",
-            "colored(e,green)",
-            "colored(f,red)",
-            "arc(a,b)",
-            "arc(b,c)",
-            "arc(c,d)",
-            "arc(d,e)",
-            "arc(e,f)",
-            "arc(f,a)",
-            "arc(a,e)",
-            "arc(b,e)",
-            "arc(b,d)"
+            "inNode(a)",
+            "inNode(b)",
+            "inNode(g)",
+            "inNode(d)",
+            "inNode(h)",
+            "inEdge(a,b,2)",
+            "inEdge(b,d,6)",
+            "inEdge(d,g,4)",
+            "inEdge(g,h,0)",
+            "outNode(c)",
+            "outNode(e)",
+            "outEdge(b,e,7)",
+            "outEdge(a,c,10)",
+            "outEdge(c,d,4)",
+            "outEdge(e,h,19)",
+            "outEdge(b,g,8)"
         ],
         "cost" : "1@2"
     }

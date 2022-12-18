@@ -29,6 +29,7 @@
         "start": "tsc && node build/script.js fromfile --template input/demo-1-template.json --as input/demo-1-as.json --output ./output",
         "demo:1": "tsc && node build/script.js fromfile --template input/demo-1-template.json --as input/demo-1-as.json --output ./output",
         "demo:2": "tsc && node build/script.js fromfile --template input/demo-2-template.json --as input/demo-2-as.json --output ./output",
+        "demo:3": "tsc && node build/script.js fromfile --template input/demo-3-template.json --as input/demo-3-as.json --output ./output",
         "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'",
         "test:coverage": "nyc npm run test"
     },
