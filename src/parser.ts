@@ -1,4 +1,3 @@
-import fs from 'fs'
 import {createGraphEdge, createGraphNode, Graph, GraphEdge, GraphNode, GraphVariables} from "./models";
 import {validateAnswerSetsSchema, validateTemplateSchema} from "./schema-validators";
 import assert from "assert";
