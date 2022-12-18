@@ -18,9 +18,9 @@ describe("EXPRESSIONS TEST", () => {
         const variables: GraphVariables = {
             a: 'hello'
         };
-        let spy = sinon.spy(console, 'error');
-        expect(new ExpressionEvaluator(expression).evaluate(variables)).to.be.equal('bar');
-        expect(spy.calledWith("Invalid/missing condition operator: ")).to.be.true;
+        expect(() => {
+            new ExpressionEvaluator(expression).evaluate(variables);
+        }).to.throw(Error);
     });
 
     /*

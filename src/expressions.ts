@@ -91,7 +91,6 @@ export class ExpressionEvaluator {
                 return CONDITION_OPERATORS[operatorName](condition, variables);
             }
         }
-        console.error("Invalid/missing condition operator: ", condition);
-        return false;
+        throw Error("Invalid/missing condition operator: " + JSON.stringify(condition));
     }
 }

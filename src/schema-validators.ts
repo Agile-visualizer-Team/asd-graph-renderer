@@ -190,77 +190,91 @@ const COLOR_SCHEMA = {
     ]
 };
 
-const NEW_TEMPLATE_SCHEMA = {
+const NODE_SCHEMA = {
+    type: "object",
+    properties: {
+        atom: {
+            type: "object",
+            properties: {
+                name: {type: "string", default: "node", pattern: VARIABLE_NAME_REGEX},
+                variables: {
+                    type: "array",
+                    default: ["label"],
+                    uniqueItems: true,
+                    items: {type: "string"},
+                    minItems: 1
+                }
+            }
+        },
+        style: {
+            type: "object",
+            properties: {
+                color: {
+                    type: "object",
+                    properties: {
+                        all:{ $ref: "COLOR_SCHEMA", default: "green"},
+                        root: { $ref: "COLOR_SCHEMA"},
+                        leaf: { $ref: "COLOR_SCHEMA"},
+                        nonRoot: { $ref: "COLOR_SCHEMA"}
+                    }
+                }
+            }
+        }
+    },
+    required: ["atom"]
+};
+
+const EDGE_SCHEMA = {
+    type: "object",
+    properties: {
+        atom: {
+            type: "object",
+            properties: {
+                name: {type: "string", default: "edge", pattern: VARIABLE_NAME_REGEX},
+                variables: {
+                    type: "array",
+                    default: ["from", "to"],
+                    uniqueItems: true,
+                    items: {type: "string"},
+                    minItems: 2
+                }
+            }
+        },
+        style: {
+            type: "object",
+            properties: {
+                color: { $ref: "COLOR_SCHEMA"},
+                oriented: {type: "boolean", default: true}
+            },
+            default: {
+                oriented: true
+            }
+        }
+    },
+    required: ["atom"]
+};
+
+const TEMPLATE_SCHEMA = {
     type: "object",
     properties: {
         template: {type: "string"},
+        layout: {enum: ['dagre', 'avsdf'], default: 'dagre'},
         nodes: {
-            type: "object",
-            properties: {
-                atom: {
-                    type: "object",
-                    properties: {
-                        name: {type: "string", default: "node", pattern: VARIABLE_NAME_REGEX},
-                        variables: {
-                            type: "array",
-                            default: ["label"],
-                            uniqueItems: true,
-                            items: {type: "string"},
-                            minItems: 1
-                        }
-                    }
-                },
-                style: {
-                    type: "object",
-                    properties: {
-                        color: {
-                            type: "object",
-                            properties: {
-                                all:{ $ref: "COLOR_SCHEMA", default: "green"},
-                                root: { $ref: "COLOR_SCHEMA"}, 
-                                leaves: { $ref: "COLOR_SCHEMA"}, 
-                                nonRoot: { $ref: "COLOR_SCHEMA"}
-                            }
-                        }
-                    }
-                }
-            }, required: ["atom"]
+            type: "array",
+            items: NODE_SCHEMA
         },
         edges: {
-            type: "object",
-            properties: {
-                atom: {
-                    type: "object",
-                    properties: {
-                        name: {type: "string", default: "edge", pattern: VARIABLE_NAME_REGEX},
-                        variables: {
-                            type: "array",
-                            default: ["from", "to"],
-                            uniqueItems: true,
-                            items: {type: "string"},
-                            minItems: 2
-                        }
-                    }
-                },
-                style: {
-                    type: "object",
-                    properties: {
-                        color: { $ref: "COLOR_SCHEMA"},
-                        oriented: {type: "boolean", default: true}
-                    }
-                }
-            }, required: ["atom"]
+            type: "array",
+            items: EDGE_SCHEMA
         }
     },
     required: ["template", "nodes", "edges"]
 };
-
-
 
 const ANSWER_SETS_SCHEMA = {
     type: "array",
     items: {type: "object"}
 };
 
-export const validateTemplateSchema = new Ajv({schemas:[COLOR_SCHEMA],useDefaults: true}).compile(NEW_TEMPLATE_SCHEMA);
+export const validateTemplateSchema = new Ajv({schemas:[COLOR_SCHEMA],useDefaults: true}).compile(TEMPLATE_SCHEMA);
 export const validateAnswerSetsSchema = new Ajv().compile(ANSWER_SETS_SCHEMA);

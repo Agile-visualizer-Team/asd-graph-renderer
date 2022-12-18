@@ -1,0 +1,24 @@
+{
+    "template": "graph",
+    "layout": "avsdf",
+    "nodes": [
+        {
+            "atom": {
+                "name": "colored",
+                "variables": ["label", "color"]
+            }
+        }
+    ],
+    "edges": [
+        {
+            "atom": {
+                "name": "arc",
+                "variables": ["from", "to"]
+            },
+            "style": {
+                "oriented": false,
+                "color": "grey"
+            }
+        }
+    ]
+}

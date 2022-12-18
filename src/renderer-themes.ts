@@ -62,7 +62,7 @@ export const VSCODE_THEME = <GraphRendererTheme>{
         fuchsia: '#d82983',
         purple: '#7261ab',
         orange: '#f47a20',
-        gray: '#666666',
+        grey: '#666666',
         white: '#ffffff',
         black: '#000000',
         silver: '#99a1a1',

@@ -7,95 +7,22 @@
 
 ## How to render from file input
 
-    node build/script.js fromfile --template ./input/demo-template.json --as ./input/demo-as.json --output ./output
+    node build/script.js fromfile --template ./input/demo-1-template.json --as ./input/demo-1-as.json --output ./output
 
 ## How to render from string input
 
-    node build/script.js fromstr --template ./input/demo-template.json --output ./output
+    node build/script.js fromstr --template ./input/demo-1-template.json --output ./output
 
 Then type an example answer set as json string:
 
-    [{"as":["node(a,red)","node(b,green)","edge(a,b,3,blue)"]}]
+    [{"as":["inNode(a)","outNode(b)","inNode(c)","inEdge(a,c,3)","outEdge(a,b,10)"]}]
 
-## Demo
+## Demos
 
-In order to generate a demo graph rendering, run `npm start`. The following json files will be used as input:
-
-**Template:** (`input/demo-template.json`)
-
-    {
-        "template": "graph",
-        "nodes": {
-            "atom": {
-                "name": "node",
-                "variables": ["label"]
-            },
-            "style": {
-                "color": {
-                    "nonRoot": "yellow",
-                    "all": {
-                        "if": [
-                            {"variable": "label", "matches": "b", "then": "blue"},
-                            {"variable": "label", "matches": "e", "then": "green"}
-                        ],
-                        "else": "red"
-                    }
-                }
-            }
-        },
-        "edges": {
-            "atom": {
-                "name": "edge",
-                "variables": ["from", "to", "weight", "deepness"]
-            },
-            "style": {
-                "color": {
-                    "if": [
-                        {"variable": "deepness", "matches": "1", "then": "yellow"},
-                        {"variable": "deepness", "matches": "2", "then": "orange"},
-                        {"variable": "deepness", "gte": "3", "then": "red"}
-                    ],
-                    "else": "grey"
-                },
-                "oriented": true
-            }
-        }
-    }
-
-**Answer sets:** (`input/demo-answer-set.json`)
-
-    [
-        {
-            "as" : [
-                "node(a)",
-                "node(b)",
-                "node(c)",
-                "node(d)",
-                "node(e)",
-                "node(f)",
-                "node(g)",
-                "edge(a,b,2,1)",
-                "edge(a,c,10,1)",
-                "edge(b,d,6,2)",
-                "edge(c,d,4,2)",
-                "edge(b,e,7,2)",
-                "edge(b,f,5,2)",
-                "edge(d,g,3,3)"
-            ],
-            "cost" : "1@2"
-        },
-        {
-            "as" : [
-                "node(a)",
-                "node(b)",
-                "node(g)",
-                "edge(a,b,1,1)",
-                "edge(b,g,2,2)",
-                "edge(a,g,10,1)"
-            ],
-            "cost" : "1@2"
-        }
-    ]
+| Command | Description |
+|-----------------------|-------------------------|
+| `npm run demo:1` | Example of a path coloring problem where the colors of nodes and edges are calculated with custom template conditions |
+| `npm run demo:2` | Example of a 3 colorability problem where the color of each node is taken from the answer set |
 
 After the script execution is completed check the `output` folder, you should get a graph-*.png image for each input answer set.
 

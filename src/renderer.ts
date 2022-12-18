@@ -1,16 +1,14 @@
 import {Graph} from "./models";
 import {GraphRendererTheme, VSCODE_THEME} from "./renderer-themes";
-import {GraphRendererLayout} from "./renderer-layout";
 
 declare function require(name: string): any;
 const cytosnap = require('cytosnap');
-cytosnap.use(['cytoscape-dagre']);
+cytosnap.use(['cytoscape-dagre', 'cytoscape-avsdf']);
 
 export class GraphRenderer {
     public width: number = 800;
     public height: number = 600;
     public theme: GraphRendererTheme = VSCODE_THEME;
-    public layout: GraphRendererLayout = GraphRendererLayout.Dagre;
     public outputType = 'base64';
 
     private generateCytoscapeElements(graph: Graph): object[] {
@@ -52,7 +50,7 @@ export class GraphRenderer {
                     color: e.color
                         ? this.convertColorWithThemePalette(e.color)
                         : this.theme.edge.lineColor,
-                    arrowShape: graph.oriented ? 'triangle' : 'none'
+                    arrowShape: e.oriented ? 'triangle' : 'none'
                 }
             });
         });
@@ -67,12 +65,20 @@ export class GraphRenderer {
         return colorName;
     }
 
-    private generateCytoscapeLayout(): object {
-        if (this.layout == GraphRendererLayout.Dagre) {
+    public generateCytoscapeLayout(graph: Graph): object {
+        if (graph.layout == "dagre") {
             return {
                 name: 'dagre',
                 edgeSep: 70,
                 rankDir: 'TB',
+                padding: 5
+            };
+        }
+        if (graph.layout == "avsdf") {
+            return {
+                name: 'avsdf',
+                nodeSeparation: 100,
+                padding: 5
             };
         }
         throw new Error("Unsupported layout type");
@@ -134,7 +140,6 @@ export class GraphRenderer {
             args: ['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage'] // ubuntu fix
         });
 
-        const layout = that.generateCytoscapeLayout();
         const style = that.generateCytoscapeStyle();
 
         snap.start().then(() => {
@@ -147,7 +152,7 @@ export class GraphRenderer {
 
                 const renderingPromise = snap.shot({
                     elements: that.generateCytoscapeElements(graph),
-                    layout: layout,
+                    layout: that.generateCytoscapeLayout(graph),
                     style: style,
                     resolvesTo: this.outputType,
                     format: 'png',

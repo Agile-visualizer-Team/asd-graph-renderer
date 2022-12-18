@@ -3,19 +3,22 @@ import yargs from "yargs";
 import fs from "fs";
 import {GraphRenderer} from "./renderer";
 import {VSCODE_THEME} from "./renderer-themes";
-import {GraphRendererLayout} from "./renderer-layout";
 import {GraphParser} from "./parser";
 import readline from 'readline';
 
 class GraphScript {
-    constructor() {
-        try {
+    constructor(debugMode: boolean) {
+        if (debugMode) {
             this.runCliScript();
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error(error.message);
-            } else {
-                console.log('an error occurred: ', error);
+        } else {
+            try {
+                this.runCliScript();
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.error(error.message);
+                } else {
+                    console.log('an error occurred: ', error);
+                }
             }
         }
     }
@@ -103,7 +106,6 @@ class GraphScript {
         renderer.width = 1280;
         renderer.height = 1280;
         renderer.theme = VSCODE_THEME;
-        renderer.layout = GraphRendererLayout.Dagre;
         renderer.outputType = 'base64';
 
         const parser = new GraphParser(template, answerSets);
@@ -134,5 +136,5 @@ export function renderGraph(template: any, jsonAnswerset: string, outputDirPath:
 }
 
 if (require.main === module) {
-    new GraphScript();
+    new GraphScript(false);
 }

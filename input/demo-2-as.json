@@ -1,0 +1,22 @@
+[
+    {
+        "as" : [
+            "colored(a,blue)",
+            "colored(b,red)",
+            "colored(c,green)",
+            "colored(d,blue)",
+            "colored(e,green)",
+            "colored(f,red)",
+            "arc(a,b)",
+            "arc(b,c)",
+            "arc(c,d)",
+            "arc(d,e)",
+            "arc(e,f)",
+            "arc(f,a)",
+            "arc(a,e)",
+            "arc(b,e)",
+            "arc(b,d)"
+        ],
+        "cost" : "1@2"
+    }
+]

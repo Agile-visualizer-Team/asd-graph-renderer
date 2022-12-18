@@ -10,29 +10,23 @@ export class GraphParser {
     private readonly MANDATORY_NODE_VARIABLE: string[] = ["label"];
     private readonly MANDATORY_EDGE_VARIABLE: string[] = ["from", "to"];
 
-    /**
-     * It takes a template object, which is validated with a schema, and an array of answer set.
-     */
-    private check_variables_name(variables: string[], mandatory_variables: string[]) {
-        //TODO Remember to make case insensitive
-        const check = mandatory_variables.every(value => {
-            return variables.includes(value);
-        })
-        if (!check)
-            throw Error(`Variables provided: \"${variables}\" must contain \"${mandatory_variables}\"`)
-    }
-
     constructor(template: any, answerSets: any[]) {
         if (!validateTemplateSchema(template)) {
             assert(validateTemplateSchema.errors);
-            const error = validateTemplateSchema.errors[0];
-            const path = error.instancePath || "template";
-            console.log(validateTemplateSchema.errors)
-            throw Error("Template is not valid: " + path + " " + error.message);
+            const errorMessages = validateTemplateSchema.errors.map(e => {
+                const path = e.instancePath || "template";
+                return "Template is not valid: " + path + " " + e.message;
+            });
+            throw Error(errorMessages.join("\n"));
         }
         this.template = template;
-        this.check_variables_name(this.template.nodes.atom.variables, this.MANDATORY_NODE_VARIABLE);
-        this.check_variables_name(this.template.edges.atom.variables, this.MANDATORY_EDGE_VARIABLE);
+
+        this.template.nodes.forEach((nodeTemplate: any) => {
+            this.checkMandatoryVariables(nodeTemplate.atom.variables, this.MANDATORY_NODE_VARIABLE);
+        })
+        this.template.edges.forEach((edgeTemplate: any) => {
+            this.checkMandatoryVariables(edgeTemplate.atom.variables, this.MANDATORY_EDGE_VARIABLE);
+        })
 
         if (!validateAnswerSetsSchema(answerSets)) {
             assert(validateAnswerSetsSchema.errors);
@@ -47,49 +41,52 @@ export class GraphParser {
     }
 
     /**
-     * @param {string|null} [outputFile=null] - the file to write the output to. If null, the output is
-     * returned as an array of objects.
-     * @returns An array of objects. Each object has two properties: nodes and edges.
+     * It takes a template object, which is validated with a schema, and an array of answer set.
      */
-    public extractNodesAndEdgesFromAnswerSets(outputFile: string | null = null) {
-        const node_atom = new RegExp(this.template.nodes.atom.name + '\(.+\)');
-        const edge_atom = new RegExp(this.template.edges.atom.name + '\(.+\)');
-
-        const output: any = [];
-        this.answerSets.forEach(answerSet => {
-            const nodes: string[] = [];
-            const edges: string[] = [];
-            answerSet.as.forEach((atom: string) => {
-                if (node_atom.test(atom))
-                    nodes.push(atom);
-                else if (edge_atom.test(atom))
-                    edges.push(atom);
-            })
-            if (nodes) {
-                output.push({"nodes": nodes, "edges": edges});
-            }
+    private checkMandatoryVariables(variables: string[], mandatoryVariables: string[]) {
+        const check = mandatoryVariables.every(value => {
+            return variables.includes(value);
         })
-        if (outputFile) {
-            fs.writeFileSync(outputFile, JSON.stringify(output, null, 4));
-        }
-        return output;
+        if (!check)
+            throw Error(`Variables provided: \"${variables}\" must contain \"${mandatoryVariables}\"`)
+    }
+
+    /**
+     * @param answerSet
+     * @param atomName
+     * @returns An array of strings, where each string is a fact
+     */
+    public extractFactsByAtomNameFromAnswerSet(answerSet: string[], atomName: string): string[] {
+        const regex = new RegExp('^' + atomName + '\\(.+\\)');
+        return answerSet.filter(fact => {
+            return regex.test(fact);
+        });
     }
 
     /**
      * @returns An array of Graphs.
      */
     public parse(): Graph[] {
-        const answerSets = this.extractNodesAndEdgesFromAnswerSets();
-        const nodeVariablesIndex = this.findVariableIndexes(this.template.nodes.atom.variables);
-        const edgeVariablesIndex = this.findVariableIndexes(this.template.edges.atom.variables);
+        return this.answerSets.map((answerSet: any) => {
+            const nodes: GraphNode[] = [];
+            const edges: GraphEdge[] = [];
 
-        return answerSets.map((as: any) => {
-            const nodes: GraphNode[] = as.nodes.map((atom: string) => {
-                return this.createNode(atom, nodeVariablesIndex);
+            this.template.nodes.forEach((nodeTemplate: any, nodeTemplateIndex: number) => {
+                const variableindexes = this.findVariableIndexes(nodeTemplate.atom.variables);
+                const facts = this.extractFactsByAtomNameFromAnswerSet(answerSet.as, nodeTemplate.atom.name);
+
+                facts.forEach((fact: string) => {
+                    nodes.push(this.createNode(fact, variableindexes, nodeTemplateIndex));
+                });
             });
 
-            const edges: GraphEdge[] = as.edges.map((atom: string) => {
-                return this.createEdge(atom, edgeVariablesIndex);
+            this.template.edges.forEach((edgeTemplate: any, edgeTemplateIndex: number) => {
+                const variableindexes = this.findVariableIndexes(edgeTemplate.atom.variables);
+                const facts = this.extractFactsByAtomNameFromAnswerSet(answerSet.as, edgeTemplate.atom.name);
+
+                facts.forEach((fact: string) => {
+                    edges.push(this.createEdge(fact, variableindexes, edgeTemplateIndex));
+                });
             });
 
             this.checkEdgesConnections(edges, nodes);
@@ -99,9 +96,7 @@ export class GraphParser {
             return <Graph>{
                 nodes: nodes,
                 edges: edges,
-                oriented: this.template.edges.style
-                    ? this.template.edges.style.oriented
-                    : false,
+                layout: this.template.layout
             };
         });
     }
@@ -112,11 +107,10 @@ export class GraphParser {
      * @private
      */
     private assignDefaultEdgesColors(edges: GraphEdge[]) {
-        if (this.template.edges.style.color) {
-            edges.filter(e => !e.color).forEach(e => {
-                e.color = this.parseColor(this.template.edges.style.color, e.variables)
-            });
-        }
+        edges.filter(e => !e.color && this.template.edges[e.templateIndex].style.color).forEach(e => {
+            const edgeTemplate = this.template.edges[e.templateIndex];
+            e.color = this.parseColor(edgeTemplate.style.color, e.variables);
+        });
     }
 
     /**
@@ -126,23 +120,22 @@ export class GraphParser {
      * @private
      */
     private assignDefaultNodesColors(nodes: GraphNode[], edges: GraphEdge[]) {
-        if (this.template.nodes.style.color) {
-            nodes.filter(n => !n.color).forEach(n => {
-                if (!edges.find(e => e.to == n.label)) {
-                    // Root
-                    n.color = this.parseColor(
-                        this.template.nodes.style.color.root || this.template.nodes.style.color.all, n.variables);
-                } else if (!edges.find(e => e.from == n.label)) {
-                    // Leave
-                    n.color = this.parseColor(
-                        this.template.nodes.style.color.leaves || this.template.nodes.style.color.all, n.variables);
-                } else {
-                    // Non-root
-                    n.color = this.parseColor(
-                        this.template.nodes.style.color.nonRoot || this.template.nodes.style.color.all, n.variables);
-                }
-            });
-        }
+        nodes.filter(n => !n.color && this.template.nodes[n.templateIndex].style.color).forEach(n => {
+            const nodeTemplate = this.template.nodes[n.templateIndex];
+            if (!edges.find(e => e.to == n.label)) {
+                // Root
+                n.color = this.parseColor(
+                    nodeTemplate.style.color.root || nodeTemplate.style.color.all, n.variables);
+            } else if (!edges.find(e => e.from == n.label)) {
+                // Leaf
+                n.color = this.parseColor(
+                    nodeTemplate.style.color.leaf || nodeTemplate.style.color.all, n.variables);
+            } else {
+                // Non-root
+                n.color = this.parseColor(
+                    nodeTemplate.style.color.nonRoot || nodeTemplate.style.color.all, n.variables);
+            }
+        });
     }
 
     // noinspection JSMethodCanBeStatic
@@ -182,7 +175,7 @@ export class GraphParser {
     }
 
     // noinspection JSMethodCanBeStatic
-    private createNode(node: string, variableIndexes: { [key: string]: number }): GraphNode {
+    private createNode(node: string, variableIndexes: { [key: string]: number }, templateIndex: number): GraphNode {
         let node_var = node.split("(")[1].split(")")[0].split(",");
 
         const variables: GraphVariables = {};
@@ -194,12 +187,13 @@ export class GraphParser {
         return createGraphNode({
             label: variables['label'],
             color: 'color' in variables ? variables['color'] : null,
-            variables: variables
+            variables: variables,
+            templateIndex: templateIndex
         });
     }
 
     // noinspection JSMethodCanBeStatic
-    private createEdge(edge: string, variableIndexes: { [key: string]: number }): GraphEdge {
+    private createEdge(edge: string, variableIndexes: { [key: string]: number }, templateIndex: number): GraphEdge {
         let edge_var = edge.split("(")[1].split(")")[0].split(",");
 
         const variables: GraphVariables = {};
@@ -213,7 +207,9 @@ export class GraphParser {
             to: variables['to'],
             weight: variables['weight'],
             color: 'color' in variables ? variables['color'] : null,
-            variables: variables
+            variables: variables,
+            oriented: this.template.edges[templateIndex].style.oriented,
+            templateIndex: templateIndex
         });
     }
 }

@@ -4,6 +4,7 @@
         "@types/sinon": "^10.0.13",
         "ajv": "^8.11.2",
         "cytoscape": "^3.23.0",
+        "cytoscape-avsdf": "^1.0.0",
         "cytoscape-dagre": "^2.5.0",
         "cytosnap": "^3.1.0",
         "readline-sync": "^1.4.10",
@@ -25,7 +26,9 @@
     },
     "scripts": {
         "build": "tsc",
-        "start": "tsc && node build/script.js fromfile --template input/demo-template.json --as ./input/demo-as.json --output ./output",
+        "start": "tsc && node build/script.js fromfile --template input/demo-1-template.json --as input/demo-1-as.json --output ./output",
+        "demo:1": "tsc && node build/script.js fromfile --template input/demo-1-template.json --as input/demo-1-as.json --output ./output",
+        "demo:2": "tsc && node build/script.js fromfile --template input/demo-2-template.json --as input/demo-2-as.json --output ./output",
         "test": "mocha --require ts-node/register --watch-extensions ts 'test/**/*.ts'",
         "test:coverage": "nyc npm run test"
     },

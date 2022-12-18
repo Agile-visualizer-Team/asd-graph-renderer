@@ -1,0 +1,64 @@
+{
+    "template": "graph",
+    "layout": "dagre",
+    "nodes": [
+        {
+            "atom": {
+                "name": "inNode",
+                "variables": ["label"]
+            },
+            "style": {
+                "color": {
+                    "all": {
+                        "if": [
+                            {"variable": "label", "matches": "a", "then": "green"},
+                            {"variable": "label", "matches": "d", "then": "blue"},
+                            {"variable": "label", "matches": "h", "then": "fuchsia"}
+                        ],
+                        "else": "orange"
+                    }
+                }
+            }
+        },
+        {
+            "atom": {
+                "name": "outNode",
+                "variables": ["label"]
+            },
+            "style": {
+                "color": {
+                    "all": "grey"
+                }
+            }
+        }
+    ],
+    "edges": [
+        {
+            "atom": {
+                "name": "inEdge",
+                "variables": ["from", "to", "weight"]
+            },
+            "style": {
+                "color": {
+                    "if": [
+                        {"variable": "weight", "gte": 6, "then": "red"},
+                        {"variable": "weight", "gte": 4, "then": "orange"},
+                        {"variable": "weight", "gte": 2, "then": "yellow"}
+                    ],
+                    "else": "green"
+                },
+                "oriented": true
+            }
+        },
+        {
+            "atom": {
+                "name": "outEdge",
+                "variables": ["from", "to", "weight"]
+            },
+            "style": {
+                "color": "grey",
+                "oriented": false
+            }
+        }
+    ]
+}
