@@ -1,0 +1,32 @@
+[
+    {
+        "as" : [
+            "node(a,green)",
+            "node(b,blue)",
+            "node(c,grey)",
+            "node(d,blue)",
+            "node(e,grey)",
+            "node(f,grey)",
+            "node(g,fuchsia)",
+            "edge(a,b,2)",
+            "edge(a,c,10)",
+            "edge(b,d,6)",
+            "edge(c,d,4)",
+            "edge(b,e,7)",
+            "edge(b,f,5)",
+            "edge(d,g,3)"
+        ],
+        "cost" : "1@2"
+    },
+    {
+        "as" : [
+            "node(a,green)",
+            "node(b,green)",
+            "node(g,green)",
+            "edge(a,b,1)",
+            "edge(b,g,2)",
+            "edge(a,g,10)"
+        ],
+        "cost" : "1@2"
+    }
+]
