@@ -151,6 +151,40 @@ describe("TEMPLATE SCHEMA VALIDATOR TEST", () => {
         expect((<any>RIGHT_SCHEMA).nodes[0].atom.name).eq("node");
         expect((<any>RIGHT_SCHEMA).nodes[0].atom.variables).deep.equal(['label']);
     });
-
+    it("should fail if the template color does not contain if/then variables", ()=>{
+        const not_if_else_schema = {
+            "template": "graph",
+            "layout": "dagre",
+            "nodes": [
+                {
+                    "atom": {
+                        "name": "inNode",
+                        "variables": ["label"]
+                    },
+                    "style": {
+                        "color": {
+                            "all": {
+                            }
+                        }
+                    }
+                }
+            ],
+            "edges": [
+                {
+                    "atom": {
+                        "name": "inEdge",
+                        "variables": ["from", "to", "weight"]
+                    },
+                    "style": {
+                        "color": {
+                        },
+                        "oriented": true
+                    }
+                }
+            ]
+        };
+        expect(validateTemplateSchema(not_if_else_schema)).to.be.false;
+        
+    });
 });
 
